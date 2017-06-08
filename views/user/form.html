@@ -10,8 +10,14 @@
 
 <body>
     <h1>Form!</h1>
-    <form method="POST" action="#">
-        <input type="text" name="name">
+    <form method="POST" action="/api/post.html">
+        <label for="name">Name</label>
+        <input type="text" name="name" required>
+        <label for="lat">Lat</label>
+        <input type="text" name="lat" required>
+        <label for="long">Long</label>
+        <input type="text" name="long" required>
+
         <input type="submit" value="send">
     </form>
 </body>

@@ -1,28 +1,21 @@
-const port = 3000;
+const bodyParser = require('body-parser')
+const controller = require(process.cwd() + '/app/controllers/controller_server.js')
 
 module.exports = function(app, db) {
 
-    app.get('/', (req, res) => {
-        res.sendFile(process.cwd() + '/index.html', (err) => {
-            if (err) throw err;
-        })
-    })
+    //new instance of controller object - all methods gets db
+    const serverController = new controller(db);
 
-    app.get('/form.html', (req, res) => {
-        res.sendFile(process.cwd() + '/user/form.html', (err) => {
-            if (err) throw err;
-        })
+    //posting
+    app.use(bodyParser.urlencoded({ extended: true })).use(bodyParser.json());
+    app.post('/api/post.html', (req, res) => {
+        serverController.addDocu(req.body);
+        res.writeHead(302, { 'Location': '/' });
+        res.end();
     });
 
-    app.post('/form.html', (req, res) => {
-        console.log(req);
-        res.sendFile(process.cwd() + '/user/form.html', (err) => {
-            if (err) throw err;
-        })
-    });
-    app.listen(port, () => {
-        console.log('listening to port' + port);
+    app.get('/api/get.html', (req, res) => {
+        serverController.getAllDocs(req, res);
     })
-
 
 }
