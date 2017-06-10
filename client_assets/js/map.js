@@ -1,7 +1,47 @@
-var map;
+(function() {
+    //removing map from global namespace, yet it has to be available for all map functions
+    var map;
+
+})();
+
 
 function initMap() {
     var myLatLng = { lat: 59.336615, lng: 18.062775 };
+
+    //map options
+    var noBusiness = [{
+        featureType: 'poi.business',
+        elementType: 'labels',
+        stylers: [{ visibility: 'off' }]
+    }]
+
+    var lunarLandscape = [{
+            "stylers": [{
+                    "hue": "#ff1a00"
+                },
+                {
+                    "invert_lightness": true
+                },
+                {
+                    "saturation": -100
+                },
+                {
+                    "lightness": 33
+                },
+                {
+                    "gamma": 0.5
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{
+                "color": "#2D333C"
+            }]
+        }
+    ]
+
     var darkTheme = [
         { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
         { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
@@ -81,31 +121,34 @@ function initMap() {
             elementType: 'labels.text.stroke',
             stylers: [{ color: '#17263c' }]
         }
-    ]
-
+    ];
 
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('map'), {
         center: myLatLng,
         scrollwheel: false,
         zoom: 17,
-        // styles: darkTheme
+        styles: noBusiness
+            // styles: darkTheme
     });
 
     // Create a marker and set its position.
     var marker = new google.maps.Marker({
         map: map,
         position: myLatLng,
-        title: 'Hello World!'
+        title: 'Mordplatsen',
+        // label: { text: 'Mordplatsen' }
     });
 
 }
 
-function newMarker(coord) {
+function newMarker(coord, title) {
     var newMarker = new google.maps.Marker({
         map: map,
         position: coord,
-        title: 'Hello World!'
+        title: title,
+        // label: { text: title },
+        animation: google.maps.Animation.DROP,
     });
     map.panTo(newMarker.position)
 
