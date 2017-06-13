@@ -11,7 +11,7 @@ function ajaxRequest(url) {
         url: url,
         dataType: 'json',
         success: (response) => {
-            printDocs(response, clickMap);
+            prepareObs(response);
         },
         error: (err) => {
             console.log('Error!', err.statusText);
@@ -19,24 +19,9 @@ function ajaxRequest(url) {
     })
 }
 
-function printDocs(docs, callback) {
-    const container = document.querySelector('#list-db');
-    let html = `<ul>`;
-    for (let i in docs) {
-        html += `<li>
-                    <a href='#' class="place-link" 
-                    data-name='${docs[i].name}'
-                    data-lat=${docs[i].coords.lat || "#"}
-                    data-long=${docs[i].coords.long || "#"}>
-                    ${docs[i].name}</li>`;
-    }
-    html += `</ul>`;
-    container.innerHTML = html;
-    callback()
-}
 
-function clickMap() {
-    let places = document.querySelectorAll('.place-link').forEach((el) => {
+function timelineClick() {
+    let places = document.querySelectorAll('.observation-link').forEach((el) => {
         el.addEventListener('click', () => {
             let name = el.getAttribute('data-name');
             let latlong = {

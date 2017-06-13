@@ -15,7 +15,7 @@ module.exports = function(app, db) {
     });
 
     app.get('/api/get.html', (req, res) => {
-        serverController.getAllDocs(req, res);
+        serverController.getDocList(req, res);
     })
 
 }

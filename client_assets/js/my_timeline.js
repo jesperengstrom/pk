@@ -1,3 +1,30 @@
+//need to put this in a module
+var obs = [];
+
+function prepareObs(observations) {
+    obs = observations;
+    for (let i in obs) {
+        obs[i].dateTime = new Date(observations[i].dateTime.date + " " + observations[i].dateTime.time);
+    }
+}
+
+function insertObs() {
+    let rows = [];
+
+    obs.forEach((element) => {
+        rows.push([element.dateTime, ,
+            `<a href="#" 
+            class="observation-link"
+            data-id=${element._id}
+            data-name=${element.name} 
+            data-lat=${element.coords.lat} 
+            data-long=${element.coords.long}>
+            ${element.name}</a>`
+        ])
+    }, this);
+    return rows;
+}
+
 google.load("visualization", "1");
 
 // Set callback to run when API is loaded
@@ -11,14 +38,12 @@ function drawVisualization() {
     data.addColumn('datetime', 'end');
     data.addColumn('string', 'content');
 
-    data.addRows([
-        [new Date(1986, 01, 29), , 'Phone call'],
-        [new Date(1986, 01, 31), , 'Traject B'],
-        [new Date(1986, 02, 4, 12, 0, 0), , '<a href="http//www.example.com">Report<a>']
-    ]);
+    //calling the functions that return the observations that we wanna insert
+    data.addRows(insertObs());
+
 
     // specify options
-    var options = {
+    const options = {
         "width": "100%",
         "height": "auto",
         "style": "box", // optional
@@ -29,7 +54,7 @@ function drawVisualization() {
         "locale": "se_SE",
         "stackEvents": false,
         "showCurrentTime": false,
-        "style": "dot",
+        // "style": "dot",
         "zoomMax": 31536000000,
         "zoomMin": 60000
 
@@ -37,8 +62,9 @@ function drawVisualization() {
 
     // Instantiate our timeline object.
     var timeline = new links.Timeline(document.getElementById('mytimeline'));
-
     // Draw our timeline with the created data and options
     timeline.setOptions(options);
+    // listener 2 know when draw is ready -> create event listeners etc
+    google.visualization.events.addListener(timeline, 'ready', timelineClick);
     timeline.draw(data);
 }
