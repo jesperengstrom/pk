@@ -1,29 +1,5 @@
-//need to put this in a module
-var obs = [];
+//Client-side, handles rendering of map
 
-function prepareObs(observations) {
-    obs = observations;
-    for (let i in obs) {
-        obs[i].dateTime = new Date(observations[i].dateTime.date + " " + observations[i].dateTime.time);
-    }
-}
-
-function insertObs() {
-    let rows = [];
-
-    obs.forEach((element) => {
-        rows.push([element.dateTime, ,
-            `<a href="#" 
-            class="observation-link"
-            data-id=${element._id}
-            data-name=${element.name} 
-            data-lat=${element.coords.lat} 
-            data-long=${element.coords.long}>
-            ${element.name}</a>`
-        ])
-    }, this);
-    return rows;
-}
 
 google.load("visualization", "1");
 
@@ -67,4 +43,24 @@ function drawVisualization() {
     // listener 2 know when draw is ready -> create event listeners etc
     google.visualization.events.addListener(timeline, 'ready', timelineClick);
     timeline.draw(data);
+}
+
+/**
+ * Returns array of arrays / inserts observations as rows into timeline
+ */
+function insertObs() {
+    let rows = [];
+
+    obs.forEach((element) => {
+        rows.push([element.dateTime, ,
+            `<a href="#" 
+            class="observation-link"
+            data-id=${element._id}
+            data-name=${element.name} 
+            data-lat=${element.coords.lat} 
+            data-long=${element.coords.long}>
+            ${element.name}</a>`
+        ])
+    }, this);
+    return rows;
 }

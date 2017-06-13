@@ -1,3 +1,5 @@
+//Server-side. Handles routes / api requests
+
 const bodyParser = require('body-parser')
 const controller = require(process.cwd() + '/app/controllers/controller_server.js')
 
@@ -14,8 +16,12 @@ module.exports = function(app, db) {
         res.end();
     });
 
-    app.get('/api/get.html', (req, res) => {
+    app.get('/api/all', (req, res) => {
         serverController.getDocList(req, res);
+    })
+
+    app.get('/api/search/:id', (req, res) => {
+        serverController.getFullDoc(req, res);
     })
 
 }

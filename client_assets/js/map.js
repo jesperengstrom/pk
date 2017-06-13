@@ -1,6 +1,7 @@
+//removing map from global namespace, yet it has to be available for all map functions
 (function() {
-    //removing map from global namespace, yet it has to be available for all map functions
     var map;
+    var markers = [];
 
 })();
 
@@ -133,15 +134,22 @@ function initMap() {
     });
 
     // Create a marker and set its position.
-    var marker = new google.maps.Marker({
+    const mainMarker = new google.maps.Marker({
         map: map,
         position: myLatLng,
         title: 'Mordplatsen',
         // label: { text: 'Mordplatsen' }
     });
 
+
 }
 
+//setmap null
+function addAllMarkers() {
+    console.log(obs);
+}
+
+//change this to show instead of add marker (setmap)
 function newMarker(coord, title) {
     var newMarker = new google.maps.Marker({
         map: map,
