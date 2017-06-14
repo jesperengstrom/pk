@@ -1,13 +1,9 @@
-//removing map from global namespace, yet it has to be available for all map functions
-(function() {
-    var map;
-    var markers = [];
-
-})();
-
+//remove these from global namespace, yet it has to be available for all map functions
+var map;
+var markers = [];
+const mordplatsen = { lat: 59.336615, lng: 18.062775 };
 
 function initMap() {
-    var myLatLng = { lat: 59.336615, lng: 18.062775 };
 
     //map options
     var noBusiness = [{
@@ -16,148 +12,80 @@ function initMap() {
         stylers: [{ visibility: 'off' }]
     }]
 
-    var lunarLandscape = [{
-            "stylers": [{
-                    "hue": "#ff1a00"
-                },
-                {
-                    "invert_lightness": true
-                },
-                {
-                    "saturation": -100
-                },
-                {
-                    "lightness": 33
-                },
-                {
-                    "gamma": 0.5
-                }
-            ]
-        },
-        {
-            "featureType": "water",
-            "elementType": "geometry",
-            "stylers": [{
-                "color": "#2D333C"
-            }]
-        }
-    ]
-
-    var darkTheme = [
-        { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
-        { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
-        { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
-        {
-            featureType: 'administrative.locality',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#d59563' }]
-        },
-        {
-            featureType: 'poi',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#d59563' }]
-        },
-        {
-            featureType: 'poi.park',
-            elementType: 'geometry',
-            stylers: [{ color: '#263c3f' }]
-        },
-        {
-            featureType: 'poi.park',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#6b9a76' }]
-        },
-        {
-            featureType: 'road',
-            elementType: 'geometry',
-            stylers: [{ color: '#38414e' }]
-        },
-        {
-            featureType: 'road',
-            elementType: 'geometry.stroke',
-            stylers: [{ color: '#212a37' }]
-        },
-        {
-            featureType: 'road',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#9ca5b3' }]
-        },
-        {
-            featureType: 'road.highway',
-            elementType: 'geometry',
-            stylers: [{ color: '#746855' }]
-        },
-        {
-            featureType: 'road.highway',
-            elementType: 'geometry.stroke',
-            stylers: [{ color: '#1f2835' }]
-        },
-        {
-            featureType: 'road.highway',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#f3d19c' }]
-        },
-        {
-            featureType: 'transit',
-            elementType: 'geometry',
-            stylers: [{ color: '#2f3948' }]
-        },
-        {
-            featureType: 'transit.station',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#d59563' }]
-        },
-        {
-            featureType: 'water',
-            elementType: 'geometry',
-            stylers: [{ color: '#17263c' }]
-        },
-        {
-            featureType: 'water',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#515c6d' }]
-        },
-        {
-            featureType: 'water',
-            elementType: 'labels.text.stroke',
-            stylers: [{ color: '#17263c' }]
-        }
-    ];
-
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('map'), {
-        center: myLatLng,
+        center: mordplatsen,
         scrollwheel: false,
         zoom: 17,
         styles: noBusiness
-            // styles: darkTheme
     });
 
-    // Create a marker and set its position.
+    // Static marker
     const mainMarker = new google.maps.Marker({
         map: map,
-        position: myLatLng,
+        position: mordplatsen,
         title: 'Mordplatsen',
         // label: { text: 'Mordplatsen' }
     });
-
-
 }
 
-//setmap null
-function addAllMarkers() {
-    console.log(obs);
+/**
+ * Creates all the markers when obs-array is available
+ */
+function createMarkers() {
+    var onMap;
+    pkSettings.showAllMarkers ? onMap = map : onMap = null; //displaying them on map or not depending on setting
+    obs.forEach((el) => {
+        var newMarker = new google.maps.Marker({
+            map: onMap,
+            position: {
+                lat: el.coords.lat,
+                lng: el.coords.lng
+            },
+            title: el.name,
+            marker_id: el._id,
+            // label: { text: title },
+        });
+        markers.push(newMarker);
+        //Makes the labels clickable
+        newMarker.addListener('click', () => {
+            let id = newMarker.marker_id;
+            ajaxRequest('GET', server + '/api/search/' + id, displayFullObs);
+        });
+    })
 }
 
-//change this to show instead of add marker (setmap)
-function newMarker(coord, title) {
-    var newMarker = new google.maps.Marker({
-        map: map,
-        position: coord,
-        title: title,
-        // label: { text: title },
-        animation: google.maps.Animation.DROP,
-    });
-    map.panTo(newMarker.position)
+/**
+ * Displaying one marker (id match) on the map - if option:all not set
+ * @param {string} id 
+ */
+function showMarker(id) {
+    markers.forEach((el) => {
+        if (!pkSettings.showAllMarkers) {
+            el.setMap(null);
+        }
+        if (el.marker_id === id) {
+            el.setMap(map);
+            map.panTo(el.position);
+            if (!pkSettings.showAllMarkers) {
+                el.setAnimation(google.maps.Animation.DROP);
+            }
+        }
+    }, this);
+}
 
+function toggleMarkers() {
+    let i = 0;
+    markers.forEach((el) => {
+        if (!pkSettings.showAllMarkers) {
+            el.setMap(null)
+        } else {
+            setTimeout(function() {
+                el.setMap(map);
+                el.setAnimation(google.maps.Animation.DROP)
+            }, i * 100);
+            i++;
+            map.panTo(mordplatsen);
+        }
+    })
 }

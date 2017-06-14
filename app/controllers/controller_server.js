@@ -7,10 +7,10 @@ function ServerController(db) {
     this.addDocu = (form) => {
         let name = form.name,
             lat = form.lat,
-            long = form.long,
+            lng = form.lng,
             date = form['obs-date'],
             time = form['obs-time'];
-        pk.insert({ 'name': name, 'dateTime': { 'date': date, 'time': time }, 'coords': { 'lat': lat, 'long': long } }, (err, res) => {
+        pk.insert({ 'name': name, 'dateTime': { 'date': date, 'time': time }, 'coords': { 'lat': lat, 'lng': lng } }, (err, res) => {
             if (err) throw err;
             console.log(res)
         })

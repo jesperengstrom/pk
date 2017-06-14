@@ -1,6 +1,5 @@
 //Client-side, handles rendering of map
 
-
 google.load("visualization", "1");
 
 // Set callback to run when API is loaded
@@ -58,7 +57,7 @@ function insertObs() {
             data-id=${element._id}
             data-name=${element.name} 
             data-lat=${element.coords.lat} 
-            data-long=${element.coords.long}>
+            data-lng=${element.coords.lng}>
             ${element.name}</a>`
         ])
     }, this);
