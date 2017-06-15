@@ -1,10 +1,11 @@
-//setting my vars
+//depencencies etc
 const express = require('express');
 const app = express();
 const port = 3000;
 const mongo = require('mongodb').MongoClient;
 const mongoUrl = 'mongodb://127.0.0.1:27017/pk';
 const routes = require('./app/routes');
+
 
 //connecting to db
 mongo.connect(mongoUrl, (err, db) => {
@@ -25,7 +26,4 @@ mongo.connect(mongoUrl, (err, db) => {
     app.listen(port, () => {
         console.log('listening to port' + port);
     })
-
-
-
 })
