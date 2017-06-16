@@ -1,28 +1,11 @@
 'use strict';
-//constructor
-
-//importing mongoose.model
+//importing mongoose.model = constructor
 const Pk = require('../models/pk.js');
 
-// function ServerController(db) {
 function ServerController() {
-    // const pk = db.collection('pk');
     const ObjectId = require('mongodb').ObjectID;
 
-    //old post form to db
-    // this.addDocu = (form) => {
-    //     let name = form.name,
-    //         lat = form.lat,
-    //         lng = form.lng,
-    //         date = form['obs-date'],
-    //         time = form['obs-time'];
-    //     pk.insert({ 'name': name, 'dateTime': { 'date': date, 'time': time }, 'coords': { 'lat': lat, 'lng': lng } }).
-    //     exec((err, res) => {
-    //         if (err) throw err;
-    //         console.log(res)
-    //     });
-    // }
-
+    //modify to real datetime
     this.addDocu = (form) => {
         let name = form.name,
             lat = form.lat,

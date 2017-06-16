@@ -4,16 +4,14 @@
 const bodyParser = require('body-parser')
 const Controller = require(process.cwd() + '/app/controllers/controller_server.js')
 
-// module.exports = function(app, db) {
 module.exports = function(app) {
 
-    //new instance of controller object - remove db new version
-    // const serverController = new controller(db);
+    //new instance of controller object
     const serverController = new Controller();
 
     //posting
     app.use(bodyParser.urlencoded({ extended: true })).use(bodyParser.json());
-    app.post('/api/post.html', (req, res) => {
+    app.post('/api/post', (req, res) => {
         serverController.addDocu(req.body);
         res.writeHead(302, { 'Location': '/' });
         res.end();
@@ -26,5 +24,9 @@ module.exports = function(app) {
     app.get('/api/search/:id', (req, res) => {
         serverController.getFullDoc(req, res);
     })
+
+    app.get('/login', function(req, res) {
+        res.render('login', { name: "jesper", layout: false });
+    });
 
 }
