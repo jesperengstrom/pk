@@ -1,12 +1,15 @@
 //Server-side. Handles routes / api requests
+'use strict'
 
 const bodyParser = require('body-parser')
-const controller = require(process.cwd() + '/app/controllers/controller_server.js')
+const Controller = require(process.cwd() + '/app/controllers/controller_server.js')
 
-module.exports = function(app, db) {
+// module.exports = function(app, db) {
+module.exports = function(app) {
 
-    //new instance of controller object - all methods gets db
-    const serverController = new controller(db);
+    //new instance of controller object - remove db new version
+    // const serverController = new controller(db);
+    const serverController = new Controller();
 
     //posting
     app.use(bodyParser.urlencoded({ extended: true })).use(bodyParser.json());

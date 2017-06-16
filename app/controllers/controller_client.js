@@ -60,6 +60,7 @@ function storeObs(observations) {
         obs[i].coords.lat = parseFloat(observations[i].coords.lat);
         obs[i].coords.lng = parseFloat(observations[i].coords.lng);
     }
+    console.log(obs);
     createMarkers(); //...now we also have the coords
 }
 
