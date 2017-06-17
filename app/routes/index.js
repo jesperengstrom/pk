@@ -1,32 +1,30 @@
-//Server-side. Handles routes / api requests
 'use strict'
 
-const bodyParser = require('body-parser')
-const Controller = require(process.cwd() + '/app/controllers/controller_server.js')
+//setting routes for my template pages
+const express = require('express');
+const passport = require('passport');
+const router = express.Router();
 
-module.exports = function(app) {
+router.get('/', (req, res, next) => {
+    res.render('index', { title: 'Hem' })
+})
 
-    //new instance of controller object
-    const serverController = new Controller();
+router.get('/login.html', (req, res, next) => {
+    res.render('login', { title: 'Logga in' });
+});
 
-    //posting
-    app.use(bodyParser.urlencoded({ extended: true })).use(bodyParser.json());
-    app.post('/api/post', (req, res) => {
-        serverController.addDocu(req.body);
-        res.writeHead(302, { 'Location': '/' });
-        res.end();
-    });
+router.get('/user/register.html', (req, res, next) => {
+    res.render('register', { title: 'Registera konto' });
+});
 
-    app.get('/api/all', (req, res) => {
-        serverController.getDocList(req, res);
-    })
+router.get('/user/form.html', isLoggedIn, (req, res) => {
+    res.render('form', { title: 'Lägg till observation' });
+});
 
-    app.get('/api/search/:id', (req, res) => {
-        serverController.getFullDoc(req, res);
-    })
+module.exports = router;
 
-    app.get('/login', function(req, res) {
-        res.render('login', { name: "jesper", layout: false });
-    });
-
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+    res.redirect('/');
 }

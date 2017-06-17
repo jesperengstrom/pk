@@ -2,14 +2,14 @@
   <div class="container d-flex flex-column justify-content-center align-items-center full-height">
     <div class="col-sm-4">
       <h1>
-        <span class="fa fa-sign-in"></span> Logga in
+        <span class="fa fa-sign-in"></span> Registrera konto
       </h1>
 
           {{!--<% if (message != null) { %>
             <div class="alert-danger"><%= message %></div>
           <% } %>--}}
 
-        <form action="/login" method="post">
+        <form action="/register" method="post">
           <div class="form-group">
               <label for="username">Användarnamn</label>
               <input type="text" class="form-control" name="username">
@@ -19,12 +19,9 @@
             <input type="password" class="form-control" name="password" />
           </div>
           <div>
-            <input type="submit" class="form-control btn btn-info" value="Logga in" />
+            <input type="submit" class="form-control btn btn-info" value="Registrera" />
           </div>
         </form>
-        <div>
-          <p>Skaffa ett konto här.</p>
-        </div>
     </div>
   </div>
 </body>
