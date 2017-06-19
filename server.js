@@ -15,6 +15,13 @@ const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
 
+const routes = require('./app/routes/index');
+const userRoutes = require('./app/routes/users')
+const api = require('./app/routes/api')
+
+//init passport setup
+require('./app/config/passport')(passport);
+
 //init express function
 const app = express();
 
@@ -29,7 +36,9 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, '/app/views'));
 
 //connect to db
-mongoose.connect(process.env.DB_HOST)
+mongoose.connect(process.env.DB_HOST, (err) => {
+    if (err) console.log('could not connect to db!', err);
+})
 
 //setting my static paths
 app.use('/client_assets', express.static(path.join(__dirname, 'client_assets')));
@@ -53,15 +62,9 @@ app.use(passport.session());
 app.use(flash());
 
 //adding my routes
-const routes = require('./app/routes/index');
 app.use('/', routes);
-
-//setting up api
-const api = require('./app/routes/api')
+app.use('/users', userRoutes);
 api(app);
-
-//init passport setup
-require('./app/config/passport')(passport);
 
 //listen
 const port = process.env.PORT || 3000;

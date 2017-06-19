@@ -1,6 +1,6 @@
 'use strict';
 //importing mongoose.model = constructor
-const Pk = require('../models/pk.js');
+const Pk = require('../models/pk');
 
 function ServerController() {
     const ObjectId = require('mongodb').ObjectID;
