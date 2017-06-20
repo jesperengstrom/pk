@@ -1,6 +1,4 @@
-<body class="d-flex flex-column">
-    <div id="mytimeline">
-    </div>
+<section class="d-flex flex-column full-height">
     <div class="d-flex flex-row full-height">
         <div id="map">
         </div>
@@ -8,14 +6,13 @@
             <div id="obs-content">
             </div>
             <div class="mt-auto">
-                <a href="/users/addform">Lägg till obs</a><br>
-                <a href="/users/register">regga användare</a><br>
-                <a href="/users/login">Logga in</a><br>
-                <p>{{user}}</p>
                 <input type="checkbox" name="all-markers" id="all-markers">Visa alla på karta
             </div>
         </div>
     </div>
+    <div id="mytimeline">
+    </div>
+</section>
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript" src="../../client_assets/libs/timeline/timeline-locales.js"></script>
     <script type="text/javascript" src="../../client_assets/libs/timeline/timeline.js"></script>
@@ -27,4 +24,3 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <script type="text/javascript" src="../../public/js/view_client.js"></script>
     <script type="text/javascript" src="../../public/js/controller_client.js"></script>
-</body>

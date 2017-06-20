@@ -3,6 +3,8 @@
 const passport = require('passport');
 const router = require('express').Router();
 const User = require('../models/user');
+const Controller = require(process.cwd() + '/app/controllers/controller_server.js');
+const userController = new Controller();
 
 const isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) return next();
@@ -12,9 +14,10 @@ const isLoggedIn = (req, res, next) => {
     }
 }
 
-//REGISTER USER
+
+//REGISTER
 router.get('/register', (req, res, next) => {
-    res.render('register', { title: 'Registera konto' });
+    res.render('register', userController.renderParams('Registrera användare', req.user));
 });
 
 router.post('/register', (req, res, next) => {
@@ -30,7 +33,7 @@ router.post('/register', (req, res, next) => {
 
 //LOGIN
 router.get('/login', (req, res, next) => {
-    res.render('login', { title: 'Logga in' });
+    res.render('login', userController.renderParams('Logga in', req.user));
 });
 
 router.post('/login', passport.authenticate('local'), (req, res, next) => {
@@ -38,10 +41,15 @@ router.post('/login', passport.authenticate('local'), (req, res, next) => {
     res.redirect('/');
 });
 
+//LOGOUT
+router.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/');
+});
 
 //LOGGED IN
 router.get('/addform', isLoggedIn, (req, res) => {
-    res.render('addform', { title: 'Lägg till observation' });
+    res.render('addform', userController.renderParams('Lägg till observation', req.user));
 });
 
 module.exports = router;

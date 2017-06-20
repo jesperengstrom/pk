@@ -47,10 +47,9 @@ app.use('/public', express.static(path.join(__dirname, '/public')));
 //Hooking up middleware
 app.use(logger('dev'));
 
+app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-app.use(cookieParser());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,

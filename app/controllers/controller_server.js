@@ -46,6 +46,24 @@ function ServerController() {
     //         else res.send("No kitten found with that ID")
     //     });
     // }
+
+    //returns an object to Handlebars to render pages
+    this.renderParams = (title, user) => {
+        let admin = false;
+        let username;
+        if (user) {
+            username = user.username;
+            if (username === 'jesper') {
+                admin = true;
+            }
+        }
+        return {
+            title: title,
+            loggedin: user,
+            username: username,
+            admin: admin
+        };
+    }
 }
 
 module.exports = ServerController;
