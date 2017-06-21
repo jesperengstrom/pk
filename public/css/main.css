@@ -24,3 +24,10 @@ body {
 .full-height {
     width: 100%;
 }
+
+
+/*Bootstrap tweaks*/
+
+.navbar-text {
+    padding: 0.5em;
+}

@@ -27,9 +27,15 @@ router.get('/logout', (req, res) => {
 
 //LOGGED IN ROUTES
 router.get('/addform', userController.isLoggedIn, (req, res) => {
-    let params = userController.renderParams(req.flash('error'), req.user, 'Lägg till observation');
+    let params = userController.renderParams(req.flash('error'), req.user, 'Lägg till post');
     res.render('addform', params);
 });
+
+router.get('/editlist', userController.isLoggedIn, (req, res) => {
+    let params = userController.renderParams(req.flash('error'), req.user, 'Redigera post');
+    res.render('editlist', params);
+});
+
 
 //ADMIN ROUTES
 router.get('/register', userController.isAdmin, (req, res, next) => {

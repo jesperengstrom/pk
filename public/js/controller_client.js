@@ -9,9 +9,20 @@ var pkSettings = {
 //gets all the observations first thing -> storing them
 $(document).ready(() => {
     const allUrl = server + '/api/all';
-    ajaxRequest('GET', allUrl, storeObs);
-    checkboxCheck();
+    if (typeof(Storage) !== "undefined") {
+        // Session storage is available
+        if (sessionStorage.getItem('obj')) {
+            console.log('Getting object from session storage')
+            obs = JSON.parse(localStorage.getItem('obs'));
+        }
 
+    } else {
+        // No storage support
+        console.log('Ajax:ing object from database...');
+        ajaxRequest('GET', allUrl, storeObs);
+
+    }
+    checkboxCheck();
 });
 
 function ajaxRequest(method, url, callback) {
@@ -60,6 +71,8 @@ function storeObs(observations) {
         obs[i].coords.lat = parseFloat(observations[i].coords.lat);
         obs[i].coords.lng = parseFloat(observations[i].coords.lng);
     }
+    //storing it in localstorage for use on other pages
+    localStorage.setItem('obs', JSON.stringify(obs));
     console.log(obs);
     createMarkers(); //...now we also have the coords
 }
