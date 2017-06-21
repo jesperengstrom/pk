@@ -3,10 +3,12 @@
       <h1>
         <span class="fa fa-sign-in"></span> Logga in
       </h1>
-
-          {{!--<% if (message != null) { %>
-            <div class="alert-danger"><%= message %></div>
-          <% } %>--}}
+      
+      {{#if error}}
+        <div class="alert alert-danger" role="alert">
+          {{error}}
+        </div>
+      {{/if}}
 
         <form action="/users/login" method="post">
           <div class="form-group">

@@ -25,7 +25,7 @@ function initMap() {
         map: map,
         position: mordplatsen,
         title: 'Mordplatsen',
-        // label: { text: 'Mordplatsen' }
+        label: { text: 'Mordplatsen' }
     });
 }
 
@@ -49,6 +49,7 @@ function createMarkers() {
         markers.push(newMarker);
         //Makes the labels clickable
         newMarker.addListener('click', () => {
+            map.panTo(newMarker.position)
             let id = newMarker.marker_id;
             ajaxRequest('GET', server + '/api/search/' + id, displayFullObs);
         });
@@ -66,6 +67,8 @@ function showMarker(id) {
         }
         if (el.marker_id === id) {
             el.setMap(map);
+            el.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(() => { el.setAnimation(null); }, 750);
             map.panTo(el.position);
             if (!pkSettings.showAllMarkers) {
                 el.setAnimation(google.maps.Animation.DROP);

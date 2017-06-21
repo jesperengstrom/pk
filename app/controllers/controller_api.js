@@ -2,7 +2,7 @@
 //importing mongoose.model = constructor
 const Pk = require('../models/pk');
 
-function ServerController() {
+function ApiController() {
     const ObjectId = require('mongodb').ObjectID;
 
     //modify to real datetime
@@ -28,7 +28,6 @@ function ServerController() {
         })
     }
 
-    //old
     this.getFullDoc = (req, res) => {
         let id = req.params.id;
         Pk.find(ObjectId(id)).exec((err, docs) => {
@@ -47,23 +46,15 @@ function ServerController() {
     //     });
     // }
 
-    //returns an object to Handlebars to render pages
-    this.renderParams = (title, user) => {
-        let admin = false;
-        let username;
-        if (user) {
-            username = user.username;
-            if (username === 'jesper') {
-                admin = true;
-            }
+
+    this.isLoggedIn = (req, res, next) => {
+        if (req.isAuthenticated()) {
+            return next();
+        } else {
+            res.send('You need to log in to post!')
         }
-        return {
-            title: title,
-            loggedin: user,
-            username: username,
-            admin: admin
-        };
     }
+
 }
 
-module.exports = ServerController;
+module.exports = ApiController;

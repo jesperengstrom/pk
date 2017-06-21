@@ -1,45 +1,23 @@
+//user routes
 'use strict';
-//serving user routes
+
 const passport = require('passport');
 const router = require('express').Router();
 const User = require('../models/user');
-const Controller = require(process.cwd() + '/app/controllers/controller_server.js');
+const Controller = require(process.cwd() + '/app/controllers/controller_users.js');
 const userController = new Controller();
-
-const isLoggedIn = (req, res, next) => {
-    if (req.isAuthenticated()) return next();
-    else {
-        console.log('No permission');
-        res.redirect('/');
-    }
-}
-
-
-//REGISTER
-router.get('/register', (req, res, next) => {
-    res.render('register', userController.renderParams('Registrera användare', req.user));
-});
-
-router.post('/register', (req, res, next) => {
-    User.register(new User({ username: req.body.username }), req.body.password, (err, user) => {
-        if (err) {
-            console.log('Fel vid registrering!', err, user)
-            return next(err);
-        }
-        console.log('Användare registrerad!');
-        res.redirect('/');
-    })
-});
 
 //LOGIN
 router.get('/login', (req, res, next) => {
-    res.render('login', userController.renderParams('Logga in', req.user));
+    let params = userController.renderParams(req.flash('error'), req.user, 'Logga in');
+    res.render('login', params);
 });
 
-router.post('/login', passport.authenticate('local'), (req, res, next) => {
-    console.log('Inloggad!');
-    res.redirect('/');
-});
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/users/login',
+    failureFlash: true
+}))
 
 //LOGOUT
 router.get('/logout', (req, res) => {
@@ -47,9 +25,27 @@ router.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
-//LOGGED IN
-router.get('/addform', isLoggedIn, (req, res) => {
-    res.render('addform', userController.renderParams('Lägg till observation', req.user));
+//LOGGED IN ROUTES
+router.get('/addform', userController.isLoggedIn, (req, res) => {
+    let params = userController.renderParams(req.flash('error'), req.user, 'Lägg till observation');
+    res.render('addform', params);
+});
+
+//ADMIN ROUTES
+router.get('/register', userController.isAdmin, (req, res, next) => {
+    let params = userController.renderParams(req.flash('error'), req.user, 'Registrera användare');
+    res.render('register', params);
+});
+
+router.post('/register', userController.isAdmin, (req, res, next) => {
+    User.register(new User({ username: req.body.username }), req.body.password, (err, user) => {
+        if (err) {
+            req.flash('error', err.message)
+            return res.redirect('/users/register')
+        }
+        console.log('Användare registrerad!');
+        res.redirect('/');
+    })
 });
 
 module.exports = router;

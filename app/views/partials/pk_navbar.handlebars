@@ -25,7 +25,7 @@
       </li>
       {{else}}
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="/users/login" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Logga in
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -43,13 +43,18 @@
                 </div>
             </form>
         </div>
-      </li>
+        </li>
       {{/if}}
     </ul>
     {{#if loggedin}}
         <span class="navbar-text">
       Inloggad som {{username}}
     </span>
+    {{/if}}
+    {{#if index}}
+        <div class="form-inline">
+            <input type="checkbox" name="all-markers" id="all-markers">Visa alla på karta
+        </div>
     {{/if}}
   </div>
 </nav>

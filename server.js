@@ -8,8 +8,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const path = require('path');
-// const LocalStrategy = require('passport-local').Strategy;
 const logger = require('morgan');
+const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const flash = require('connect-flash');
@@ -35,6 +35,8 @@ app.engine('handlebars', exphbs({
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, '/app/views'));
 
+//hide warning message about promise
+mongoose.Promise = global.Promise;
 //connect to db
 mongoose.connect(process.env.DB_HOST, (err) => {
     if (err) console.log('could not connect to db!', err);
@@ -45,6 +47,7 @@ app.use('/client_assets', express.static(path.join(__dirname, 'client_assets')))
 app.use('/public', express.static(path.join(__dirname, '/public')));
 
 //Hooking up middleware
+app.use(helmet());
 app.use(logger('dev'));
 
 app.use(cookieParser(process.env.SESSION_SECRET));
@@ -55,15 +58,45 @@ app.use(session({
     resave: true,
     saveUninitialized: false
 }));
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
+
 
 //adding my routes
 app.use('/', routes);
 app.use('/users', userRoutes);
 api(app);
+
+//ERROR
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
+
+// error handlers
+// development error handler, will print stacktrace
+if (app.get('env') === 'development') { //returns 'development' if NODE_ENV is not defined
+    app.use((err, req, res, next) => {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
+    });
+}
+
+// production error handler, no stacktraces leaked to user
+app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
+});
 
 //listen
 const port = process.env.PORT || 3000;
