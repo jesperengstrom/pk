@@ -9,18 +9,13 @@ var pkSettings = {
 //gets all the observations first thing -> storing them
 $(document).ready(() => {
     const allUrl = server + '/api/all';
-    if (typeof(Storage) !== "undefined") {
-        // Session storage is available
-        if (sessionStorage.getItem('obj')) {
-            console.log('Getting object from session storage')
-            obs = JSON.parse(localStorage.getItem('obs'));
-        }
-
-    } else {
-        // No storage support
+    if (typeof(Storage) !== "undefined" && sessionStorage.getItem('obs')) { // Session storage is available && set
+        console.log('Getting object from session storage')
+        let retrieved = JSON.parse(sessionStorage.getItem('obs'));
+        storeObs(retrieved);
+    } else { // No storage support / not set
         console.log('Ajax:ing object from database...');
         ajaxRequest('GET', allUrl, storeObs);
-
     }
     checkboxCheck();
 });
@@ -67,13 +62,14 @@ function checkboxCheck() {
 function storeObs(observations) {
     obs = observations;
     for (let i in obs) {
-        obs[i].dateTime = new Date(observations[i].dateTime.date + " " + observations[i].dateTime.time);
+        obs[i].obsDate = new Date(observations[i].obsDate);
         obs[i].coords.lat = parseFloat(observations[i].coords.lat);
         obs[i].coords.lng = parseFloat(observations[i].coords.lng);
     }
-    //storing it in localstorage for use on other pages
-    localStorage.setItem('obs', JSON.stringify(obs));
-    console.log(obs);
+    if (typeof(Storage) !== "undefined" && sessionStorage.getItem('obs') == null) { //session storage available but not set
+        console.log('storing object in session storage...')
+        sessionStorage.setItem('obs', JSON.stringify(obs));
+    }
     createMarkers(); //...now we also have the coords
 }
 
@@ -84,13 +80,25 @@ function timelineClick() {
     let places = document.querySelectorAll('.observation-link').forEach((el) => {
         el.addEventListener('click', () => {
             let id = el.getAttribute('data-id');
-            // let name = el.getAttribute('data-name');
-            // let latlong = {
-            //     lat: parseFloat(el.getAttribute('data-lat')),
-            //     lng: parseFloat(el.getAttribute('data-lng'))
-            // };
             showMarker(id);
             ajaxRequest('GET', server + '/api/search/' + id, displayFullObs);
         })
     })
+}
+
+/**
+ * Displays db-objects outside of timeline & map
+ * @param {object} res - ajax response
+ */
+function displayFullObs(res) {
+    let obs = res[0];
+    let datetime = new Date(obs.obsDate);
+    let created = new Date(obs.created);
+
+    let obsContent = document.querySelector('#obs-content');
+    obsContent.innerHTML =
+        `<h2>${obs.name}</h2>
+        <p><span class="lead">Datum: </span>${datetime}</p>
+        <p><span class="lead">Skapad: </span>${created}</p>
+        `
 }

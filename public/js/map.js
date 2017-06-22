@@ -77,6 +77,9 @@ function showMarker(id) {
     }, this);
 }
 
+/**
+ * Shows or hides all markers
+ */
 function toggleMarkers() {
     let i = 0;
     markers.forEach((el) => {

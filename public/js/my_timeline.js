@@ -51,7 +51,7 @@ function insertObs() {
     let rows = [];
 
     obs.forEach((element) => {
-        rows.push([element.dateTime, ,
+        rows.push([element.obsDate, ,
             `<a href="#" 
             class="observation-link"
             data-id=${element._id}
