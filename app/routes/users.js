@@ -32,8 +32,14 @@ router.get('/addform', userController.isLoggedIn, (req, res) => {
 });
 
 router.get('/editlist', userController.isLoggedIn, (req, res) => {
-    let params = userController.renderParams(req.flash('error'), req.user, 'Redigera post');
+    let params = userController.renderParams(req.flash('error'), req.user, 'Listar poster');
     res.render('editlist', params);
+});
+
+router.get('/editform', userController.isLoggedIn, (req, res) => {
+    console.log(req.params)
+    let params = userController.renderParams(req.flash('error'), req.user, 'Redigera post');
+    res.render('editform', params);
 });
 
 

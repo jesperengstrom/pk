@@ -1,0 +1,16 @@
+    <section class="container d-flex flex-column">
+    <h1>Form!</h1>
+    <form method="POST" action="/api/post">
+        <label for="name">Name</label>
+        <input type="text" name="name" required>
+        <label for="lat">Latitute</label>
+        <input type="number" name="lat" step="any" required>
+        <label for="lng">Longitude</label>
+        <input type="number" name="lng" step="any" required>
+        <label for="obs-date">Datum</label>
+        <input type="date" name="obs-date" min="1986-01-01" max="1986-03-01" required>
+        <label for="obs-time">Tid</label>
+        <input type="time" name="obs-time" required>
+        <input type="submit" value="send">
+    </form>
+</section>

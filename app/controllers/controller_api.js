@@ -1,6 +1,7 @@
 'use strict';
 //importing mongoose.model = constructor
 const Pk = require('../models/pk');
+const PkTimestamp = require('../models/pk_timestamp');
 
 function ApiController() {
     const ObjectId = require('mongodb').ObjectID;
@@ -13,11 +14,9 @@ function ApiController() {
             lng = form.lng,
             created = Date.now(),
             updated = null
-        console.log(obsDate);
         Pk.create({ 'name': name, 'obsDate': obsDate, 'coords': { 'lat': lat, 'lng': lng }, 'created': created, 'updated': updated }),
             (err, res) => {
                 if (err) throw err;
-                console.log(res)
             };
     }
 
@@ -59,6 +58,20 @@ function ApiController() {
         }
     }
 
+    this.getLastPkUpdate = (req, res) => {
+        PkTimestamp.findOne({})
+            .exec((err, docs) => {
+                if (err) throw err;
+                return res.json(docs);
+            })
+    }
+
+    this.setLastPkUpdate = () => {
+        PkTimestamp.create({ 'timestamp': Date.now() }),
+            (err, res) => {
+                if (err) throw err;
+            };
+    }
 }
 
 module.exports = ApiController;

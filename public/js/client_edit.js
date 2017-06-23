@@ -47,15 +47,19 @@
     }
 
     function renderlist() {
-        let list = document.getElementById('edit-list-body');
+        let listEl = document.getElementById('edit-list-body');
+        let sorted = obs.sort((a, b) => {
+            return b.obsDate - a.obsDate;
+        });
+        console.log(obs);
         let html = ``;
-        for (let i in obs) {
+        for (let i in sorted) {
             html += `<tr>
-                        <td>${obs[i].name}</td>
-                        <td>${obs[i].obsDate}</td>
-                        <td><a href="/users/editform?id=${obs[i]._id}">redigera</a> 
+                        <td>${sorted[i].name}</td>
+                        <td>${sorted[i].obsDate}</td>
+                        <td><a href="/users/editform?id=${sorted[i]._id}">redigera</a> 
                     </tr>`
         }
-        list.innerHTML = html;
+        listEl.innerHTML = html;
     }
 })();

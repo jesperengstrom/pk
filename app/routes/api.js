@@ -10,6 +10,7 @@ module.exports = function(app) {
     app.use(bodyParser.urlencoded({ extended: true })).use(bodyParser.json());
 
     app.post('/api/post', apiController.isLoggedIn, (req, res) => {
+        apiController.setLastPkUpdate();
         apiController.addDocu(req.body);
         res.writeHead(302, { 'Location': '/' });
         res.end();
@@ -23,4 +24,8 @@ module.exports = function(app) {
         apiController.getFullDoc(req, res);
     })
 
+    //api endpoints to get time of last update
+    app.get('/api/lastupdated', (req, res) => {
+        apiController.getLastPkUpdate(req, res);
+    })
 }
