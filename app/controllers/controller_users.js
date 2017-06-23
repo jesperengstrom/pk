@@ -41,6 +41,17 @@ function UserController() {
         }
         res.redirect('/');
     }
+
+    //try replace this with identical api method
+    this.getPost = (id, res) => {
+        const Pk = require('../models/pk');
+        const ObjectId = require('mongodb').ObjectID;
+        Pk.find(ObjectId(id))
+            .exec((err, doc) => {
+                if (err) throw err;
+                return res(doc)
+            })
+    }
 }
 
 module.exports = UserController;

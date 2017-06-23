@@ -62,15 +62,20 @@ function ApiController() {
         PkTimestamp.findOne({})
             .exec((err, docs) => {
                 if (err) throw err;
+                //if timestamp is empty, we create it to return something
+                if (docs === null) {
+                    return res.json({ 'timestamp': null })
+                }
                 return res.json(docs);
             })
     }
 
     this.setLastPkUpdate = () => {
-        PkTimestamp.create({ 'timestamp': Date.now() }),
-            (err, res) => {
+        PkTimestamp.update({ name: 'timestamp' }, { 'timestamp': Date.now() }, { upsert: true, setDefaultsOnInsert: true },
+            (err, numaffected) => {
                 if (err) throw err;
-            };
+                console.log(numaffected)
+            });
     }
 }
 

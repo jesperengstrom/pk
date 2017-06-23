@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var pkTimestampSchema = new Schema({
+    name: { type: String, default: 'timestamp' },
     timestamp: { type: Date, default: Date.now, required: true }
 }, { collection: 'pk_timestamp' });
 

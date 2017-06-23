@@ -7,6 +7,8 @@ const User = require('../models/user');
 const Controller = require(process.cwd() + '/app/controllers/controller_users.js');
 const userController = new Controller();
 
+var dateFormat = require('dateformat');
+
 //LOGIN
 router.get('/login', (req, res, next) => {
     let params = userController.renderParams(req.flash('error'), req.user, 'Logga in');
@@ -37,9 +39,14 @@ router.get('/editlist', userController.isLoggedIn, (req, res) => {
 });
 
 router.get('/editform', userController.isLoggedIn, (req, res) => {
-    console.log(req.params)
-    let params = userController.renderParams(req.flash('error'), req.user, 'Redigera post');
-    res.render('editform', params);
+    let id = req.query.id;
+    userController.getPost(id, (post) => {
+        let params = userController.renderParams(req.flash('error'), req.user, 'Redigera post');
+        params.form = post[0]; //saving the db result in my render params
+        params.form.date = dateFormat(post[0].obsDate, 'isoDate') //parsing the fucking date back to form
+        params.form.time = dateFormat(post[0].obsDate, 'isoTime')
+        res.render('editform', params);
+    });
 });
 
 

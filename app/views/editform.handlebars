@@ -2,15 +2,15 @@
     <h1>Form!</h1>
     <form method="POST" action="/api/post">
         <label for="name">Name</label>
-        <input type="text" name="name" required>
+        <input type="text" name="name" required value="{{form.name}}">
         <label for="lat">Latitute</label>
-        <input type="number" name="lat" step="any" required>
+        <input type="number" name="lat" step="any" required value="{{form.coords.lat}}">
         <label for="lng">Longitude</label>
-        <input type="number" name="lng" step="any" required>
+        <input type="number" name="lng" step="any" required value="{{form.coords.lng}}">
         <label for="obs-date">Datum</label>
-        <input type="date" name="obs-date" min="1986-01-01" max="1986-03-01" required>
+        <input type="date" name="obs-date" min="1986-01-01" max="1986-03-01" required value="{{form.date}}">
         <label for="obs-time">Tid</label>
-        <input type="time" name="obs-time" required>
-        <input type="submit" value="send">
+        <input type="time" name="obs-time" required value="{{form.time}}">
+        <input type="submit" value="Update">
     </form>
 </section>
