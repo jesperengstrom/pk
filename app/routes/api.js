@@ -11,7 +11,14 @@ module.exports = function(app) {
 
     app.post('/api/post', apiController.isLoggedIn, (req, res) => {
         apiController.setLastPkUpdate();
-        apiController.addDocu(req.body);
+        apiController.addDoc(req);
+        res.writeHead(302, { 'Location': '/' });
+        res.end();
+    });
+
+    app.post('/api/update', apiController.isLoggedIn, (req, res) => {
+        apiController.setLastPkUpdate();
+        apiController.updateDoc(req);
         res.writeHead(302, { 'Location': '/' });
         res.end();
     });
@@ -20,8 +27,12 @@ module.exports = function(app) {
         apiController.getDocList(req, res);
     })
 
-    app.get('/api/search/:id', (req, res) => {
-        apiController.getFullDoc(req, res);
+    app.get('/api/search', (req, res) => {
+        //if we search by id we only expect 1 result
+        if (req.query.id) {
+            apiController.findDocById(req, res);
+        }
+        //implement other searches here
     })
 
     //api endpoints to get time of last update

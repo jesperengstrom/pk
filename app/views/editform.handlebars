@@ -1,6 +1,6 @@
     <section class="container d-flex flex-column">
     <h1>Form!</h1>
-    <form method="POST" action="/api/post">
+    <form method="POST" action="/api/update?id={{form._id}}">
         <label for="name">Name</label>
         <input type="text" name="name" required value="{{form.name}}">
         <label for="lat">Latitute</label>

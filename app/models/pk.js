@@ -11,8 +11,14 @@ var pkSchema = new Schema({
         lat: { type: Number, required: true },
         lng: { type: Number, required: true }
     },
-    created: { type: Date },
-    updated: { type: Date }
+    created: {
+        date: { type: Date },
+        user: { type: String }
+    },
+    updated: {
+        date: { type: Date },
+        user: { type: String }
+    }
 }, { collection: 'pk' });
 
 module.exports = mongoose.model('pk', pkSchema);

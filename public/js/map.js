@@ -51,7 +51,7 @@ function createMarkers() {
         newMarker.addListener('click', () => {
             map.panTo(newMarker.position)
             let id = newMarker.marker_id;
-            ajaxRequest('GET', server + '/api/search/' + id, displayFullObs);
+            ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs);
         });
     })
 }

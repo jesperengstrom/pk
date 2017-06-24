@@ -30,7 +30,7 @@ function timelineClick() {
         el.addEventListener('click', () => {
             let id = el.getAttribute('data-id');
             showMarker(id);
-            ajaxRequest('GET', server + '/api/search/' + id, displayFullObs);
+            ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs);
         })
     })
 }
@@ -40,14 +40,18 @@ function timelineClick() {
  * @param {object} res - ajax response
  */
 function displayFullObs(res) {
-    let obs = res[0];
-    let datetime = new Date(obs.obsDate);
-    let created = new Date(obs.created);
+    let datetime = new Date(res.obsDate);
+    let created = new Date(res.created.date);
 
     let obsContent = document.querySelector('#obs-content');
     obsContent.innerHTML =
-        `<h2>${obs.name}</h2>
-        <p><span class="lead">Datum: </span>${datetime}</p>
-        <p><span class="lead">Skapad: </span>${created}</p>
+        `<h2>${res.name}</h2>
+        <p><span class="lead">Observationen skedde: </span>${dateFormat(datetime, 'isoDate')} kl ${dateFormat(datetime, 'isoTimeShort')}</p>
+        <p>Skapad av ${res.created.user} ${dateFormat(created, 'isoDate')} kl ${dateFormat(created, 'isoTimeShort')}</p>
+        
         `
+    if (res.updated.user) {
+        obsContent.innerHTML += `<p>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDate')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShort')}</p>
+        `;
+    }
 }

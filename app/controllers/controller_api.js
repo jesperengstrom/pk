@@ -6,18 +6,33 @@ const PkTimestamp = require('../models/pk_timestamp');
 function ApiController() {
     const ObjectId = require('mongodb').ObjectID;
 
-    //modify to real datetime
-    this.addDocu = (form) => {
-        let name = form.name,
-            obsDate = new Date(form['obs-date'] + " " + form['obs-time']),
-            lat = form.lat,
-            lng = form.lng,
+    this.addDoc = (req) => {
+        let reqBody = req.body,
+            name = reqBody.name,
+            obsDate = new Date(reqBody['obs-date'] + " " + reqBody['obs-time']),
+            lat = reqBody.lat,
+            lng = reqBody.lng,
             created = Date.now(),
-            updated = null
-        Pk.create({ 'name': name, 'obsDate': obsDate, 'coords': { 'lat': lat, 'lng': lng }, 'created': created, 'updated': updated }),
+            user = req.user.username
+        Pk.create({ 'name': name, 'obsDate': obsDate, 'coords': { 'lat': lat, 'lng': lng }, 'created': { 'date': created, 'user': user }, 'updated': { 'date': null, 'user': null } }),
             (err, res) => {
                 if (err) throw err;
             };
+    }
+
+    this.updateDoc = (req) => {
+        let reqBody = req.body,
+            id = req.query.id,
+            name = reqBody.name,
+            obsDate = new Date(reqBody['obs-date'] + " " + reqBody['obs-time']),
+            lat = reqBody.lat,
+            lng = reqBody.lng,
+            user = req.user.username,
+            updated = Date.now();
+        Pk.update({ _id: ObjectId(id) }, { 'name': name, 'obsDate': obsDate, 'coords': { 'lat': lat, 'lng': lng }, 'updated': { 'date': updated, 'user': user } }, (err, result) => {
+            if (err) throw err;
+            console.log('Updated PK: ', result);
+        })
     }
 
     //The list of docs used to render timeline & map
@@ -30,25 +45,15 @@ function ApiController() {
             })
     }
 
-    this.getFullDoc = (req, res) => {
-        let id = req.params.id;
-        Pk.find(ObjectId(id))
-            .exec((err, docs) => {
-                if (err) throw err;
-                return res.json(docs)
-            })
+    this.findDocById = (req, res) => {
+        let id = req.query.id;
+        Pk.findById(ObjectId(id), (err, doc) => {
+            if (err) throw err;
+            if (doc) {
+                return res.json(doc)
+            } else res.send('Hittade ingen post med det ID:t')
+        })
     }
-
-    //try 2 get this one to work
-    // this.getFullDoc = (req, res) => {
-    //     let id = req.params.id;
-    //     Pk.findById(id, (err, doc) => {
-    //         if (err) res.send(err)
-    //         if (doc) return res.json(doc)
-    //         else res.send("No kitten found with that ID")
-    //     });
-    // }
-
 
     this.isLoggedIn = (req, res, next) => {
         if (req.isAuthenticated()) {
@@ -70,11 +75,14 @@ function ApiController() {
             })
     }
 
+    /**
+     * Posts a timestamp to the db
+     */
     this.setLastPkUpdate = () => {
         PkTimestamp.update({ name: 'timestamp' }, { 'timestamp': Date.now() }, { upsert: true, setDefaultsOnInsert: true },
-            (err, numaffected) => {
+            (err, result) => {
                 if (err) throw err;
-                console.log(numaffected)
+                console.log('wrote to last updated', result)
             });
     }
 }
