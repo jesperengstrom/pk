@@ -2,8 +2,6 @@
 var map;
 const mordplatsen = { lat: 59.336615, lng: 18.062775 };
 var obsMarker;
-var obsLat;
-var obsLng
 
 function initMap() {
 
@@ -32,62 +30,89 @@ function initMap() {
 
     map.addListener('click', (e) => {
         placeMarker(e.latLng, map);
-        obsLat = e.latLng.lat();
-        obsLng = e.latLng.lng()
-        placeCoords(obsLat, obsLng);
+        latbox.value = e.latLng.lat();
+        lngbox.value = e.latLng.lng();
     });
-
 }
 
 
 function placeMarker(location, map) {
-    if (typeof obsMarker === 'object') {
+    if (typeof obsMarker === 'object') { //if we don't have a marker, place it
         obsMarker.setPosition(location);
-    } else {
+    } else { //if we have a marker, move it
         obsMarker = new google.maps.Marker({
             position: location,
             map: map
         });
     }
+    map.panTo(location);
 }
 
-function placeCoords(lat, lng) {
-    let latbox = document.getElementById('lat-box').value = lat;
-    let lngbox = document.getElementById('lng-box').value = lng;
-}
+//Form buttons and boxes elements
+let getAadressBtn = document.getElementById('coords-to-adress-btn');
+let getCoordsBtn = document.getElementById('adress-to-coords-btn');
 
-//Adress buttons
-document.getElementById('coords-to-adress-btn').addEventListener('click', getAdress)
-document.getElementById('adress-to-coords-btn').addEventListener('click', getCoords)
 let adressbox = document.getElementById('adress-box');
+let lngbox = document.getElementById('lng-box');
+let latbox = document.getElementById('lat-box')
 
+getAadressBtn.addEventListener('click', getAdress);
+getCoordsBtn.addEventListener('click', getCoords);
+
+/**
+ * Takes coords from latlong fields --> gets adress from Google geocode -> places it in adress field
+ */
 function getAdress() {
-    if (!obsLat) {
-        alert('Det finns inga koordinater att hämta ifrån!')
+    if (!lngbox.value || !latbox.value) {
+        alert('Det finns inga koordinater att hämta!')
     } else {
-        adressbox.value = 'Hämtar...'
-        $.ajax({
-            method: 'GET',
-            url: 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' + obsLat + ',' + obsLng,
-            dataType: 'json',
-            success: (response) => {
-                console.log(response);
-                let street = response.results["0"].address_components[1].long_name;
-                let streetno = response.results["0"].address_components["0"].long_name
-                adressbox.value = street + " " + streetno;
-            },
-            error: (err) => {
-                alert('Kunde inte hämta adress', err.statusText);
-            }
+        getAadressBtn.firstChild.data = 'Hämtar...';
+        geoCode('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + latbox.value + ',' + lngbox.value, (response) => {
+            let street = response.results["0"].address_components[1].long_name;
+            let streetno = response.results["0"].address_components["0"].long_name;
+            adressbox.value = street + " " + streetno;
+            getAadressBtn.firstChild.data = 'Hämta adress';
         })
     }
 }
 
+/**
+ * Takes adress from adress field --> gets coords from google geocode --> places it in latlong field 
+ */
 function getCoords() {
     if (!adressbox.value) {
         alert('Adressrutan är tom!');
     } else {
-        let adress = adressbox.value
+        getCoordsBtn.firstChild.data = 'Hämtar...';
+        let adress = adressbox.value + ", Stockholm, Sverige";
+        geoCode('http://maps.google.com/maps/api/geocode/json?address=' + adress, (response) => {
+            let lat = response.results["0"].geometry.location.lat;
+            let lng = response.results["0"].geometry.location.lng;
+            latbox.value = lat;
+            lngbox.value = lng;
+            placeMarker({ lat: lat, lng: lng }, map); //also places it on map
+
+            getCoordsBtn.firstChild.data = 'Sätt koordinater';
+            console.log(response);
+        })
     }
-    'http://maps.google.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA'
+}
+
+/**
+ * Using ajax to get data from google geocode
+ * @param {string} url 
+ * @param {function} callback 
+ */
+function geoCode(url, callback) {
+    $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: 'json',
+        success: (response) => {
+            callback(response);
+        },
+        error: (err) => {
+            alert('Fel vid hämtning! ' + err.statusText);
+        }
+    })
 }

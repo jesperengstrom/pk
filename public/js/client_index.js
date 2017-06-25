@@ -47,11 +47,12 @@ function displayFullObs(res) {
     obsContent.innerHTML =
         `<h2>${res.name}</h2>
         <p><span class="lead">Observationen skedde: </span>${dateFormat(datetime, 'isoDate')} kl ${dateFormat(datetime, 'isoTimeShort')}</p>
-        <p>Skapad av ${res.created.user} ${dateFormat(created, 'isoDate')} kl ${dateFormat(created, 'isoTimeShort')}</p>
+        <p><span class="lead">Adress: </span>${res.adress}</p>
+        <small>Skapad av ${res.created.user} ${dateFormat(created, 'isoDate')} kl ${dateFormat(created, 'isoTimeShort')}</small>
         
         `
     if (res.updated.user) {
-        obsContent.innerHTML += `<p>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDate')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShort')}</p>
+        obsContent.innerHTML += `<small>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDate')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShort')}</small>
         `;
     }
 }

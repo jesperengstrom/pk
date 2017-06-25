@@ -10,11 +10,12 @@ function ApiController() {
         let reqBody = req.body,
             name = reqBody.name,
             obsDate = new Date(reqBody['obs-date'] + " " + reqBody['obs-time']),
+            adress = reqBody.adress,
             lat = reqBody.lat,
             lng = reqBody.lng,
             created = Date.now(),
             user = req.user.username
-        Pk.create({ 'name': name, 'obsDate': obsDate, 'coords': { 'lat': lat, 'lng': lng }, 'created': { 'date': created, 'user': user }, 'updated': { 'date': null, 'user': null } }),
+        Pk.create({ 'name': name, 'obsDate': obsDate, 'adress': adress, 'coords': { 'lat': lat, 'lng': lng }, 'created': { 'date': created, 'user': user }, 'updated': { 'date': null, 'user': null } }),
             (err, res) => {
                 if (err) throw err;
             };
@@ -25,11 +26,12 @@ function ApiController() {
             id = req.query.id,
             name = reqBody.name,
             obsDate = new Date(reqBody['obs-date'] + " " + reqBody['obs-time']),
+            adress = reqBody.adress,
             lat = reqBody.lat,
             lng = reqBody.lng,
             user = req.user.username,
             updated = Date.now();
-        Pk.update({ _id: ObjectId(id) }, { 'name': name, 'obsDate': obsDate, 'coords': { 'lat': lat, 'lng': lng }, 'updated': { 'date': updated, 'user': user } }, (err, result) => {
+        Pk.update({ _id: ObjectId(id) }, { 'name': name, 'obsDate': obsDate, 'adress': adress, 'coords': { 'lat': lat, 'lng': lng }, 'updated': { 'date': updated, 'user': user } }, (err, result) => {
             if (err) throw err;
             console.log('Updated PK: ', result);
         })

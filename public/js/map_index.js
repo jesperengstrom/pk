@@ -16,7 +16,7 @@ function initMap() {
     map = new google.maps.Map(document.getElementById('indexmap'), {
         center: mordplatsen,
         scrollwheel: false,
-        zoom: 17,
+        zoom: 15,
         styles: noBusiness
     });
 
