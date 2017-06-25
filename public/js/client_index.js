@@ -46,13 +46,12 @@ function displayFullObs(res) {
     let obsContent = document.querySelector('#obs-content');
     obsContent.innerHTML =
         `<h2>${res.name}</h2>
-        <p><span class="lead">Observationen skedde: </span>${dateFormat(datetime, 'isoDate')} kl ${dateFormat(datetime, 'isoTimeShort')}</p>
-        <p><span class="lead">Adress: </span>${res.adress}</p>
+        <p><span class="lead">Tidpunkt: </span>${dateFormat(datetime, 'isoDate')} kl ${dateFormat(datetime, 'isoTimeShort')}</p>
+        <p><span class="lead">Plats: </span>${res.obsLocation.adress}</p>
         <small>Skapad av ${res.created.user} ${dateFormat(created, 'isoDate')} kl ${dateFormat(created, 'isoTimeShort')}</small>
-        
         `
     if (res.updated.user) {
-        obsContent.innerHTML += `<small>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDate')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShort')}</small>
+        obsContent.innerHTML += `<br><small>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDate')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShort')}</small>
         `;
     }
 }

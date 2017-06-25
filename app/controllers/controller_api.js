@@ -15,7 +15,25 @@ function ApiController() {
             lng = reqBody.lng,
             created = Date.now(),
             user = req.user.username
-        Pk.create({ 'name': name, 'obsDate': obsDate, 'adress': adress, 'coords': { 'lat': lat, 'lng': lng }, 'created': { 'date': created, 'user': user }, 'updated': { 'date': null, 'user': null } }),
+        Pk.create({
+                'name': name,
+                'obsDate': obsDate,
+                'obsLocation': {
+                    'adress': adress,
+                    'coords': {
+                        'lat': lat,
+                        'lng': lng
+                    }
+                },
+                'created': {
+                    'date': created,
+                    'user': user
+                },
+                'updated': {
+                    'date': null,
+                    'user': null
+                }
+            }),
             (err, res) => {
                 if (err) throw err;
             };
@@ -31,7 +49,21 @@ function ApiController() {
             lng = reqBody.lng,
             user = req.user.username,
             updated = Date.now();
-        Pk.update({ _id: ObjectId(id) }, { 'name': name, 'obsDate': obsDate, 'adress': adress, 'coords': { 'lat': lat, 'lng': lng }, 'updated': { 'date': updated, 'user': user } }, (err, result) => {
+        Pk.update({ _id: ObjectId(id) }, {
+            'name': name,
+            'obsDate': obsDate,
+            'obsLocation': {
+                'adress': adress,
+                'coords': {
+                    'lat': lat,
+                    'lng': lng
+                }
+            },
+            'updated': {
+                'date': updated,
+                'user': user
+            }
+        }, (err, result) => {
             if (err) throw err;
             console.log('Updated PK: ', result);
         })
@@ -40,7 +72,7 @@ function ApiController() {
     //The list of docs used to render timeline & map
     this.getDocList = (req, res) => {
         Pk.find({})
-            .select('_id name obsDate coords') //we only need these fields
+            .select('_id name obsDate obsLocation') //we only need these fields
             .exec((err, docs) => {
                 if (err) throw err;
                 return res.json(docs);

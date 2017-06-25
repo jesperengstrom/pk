@@ -68,8 +68,8 @@ function storeObs(observations) {
     obs = observations;
     for (let i in obs) {
         obs[i].obsDate = new Date(observations[i].obsDate);
-        obs[i].coords.lat = parseFloat(observations[i].coords.lat);
-        obs[i].coords.lng = parseFloat(observations[i].coords.lng);
+        obs[i].obsLocation.coords.lat = parseFloat(observations[i].obsLocation.coords.lat);
+        obs[i].obsLocation.coords.lng = parseFloat(observations[i].obsLocation.coords.lng);
     }
     if (typeof(Storage) !== "undefined") { //session storage available
         if (sessionStorage.getItem('obs') == null || sessionStorage.getItem('pk_updated') !== dbUpdated) {

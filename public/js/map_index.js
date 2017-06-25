@@ -39,8 +39,8 @@ function createMarkers() {
         var newMarker = new google.maps.Marker({
             map: onMap,
             position: {
-                lat: el.coords.lat,
-                lng: el.coords.lng
+                lat: el.obsLocation.coords.lat,
+                lng: el.obsLocation.coords.lng
             },
             title: el.name,
             marker_id: el._id,

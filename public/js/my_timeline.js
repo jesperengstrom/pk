@@ -56,8 +56,8 @@ function insertObs() {
             class="observation-link"
             data-id=${element._id}
             data-name=${element.name} 
-            data-lat=${element.coords.lat} 
-            data-lng=${element.coords.lng}>
+            data-lat=${element.obsLocation.coords.lat} 
+            data-lng=${element.obsLocation.coords.lng}>
             ${element.name}</a>`
         ])
     }, this);

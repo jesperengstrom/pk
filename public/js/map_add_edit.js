@@ -29,23 +29,44 @@ function initMap() {
     });
 
     map.addListener('click', (e) => {
-        placeMarker(e.latLng, map);
+        placeMarker(e.latLng, map, false);
         latbox.value = e.latLng.lat();
         lngbox.value = e.latLng.lng();
     });
+
+    //EDIT FORM function
+    //Displays inherited marker 
+    google.maps.event.addListenerOnce(map, 'idle', () => {
+        let latBox = document.getElementById('lat-box');
+        let lngBox = document.getElementById('lng-box');
+        if (latBox.value && lngbox.value) { //If page loads with something in coords-fields --> display on map
+            return placeMarker({ lat: parseFloat(latBox.value), lng: parseFloat(lngbox.value) }, map, true);
+        }
+        return;
+    })
 }
 
-
-function placeMarker(location, map) {
+/**
+ * 
+ * @param {object} location 
+ * @param {map} map 
+ * @param {bool} pan - Pan to marker location after adding it?
+ */
+function placeMarker(location, map, pan) {
     if (typeof obsMarker === 'object') { //if we don't have a marker, place it
         obsMarker.setPosition(location);
     } else { //if we have a marker, move it
         obsMarker = new google.maps.Marker({
             position: location,
-            map: map
+            map: map,
+            title: 'Observation',
+            label: { text: 'Observation' }
         });
     }
-    map.panTo(location);
+    if (pan) {
+        map.panTo(location);
+    }
+
 }
 
 //Form buttons and boxes elements
@@ -90,7 +111,7 @@ function getCoords() {
             let lng = response.results["0"].geometry.location.lng;
             latbox.value = lat;
             lngbox.value = lng;
-            placeMarker({ lat: lat, lng: lng }, map); //also places it on map
+            placeMarker({ lat: lat, lng: lng }, map, true); //also places it on map
 
             getCoordsBtn.firstChild.data = 'Sätt koordinater';
             console.log(response);
