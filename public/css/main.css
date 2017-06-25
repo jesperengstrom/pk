@@ -16,9 +16,14 @@ body {
 /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
 
-#map {
+#indexmap {
     height: 100%;
     width: 50%
+}
+
+#addmap {
+    height: 100%;
+    width: 100%
 }
 
 .full-height {
@@ -30,4 +35,25 @@ body {
 
 .navbar-text {
     padding: 0.5em;
+}
+
+
+/*Timeline*/
+
+.timeline-axis-text {
+    font-size: 10px;
+}
+
+div.timeline-event-box {
+    border-radius: 0px;
+}
+
+div.timeline-event-content {
+    margin: 2px 4px;
+}
+
+a.observation-link {
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
 }

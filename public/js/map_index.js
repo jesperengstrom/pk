@@ -13,7 +13,7 @@ function initMap() {
     }]
 
     // Create a map object and specify the DOM element for display.
-    map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('indexmap'), {
         center: mordplatsen,
         scrollwheel: false,
         zoom: 17,
