@@ -1,38 +1,38 @@
-<section class="container d-flex flex-row full-height">
-    <div class="col-sm-7">
-    <h1>Lägg till en observation</h1>
-    <form method="POST" action="/api/post">
-        <div class="form-group">
-            <label for="name">Namn:</label>
-            <input type="text" name="name" class="form-control" required>
-            <small class="form-text text-muted">Namnge observationen. Lämpligen efter vittnet, ex <em>Ulla S</em>.</small>
-        </div>
-        <div class="form-group">
-            <label for="lat">Latitud:</label>
-            <input type="number" name="lat" step="any" class="form-control" id="lat-box" required>
-            <label for="lng">Longitud:</label>
-            <input type="number" name="lng" step="any" class="form-control" id="lng-box" required>
-            <small class="form-text text-muted">Hämta lat och lng genom att klicka på kartan.</small>
-        </div>
-        <div class="form-group">
-            <label for="adress">Adress:</label>
-            <input type="text" id="adress-box" name="adress" class="form-control" required>
-            <button type="button" id="coords-to-adress-btn" class="btn btn-primary mt-2">Hämta adress</button>
-            <button type="button" id="adress-to-coords-btn" class="btn btn-primary mt-2">Sätt koordinater</button>
-            <small class="form-text text-muted mt-2">"Hämta adress" hämtar närmsta adress från koordinaterna.</small>
-            <small class="form-text text-muted mt-2">"Sätt koordinater" hämtar den aktuella adressens koordinater och placerar ut markören där. 
-                OBS! Markören hamnar i mitten av adressens "upptagningsområde". Den kan behöva finjusteras: zooma in och klicka på den exakta platsen.</small>
-        </div>
-        <div class="form-group">
-            <label for="obs-date">Datum:</label>
-            <input type="date" name="obs-date" min="1986-01-01" max="1986-03-01" class="form-control" required>
-            <label for="obs-time">Tid:</label>
-            <input type="time" name="obs-time" class="form-control" required>
-        </div>
-            <button type="submit" class="btn btn-primary">Skicka</button>
-    </form>
+<section class="container-fluid d-flex flex-row full-height">
+    <div class="col">
+        <h2>Lägg till en observation</h2>
+        <form method="POST" action="/api/post">
+            <div class="form-group">
+                <label for="name">Namn:</label>
+                <input type="text" name="name" class="form-control" required>
+                <small class="form-text text-muted">Namnge observationen. Lämpligen efter vittnet, ex <em>Ulla S</em>.</small>
+            </div>
+            <div class="form-group">
+                <label for="lat">Latitud:</label>
+                <input type="number" name="lat" step="any" class="form-control" id="lat-box" required>
+                <label for="lng">Longitud:</label>
+                <input type="number" name="lng" step="any" class="form-control" id="lng-box" required>
+                <small class="form-text text-muted">Hämta lat och lng genom att klicka på kartan.</small>
+            </div>
+            <div class="form-group">
+                <label for="adress">Adress:</label>
+                <input type="text" id="adress-box" name="adress" class="form-control" required>
+                <button type="button" id="coords-to-adress-btn" class="btn btn-primary mt-2">Hämta adress</button>
+                <button type="button" id="adress-to-coords-btn" class="btn btn-primary mt-2">Sätt koordinater</button>
+                <small class="form-text text-muted mt-2">"Hämta adress" hämtar närmsta adress från koordinaterna.</small>
+                <small class="form-text text-muted mt-2">"Sätt koordinater" hämtar den aktuella adressens koordinater och placerar ut markören där. 
+                    OBS! Markören hamnar i mitten av adressens "upptagningsområde". Den kan behöva finjusteras: zooma in och klicka på den exakta platsen.</small>
+            </div>
+            <div class="form-group">
+                <label for="obs-date">Datum:</label>
+                <input type="date" name="obs-date" min="1986-01-01" max="1986-03-01" class="form-control" required>
+                <label for="obs-time">Tid:</label>
+                <input type="time" name="obs-time" class="form-control" required>
+            </div>
+                <button type="submit" class="btn btn-primary">Skicka</button>
+        </form>
     </div>
-    <div class="col-sm-5 full-height">
+    <div class="col full-height">
         <div id='addmap'>
     </div>
 </section>

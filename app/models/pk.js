@@ -30,6 +30,59 @@ var pkSchema = new Schema({
             }
         }
     },
+    opLocation: {
+        lat: {
+            type: Number
+        },
+        lng: {
+            type: Number
+        }
+    },
+    witness: {
+        type: String,
+        required: true
+    },
+    observation: {
+        summary: {
+            type: String,
+            required: true
+        },
+        description: {
+            type: String,
+            required: true
+        }
+    },
+    policeContacts: {
+        calledIn: {
+            type: Date
+        },
+        interrogations: [{
+            interrDate: {
+                type: Date
+            },
+            protocol: {
+                type: String
+            }
+        }],
+        other: {
+            type: String
+        }
+    },
+    categories: [{
+        type: String
+    }],
+    sources: [{
+        name: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+        }
+    }],
+    other: {
+        type: String
+    },
     created: {
         date: {
             type: Date
