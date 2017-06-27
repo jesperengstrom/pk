@@ -58,7 +58,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
-    cookie: { maxAge: 1200000 } //auto log out after 30 min inactivity with server
+    cookie: { maxAge: 1000 * 60 * 60 } //auto log out after 60 min inactivity with server
 }));
 app.use(flash());
 

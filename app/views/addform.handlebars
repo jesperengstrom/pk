@@ -1,43 +1,78 @@
 <section class="container-fluid d-flex flex-row full-height">
     <div class="col">
         <h2>Lägg till en observation</h2>
-        <form method="POST" action="/api/post">
+        <form class="mt-3" method="POST" action="/api/post">
             <div class="form-group">
-                <label for="name">Namn:</label>
-                <input type="text" name="name" class="form-control" required>
+                <label for="title">
+                    <strong>Titel:</strong>
+                </label>
+                <input type="text" name="title" class="form-control" required>
                 <small class="form-text text-muted">Namnge observationen. Lämpligen efter vittnet, ex <em>Ulla S</em>.</small>
             </div>
-            <div class="form-group">
-                <label for="lat">Latitud:</label>
-                <input type="number" name="lat" step="any" class="form-control" id="lat-box" required>
-                <label for="lng">Longitud:</label>
-                <input type="number" name="lng" step="any" class="form-control" id="lng-box" required>
+            <div class="form-text"><strong>Plats:</strong></div>
+            <div class="form-group form-inline">
+                <label for="obs-lat" class="mr-2">Latitud:</label>
+                <input type="number" name="obs-lat" step="any" class="form-control mr-2" id="obs-lat-box" required>
+                <label for="obs-lng" class="mr-2">Longitud:</label>
+                <input type="number" name="obs-lng" step="any" class="form-control mr-2" id="obs-lng-box" required>
                 <small class="form-text text-muted">Hämta lat och lng genom att klicka på kartan.</small>
             </div>
-            <div class="form-group">
-                <label for="adress">Adress:</label>
-                <input type="text" id="adress-box" name="adress" class="form-control" required>
-                <button type="button" id="coords-to-adress-btn" class="btn btn-primary mt-2">Hämta adress</button>
-                <button type="button" id="adress-to-coords-btn" class="btn btn-primary mt-2">Sätt koordinater</button>
+            <div class="form-group form-inline">
+                <label for="adress" class="mr-2">Adress:</label>
+                <input type="text" id="adress-box" name="adress" class="form-control mr-2" required>
+                <button type="button" id="coords-to-adress-btn" class="btn btn-primary mt-2 mr-2">Hämta adress</button>
+                <button type="button" id="adress-to-coords-btn" class="btn btn-primary mt-2 mr-2">Sätt koordinater</button>
                 <small class="form-text text-muted mt-2">"Hämta adress" hämtar närmsta adress från koordinaterna.</small>
                 <small class="form-text text-muted mt-2">"Sätt koordinater" hämtar den aktuella adressens koordinater och placerar ut markören där. 
                     OBS! Markören hamnar i mitten av adressens "upptagningsområde". Den kan behöva finjusteras: zooma in och klicka på den exakta platsen.</small>
             </div>
-            <div class="form-group">
-                <label for="obs-date">Datum:</label>
-                <input type="date" name="obs-date" min="1986-01-01" max="1986-03-01" class="form-control" required>
-                <label for="obs-time">Tid:</label>
-                <input type="time" name="obs-time" class="form-control" required>
+            <div class="form-text"><strong>Tidpunkt:</strong></div>
+            <div class="form-group form-inline">
+                <label for="obs-date" class="mr-2">Datum:</label>
+                <input type="date" name="obs-date" min="1986-01-01" max="1986-03-01" class="form-control mr-2" required>
+                <label for="obs-time" class="mr-2">Tid:</label>
+                <input type="time" name="obs-time" class="form-control mr-2" required>
             </div>
-                <button type="submit" class="btn btn-primary">Skicka</button>
+            <div class="form-group">
+                <label for="witness">
+                    <strong>Vittnets namn:</strong>
+                </label>
+                <input type="text" name="witness-name" class="form-control" required>
+                <small class="form-text text-muted">Inga fullständiga namn, tänk på PUL. Ex <em>Ulla S</em>.</small>
+            </div>
+            <div class="form-group">
+                <label for="obs-summary"><strong>Observationen:</strong></label>
+                <textarea name="obs-summary" class="form-control" rows="5" required></textarea>
+                <small class="form-text text-muted"></small>
+                <label for="description">Signalement:</label>
+                <textarea name="description" class="form-control" rows="2" required></textarea>
+                <small class="form-text text-muted">Beskrivning av personen/personerna hen såg.</small>
+            </div>
+            <div class="form-text"><strong>Poliskontakter:</strong></div>
+            <div class="form-group form-inline">
+                <label for="called-in" class="mr-2">Kontaktade polisen:</label>
+                <input type="date" name="called-in" min="1986-02-28" class="form-control mr-2">
+                <label for="num-interrogations" class="mr-2">Antal kända förhör:</label>
+                <input type="number" name="num-interrogations" step="1" class="form-control col-sm-1 mr-2">
+            </div>    
+            <button type="button" id="add-interrogation-btn" class="btn btn-primary mt-2 mr-2">Lägg till förhör</button>
+            <small class="form-text text-muted mb-4">Klicka för att lägga till länk till ett förhör.</small>
+            <div class="form-group" id="interrogation-container">
+            </div>
+            <div class="form-group">
+                <label for="follow-up">Polisens uppföljning mm:</label>
+                <textarea name="follow-up" class="form-control" rows="2"></textarea>
+                <small class="form-text text-muted">T.ex polisens kontroll av tipset, bemötande, förklaringar till observationen eller annat som kan vara relevant i sammanhanget.</small>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger">Skicka</button>
+            </div>
         </form>
     </div>
     <div class="col full-height">
         <div id='addmap'>
     </div>
 </section>
-
-
 
 <script type="text/javascript" src="../../public/js/map_add_edit.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9FgYDKmsQnbjfrlIl38f8rHPqiLiUkX8&callback=initMap" async defer></script>

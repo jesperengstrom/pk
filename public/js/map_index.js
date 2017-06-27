@@ -42,7 +42,7 @@ function createMarkers() {
                 lat: el.obsLocation.coords.lat,
                 lng: el.obsLocation.coords.lng
             },
-            title: el.name,
+            title: el.title,
             marker_id: el._id,
             // label: { text: title },
         });

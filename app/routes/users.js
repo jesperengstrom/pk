@@ -28,8 +28,8 @@ router.get('/logout', (req, res) => {
 });
 
 //LOGGED IN ROUTES
-router.get('/addform', userController.isLoggedIn, (req, res) => {
-    // router.get('/addform', (req, res) => {
+// router.get('/addform', userController.isLoggedIn, (req, res) => {
+router.get('/addform', (req, res) => {
     let params = userController.renderParams(req.flash('error'), req.user, 'Lägg till post');
     res.render('addform', params);
 });

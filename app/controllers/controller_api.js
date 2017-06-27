@@ -7,42 +7,57 @@ function ApiController() {
     const ObjectId = require('mongodb').ObjectID;
 
     this.addDoc = (req) => {
-        let reqBody = req.body,
-            name = reqBody.name,
-            obsDate = new Date(reqBody['obs-date'] + " " + reqBody['obs-time']),
-            adress = reqBody.adress,
-            lat = reqBody.lat,
-            lng = reqBody.lng,
-            created = Date.now(),
-            user = req.user.username
-        Pk.create({
-                'name': name,
-                'obsDate': obsDate,
-                'obsLocation': {
-                    'adress': adress,
-                    'coords': {
-                        'lat': lat,
-                        'lng': lng
-                    }
-                },
-                'created': {
-                    'date': created,
-                    'user': user
-                },
-                'updated': {
-                    'date': null,
-                    'user': null
+        let reqBody = req.body;
+
+        let addObj = {
+            'title': reqBody.title,
+            'obsLocation': {
+                'adress': reqBody.adress,
+                'coords': {
+                    'lat': reqBody['obs-lat'],
+                    'lng': reqBody['obs-lng']
                 }
-            }),
-            (err, res) => {
-                if (err) throw err;
-            };
+            },
+            'obsDate': new Date(reqBody['obs-date'] + " " + reqBody['obs-time']),
+            'witness': {
+                'name': reqBody['witness-name'],
+                'coords': {
+                    'lat': null,
+                    'lng': null
+                }
+            },
+            'observation': {
+                'summary': reqBody['obs-summary'],
+                'description': reqBody.description
+            },
+            'policeContacts': {
+                'calledIn': reqBody['called-in'] === "" ? null : new Date(reqBody['called-in']),
+                'numInterrogations': reqBody['num-interrogations'],
+                'interrogations': [{
+                    'interrDate': null,
+                    'protocol': null
+                }],
+                'followUp': reqBody['follow-up']
+            },
+            'created': {
+                'date': Date.now(),
+                'user': req.user.username
+            },
+            'updated': {
+                'date': null,
+                'user': null
+            }
+        };
+
+        Pk.create(addObj), (err, res) => {
+            if (err) throw err;
+        };
     }
 
     this.updateDoc = (req) => {
         let reqBody = req.body,
             id = req.query.id,
-            name = reqBody.name,
+            title = reqBody.title,
             obsDate = new Date(reqBody['obs-date'] + " " + reqBody['obs-time']),
             adress = reqBody.adress,
             lat = reqBody.lat,
@@ -50,7 +65,7 @@ function ApiController() {
             user = req.user.username,
             updated = Date.now();
         Pk.update({ _id: ObjectId(id) }, {
-            'name': name,
+            'title': title,
             'obsDate': obsDate,
             'obsLocation': {
                 'adress': adress,
@@ -72,7 +87,7 @@ function ApiController() {
     //The list of docs used to render timeline & map
     this.getDocList = (req, res) => {
         Pk.find({})
-            .select('_id name obsDate obsLocation') //we only need these fields
+            .select('_id title obsDate obsLocation') //we only need these fields
             .exec((err, docs) => {
                 if (err) throw err;
                 return res.json(docs);

@@ -4,14 +4,11 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+const categories = ['Walkie Talkie', 'Förföljare', 'Grand', 'Gamla Stan'];
+
 var pkSchema = new Schema({
-    name: {
+    title: {
         type: String,
-        required: true,
-        unique: true
-    },
-    obsDate: {
-        type: Date,
         required: true
     },
     obsLocation: {
@@ -30,17 +27,23 @@ var pkSchema = new Schema({
             }
         }
     },
-    opLocation: {
-        lat: {
-            type: Number
-        },
-        lng: {
-            type: Number
-        }
+    obsDate: {
+        type: Date,
+        required: true
     },
     witness: {
-        type: String,
-        required: true
+        name: {
+            type: String,
+            required: true
+        },
+        coords: {
+            lat: {
+                type: Number
+            },
+            lng: {
+                type: Number
+            }
+        }
     },
     observation: {
         summary: {
@@ -54,7 +57,10 @@ var pkSchema = new Schema({
     },
     policeContacts: {
         calledIn: {
-            type: Date
+            // type: Date //have 2 have option to insert null
+        },
+        numInterrogations: {
+            type: Number
         },
         interrogations: [{
             interrDate: {
@@ -64,17 +70,27 @@ var pkSchema = new Schema({
                 type: String
             }
         }],
-        other: {
+        followUp: {
             type: String
         }
     },
+    opLocation: {
+        lat: {
+            type: Number
+        },
+        lng: {
+            type: Number
+        }
+    },
     categories: [{
-        type: String
+        type: String,
+        // required: true,
+        enum: categories
     }],
     sources: [{
         name: {
             type: String,
-            required: true
+            // required: true
         },
         url: {
             type: String,

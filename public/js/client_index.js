@@ -36,37 +36,58 @@ function timelineClick() {
 }
 
 /**
- * Displays db-objects outside of timeline & map
+ * Renders the full db-object
  * @param {object} res - ajax response
  */
 function displayFullObs(res) {
-    let datetime = new Date(res.obsDate);
-    let created = new Date(res.created.date);
+
+    //Defined? --> parse date/fallback
+    let obsDatetime = new Date(res.obsDate);
 
     let obsContent = document.querySelector('#obs-content');
     obsContent.innerHTML =
-        `<h2>${res.name}</h2>
-        <table class="table mt-4">
+        `<h2>${res.title}</h2>
+        <table class="table mt-4" id="fullpost-table">
             <tbody>
-                <tr>
-                    <th scope="row">Tidpunkt:</td>
-                    <td>${dateFormat(datetime, 'isoDate')} kl ${dateFormat(datetime, 'isoTimeShort')}</td>
-                </tr>
                 <tr>
                     <th scope="row">Plats:</th>
                     <td>${res.obsLocation.adress}</td>
                 </tr>
                 <tr>
+                    <th scope="row">Tidpunkt:</td>
+                    <td>${dateFormat(obsDatetime, 'isoDate')} kl ${dateFormat(obsDatetime, 'isoTimeShort')}</td>
+                </tr>
+                <tr>
                     <th scope="row">Vittne:</th>
-                    <td></td>
+                    <td><a href="#" data-query="witness.name=${res.witness.name}">${res.witness.name}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Observation:</th>
+                    <td>${res.observation.summary}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Signalement:</th>
+                    <td>${res.observation.description}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Kontaktade polisen:</th>
+                    <td>${typeof res.policeContacts.calledIn == 'string' ? dateFormat(new Date(res.policeContacts.calledIn), 'isoDate') : '-'}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Antal kända förhör:</th>
+                    <td>${res.policeContacts.numInterrogations || '-'}</td>
+                </tr>
+                <tr> 
+                    <th scope="row">Polisens uppföljning mm:</th>
+                    <td>${res.policeContacts.followUp || '-'}</td>
                 </tr>
             </tbody>
-        </table>
-        
-        <small>Skapad av ${res.created.user} ${dateFormat(created, 'isoDate')} kl ${dateFormat(created, 'isoTimeShort')}</small>
-        `
+        </table>`;
+
+    //footnote
+    obsContent.innerHTML += `<small>Skapad av ${res.created.user} ${dateFormat(new Date(res.created.date), 'isoDate')} kl ${dateFormat(res.created.date, 'isoTimeShort')}</small>`;
+
     if (res.updated.user) {
-        obsContent.innerHTML += `<br><small>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDate')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShort')}</small>
-        `;
+        obsContent.innerHTML += `<br><small>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDate')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShort')}</small>`;
     }
 }

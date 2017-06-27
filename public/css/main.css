@@ -30,6 +30,9 @@ body {
 
 /*Bootstrap tweaks*/
 
+
+/*navbar*/
+
 .navbar-text {
     padding: 0.5em;
 }
@@ -43,6 +46,16 @@ body {
     text-decoration: none;
     background-color: #fff;
 }
+
+
+/*table*/
+
+
+/*
+#fullpost-table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}*/
 
 
 /*Timeline*/

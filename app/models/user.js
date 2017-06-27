@@ -15,8 +15,8 @@ const options = {
 
 const User = new Schema({
     local: {
-        username: { type: String, required: true, unique: true },
-        password: { type: String, required: true },
+        username: { type: String, unique: true },
+        password: { type: String },
         isAdmin: { type: Boolean, default: false }
     }
 }, { collection: 'users' })

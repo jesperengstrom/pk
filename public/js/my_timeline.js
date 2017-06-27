@@ -50,16 +50,19 @@ function drawVisualization() {
 function insertObs() {
     let rows = [];
 
+    //are all of these really necessary?
     obs.forEach((element) => {
         rows.push([element.obsDate, ,
             `<a href="#" 
             class="observation-link"
-            data-id=${element._id}
-            data-name=${element.name} 
-            data-lat=${element.obsLocation.coords.lat} 
-            data-lng=${element.obsLocation.coords.lng}>
-            ${element.name}</a>`
+            data-id=${element._id}>
+            ${element.title}</a>`
         ])
     }, this);
     return rows;
 }
+
+//used to be appended to timeline items...
+// data-title=${element.title} 
+// data-lat=${element.obsLocation.coords.lat} 
+// data-lng=${element.obsLocation.coords.lng}
