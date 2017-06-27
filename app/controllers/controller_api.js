@@ -7,6 +7,7 @@ function ApiController() {
     const ObjectId = require('mongodb').ObjectID;
 
     this.addDoc = (req) => {
+        console.log(req.body)
         let reqBody = req.body;
 
         let addObj = {
@@ -22,8 +23,8 @@ function ApiController() {
             'witness': {
                 'name': reqBody['witness-name'],
                 'coords': {
-                    'lat': null,
-                    'lng': null
+                    'lat': reqBody['witness-lat'],
+                    'lng': reqBody['witness-lng']
                 }
             },
             'observation': {
@@ -33,10 +34,7 @@ function ApiController() {
             'policeContacts': {
                 'calledIn': reqBody['called-in'] === "" ? null : new Date(reqBody['called-in']),
                 'numInterrogations': reqBody['num-interrogations'],
-                'interrogations': [{
-                    'interrDate': null,
-                    'protocol': null
-                }],
+                'interrogations': constructArray(),
                 'followUp': reqBody['follow-up']
             },
             'created': {
@@ -48,6 +46,17 @@ function ApiController() {
                 'user': null
             }
         };
+
+        function constructArray() {
+            let array = [];
+            for (let i in reqBody['interr-date']) {
+                array.push({
+                    'interrDate': new Date(reqBody['interr-date'][i]),
+                    'protocolUrl': reqBody['protocol-url'][i]
+                })
+            }
+            return array;
+        }
 
         Pk.create(addObj), (err, res) => {
             if (err) throw err;

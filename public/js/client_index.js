@@ -40,19 +40,18 @@ function timelineClick() {
  * @param {object} res - ajax response
  */
 function displayFullObs(res) {
+    //changes the URL to include id - to enable linking 
+    window.history.pushState(null, "", "/observation?id=" + res._id); //need to handle GET requests to this adress
 
     //Defined? --> parse date/fallback
     let obsDatetime = new Date(res.obsDate);
-
     let obsContent = document.querySelector('#obs-content');
+
     obsContent.innerHTML =
         `<h2>${res.title}</h2>
         <table class="table mt-4" id="fullpost-table">
             <tbody>
-                <tr>
-                    <th scope="row">Plats:</th>
-                    <td>${res.obsLocation.adress}</td>
-                </tr>
+                ${renderTr('Plats', res.obsLocation.adress)}
                 <tr>
                     <th scope="row">Tidpunkt:</td>
                     <td>${dateFormat(obsDatetime, 'isoDate')} kl ${dateFormat(obsDatetime, 'isoTimeShort')}</td>
@@ -61,33 +60,42 @@ function displayFullObs(res) {
                     <th scope="row">Vittne:</th>
                     <td><a href="#" data-query="witness.name=${res.witness.name}">${res.witness.name}</a></td>
                 </tr>
-                <tr>
-                    <th scope="row">Observation:</th>
-                    <td>${res.observation.summary}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Signalement:</th>
-                    <td>${res.observation.description}</td>
-                </tr>
+                ${renderTr('Observation',res.observation.summary)}
+                ${renderTr('Signalement', res.observation.description)}
                 <tr>
                     <th scope="row">Kontaktade polisen:</th>
                     <td>${typeof res.policeContacts.calledIn == 'string' ? dateFormat(new Date(res.policeContacts.calledIn), 'isoDate') : '-'}</td>
                 </tr>
-                <tr>
-                    <th scope="row">Antal kända förhör:</th>
-                    <td>${res.policeContacts.numInterrogations || '-'}</td>
-                </tr>
-                <tr> 
-                    <th scope="row">Polisens uppföljning mm:</th>
-                    <td>${res.policeContacts.followUp || '-'}</td>
-                </tr>
+                ${renderTr('Antal kända förhör', res.policeContacts.numInterrogations)}
+                ${renderArray()}
+                ${renderTr('Polisens uppföljning mm', res.policeContacts.followUp)}
             </tbody>
-        </table>`;
+        </table>
+        ${renderFootnote()}`;
 
     //footnote
-    obsContent.innerHTML += `<small>Skapad av ${res.created.user} ${dateFormat(new Date(res.created.date), 'isoDate')} kl ${dateFormat(res.created.date, 'isoTimeShort')}</small>`;
+    function renderFootnote() {
+        let footer = `<small>Skapad av 
+        ${res.created.user} ${dateFormat(new Date(res.created.date), 'isoDate')} 
+        kl ${dateFormat(res.created.date, 'isoTimeShort')}</small>`;
+        if (res.updated.user) {
+            footer += `<br><small>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDate')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShort')}</small>`;
+        }
+        return footer;
+    }
 
-    if (res.updated.user) {
-        obsContent.innerHTML += `<br><small>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDate')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShort')}</small>`;
+    function renderTr(key, value) {
+        return `<tr><th scope="row">` + key + `:</th><td>${value || '-'}</td></tr>`;
+    }
+
+    function renderArray() {
+        if (res.policeContacts.interrogations.length > 0) {
+            let result = `<th scope="row">Förhörsprotokoll:</th><td><ul>`;
+            res.policeContacts.interrogations.forEach((el) => {
+                result += `<li><a href="${el.protocolUrl}" target="_blank">${dateFormat(new Date(el.interrDate), 'isoDate')}</a></li>`;
+            })
+            result += `</ul></td>`;
+            return result;
+        }
     }
 }

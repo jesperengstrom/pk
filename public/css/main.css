@@ -58,6 +58,14 @@ body {
 }*/
 
 
+/*list*/
+
+ul {
+    list-style-position: inside;
+    padding-left: 0;
+}
+
+
 /*Timeline*/
 
 .timeline-axis-text {
@@ -83,4 +91,11 @@ a.observation-link {
 
 #obs-wrapper {
     overflow-y: scroll;
+}
+
+
+/*general*/
+
+.hidden {
+    display: none;
 }

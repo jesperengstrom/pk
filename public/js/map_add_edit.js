@@ -2,6 +2,7 @@
 var map;
 const mordplatsen = { lat: 59.336615, lng: 18.062775 };
 var obsMarker;
+var witnessMarker;
 
 function initMap() {
 
@@ -70,16 +71,14 @@ function placeMarker(location, map, pan) {
 //Form buttons and boxes elements
 let getAadressBtn = document.getElementById('coords-to-adress-btn');
 let getCoordsBtn = document.getElementById('adress-to-coords-btn');
-let addInterrogationBtn = document.getElementById('add-interrogation-btn');
 
 let adressbox = document.getElementById('adress-box');
 let latBox = document.getElementById('obs-lat-box');
 let lngBox = document.getElementById('obs-lng-box');
 
-
 getAadressBtn.addEventListener('click', getAdress);
 getCoordsBtn.addEventListener('click', getCoords);
-addInterrogationBtn.addEventListener('click', interrogationForm);
+
 
 /**
  * Takes coords from latlong fields --> gets adress from Google geocode -> places it in adress field
@@ -139,27 +138,17 @@ function geoCode(url, callback) {
     })
 }
 
-/**
- * Adds 2 form fields & a button at each call
- * button click removes itself + parent element
- */
-function interrogationForm() {
-    let interContainer = document.getElementById('interrogation-container');
-    let newfield = document.createElement('div');
-    newfield.setAttribute('class', 'form-group form-inline');
-    newfield.innerHTML = `
-                <label for="interr-date" class="mr-2">Förhörsdatum:</label>
-                <input type="date" name="interr-date" min="1986-02-28" class="form-control col-sm-3 mr-2" required>
-                <label for="protocol" class="mr-2">URL-länk:</label>
-                <input type="text" name="protocol" class="form-control col-sm-3 mr-2" required>
-                <button type="button" class="btn btn-sm btn-danger mr-2 remove-interrogation-btn">Ta bort</button>
-                `;
+function addWitnessMarker() {
+    witnessMarker = new google.maps.Marker({
+        position: mordplatsen,
+        map: map,
+        title: 'Vittne',
+        label: { text: 'Vittne' }
+    });
 
-    interContainer.appendChild(newfield);
+}
 
-    let btns = document.querySelectorAll('.remove-interrogation-btn').forEach((el) => {
-        el.addEventListener('click', (e) => {
-            e.target.parentNode.remove();
-        })
-    }, this);
+function removeWitnessMarker() {
+    witnessMarker.setMap(null)
+
 }

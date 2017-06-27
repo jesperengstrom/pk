@@ -66,7 +66,7 @@ var pkSchema = new Schema({
             interrDate: {
                 type: Date
             },
-            protocol: {
+            protocolUrl: {
                 type: String
             }
         }],
