@@ -57,7 +57,7 @@ var pkSchema = new Schema({
     },
     policeContacts: {
         calledIn: {
-            // type: Date //have 2 have option to insert null
+            // type: Date //no, have 2 have option to insert null
         },
         numInterrogations: {
             type: Number

@@ -14,7 +14,7 @@ var activeBox, activeMarker;
 var obsMarker, witnessMarker, palmeMarker;
 var obsBox = { lat: document.getElementById('obs-lat-box'), lng: document.getElementById('obs-lng-box') }
 
-var defaultSettings = (function defset() { //self invoking but can also be called, restores defaults
+var defaultSettings = (function defset() { //self invoking but can also be called, activates default = observation
     activeBox = obsBox;
     activeMarker = obsMarker;
     return defset;
@@ -46,6 +46,24 @@ function initMap() {
         position: mordplatsen,
         title: 'Mordplatsen',
         label: { text: 'Mordplatsen' }
+    });
+
+    //witness marker invisible by default
+    witnessMarker = new google.maps.Marker({
+        position: mordplatsen,
+        map: null,
+        title: 'Vittne',
+        label: { text: 'Vittne' },
+        moved: false
+    });
+
+    //Palme marker invisible by default
+    palmeMarker = new google.maps.Marker({
+        position: mordplatsen,
+        map: null,
+        title: 'Palme',
+        label: { text: 'Palme' },
+        moved: false
     });
 
     map.addListener('click', (e) => {
@@ -88,22 +106,23 @@ function placeMarker(location, map, pan) { //Should have option to not always ef
 }
 
 /**
- * creates new marker obj + input box refs and sets them as active
+ * displays target marker obj + input box refs and sets all as active
  */
-function addWitnessMarker() {
-    let witnessBox = { lat: document.getElementById('witness-lat-box'), lng: document.getElementById('witness-lng-box') }
-    activeBox = witnessBox;
+function activateMarker(target) {
+    target === 'witness' ? activeMarker = witnessMarker : activeMarker = palmeMarker;
+    if (!activeMarker.moved) { //if we haven't moved marker previously...
+        activeMarker.setPosition(obsMarker === undefined ? mordplatsen : obsMarker.getPosition()); //place it at observation if it's defined, else mordplatsen
+        activeMarker.moved = true; //and say we've moved it, else it will reset on next check.
+    }
+    activeMarker.setMap(map);
+    activeBox = { lat: document.getElementById(target + '-lat-box'), lng: document.getElementById(target + '-lng-box') }
 
-    witnessMarker = new google.maps.Marker({
-        position: mordplatsen,
-        map: map,
-        title: 'Vittne',
-        label: { text: 'Vittne' }
-    });
-    activeMarker = witnessMarker;
 }
 
-function removeWitnessMarker() {
+/**
+ * Sets observation as default marker
+ */
+function deactivateMarker() {
     defaultSettings();
 }
 
@@ -142,7 +161,6 @@ function getCoords() {
             placeMarker({ lat: lat, lng: lng }, map, true); //also places it on map
 
             getCoordsBtn.firstChild.data = 'Sätt koordinater';
-            console.log(response);
         })
     }
 }

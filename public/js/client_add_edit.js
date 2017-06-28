@@ -2,11 +2,26 @@
 
 //Form buttons and boxes elements
 let addInterrogationBtn = document.getElementById('add-interrogation-btn');
-let witnessPosCheckbox = document.getElementById('witness-pos-checkbox');
+let posCheckboxes = document.querySelectorAll('.pos-checkbox');
 
 //event listeners
 addInterrogationBtn.addEventListener('click', interrogationForm);
-witnessPosCheckbox.addEventListener('click', toggleWitnessPosition);
+
+/**
+ * We only want to control one marker at a time so we have to switch off/disable the others
+ * not to cause confusion.
+ */
+posCheckboxes.forEach((element) => {
+    element.addEventListener('click', (el) => {
+        posCheckboxes.forEach((e) => {
+            if (e !== el.target) { //thos was NOT clicked = toggle off
+                e.checked = false; //set it to unclicked
+                togglePositionInput(e); //run the function that will disable the input & marker
+            }
+        })
+        togglePositionInput(el.target); //clicked = toggle on/off.
+    })
+}, this);
 
 /**
  * Adds 2 form fields & a button at each call
@@ -33,21 +48,26 @@ function interrogationForm() {
     }, this);
 }
 
-function toggleWitnessPosition() {
-    let posbox = document.querySelectorAll('.witness-pos-box')
-    let helptext = document.getElementById('witness-pos-helper');
-    if (witnessPosCheckbox.checked) {
-        posbox.forEach((el) => {
-            console.log(el.readonly);
+/**
+ * Enables/disables position input for witness/palme - sends the target marker to map function
+ */
+function togglePositionInput(element) {
+    let target = element.getAttribute(['data-target'])
+    let targetBox = document.querySelectorAll('.' + target + '-pos-box')
+    let helptext = document.getElementById(target + '-pos-helper');
+    if (element.checked) {
+        targetBox.forEach((el) => {
             el.removeAttribute('readonly')
         })
-        addWitnessMarker();
+        activateMarker(target);
+        helptext.classList.remove('hidden');
 
     } else {
-        posbox.forEach((el) => {
+        targetBox.forEach((el) => {
             el.setAttribute('readonly', 'readonly');
+            helptext.classList.add('hidden');
         })
-        removeWitnessMarker();
+        deactivateMarker(target);
     }
-    helptext.classList.toggle('hidden');
+
 }

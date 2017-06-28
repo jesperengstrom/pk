@@ -37,6 +37,10 @@ function ApiController() {
                 'interrogations': constructArray(),
                 'followUp': reqBody['follow-up']
             },
+            'opLocation': {
+                'lat': reqBody['palme-lat'],
+                'lng': reqBody['palme-lng']
+            },
             'created': {
                 'date': Date.now(),
                 'user': req.user.username
