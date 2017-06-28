@@ -47,15 +47,25 @@ function ApiController() {
             }
         };
 
+        /**
+         * Formats arrs as [{date, url}, {date:url}] 
+         * since req.body delivers multi entries as [date, date] [url, url]
+         * single entries are just sent as 'date', 'url', so need to handle them too
+         */
         function constructArray() {
-            let array = [];
-            for (let i in reqBody['interr-date']) {
-                array.push({
-                    'interrDate': new Date(reqBody['interr-date'][i]),
-                    'protocolUrl': reqBody['protocol-url'][i]
-                })
+            if (typeof reqBody['interr-date'] === 'string') {
+                let singlearray
+                return [{ 'interrDate': new Date(reqBody['interr-date']), 'protocolUrl': reqBody['protocol-url'] }]
+            } else {
+                let array = [];
+                for (let i in reqBody['interr-date']) {
+                    array.push({
+                        'interrDate': new Date(reqBody['interr-date'][i]),
+                        'protocolUrl': reqBody['protocol-url'][i]
+                    })
+                }
+                return array;
             }
-            return array;
         }
 
         Pk.create(addObj), (err, res) => {
