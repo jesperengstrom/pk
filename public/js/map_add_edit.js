@@ -1,8 +1,27 @@
 //remove these from global namespace, yet it has to be available for all map functions
 var map;
 const mordplatsen = { lat: 59.336615, lng: 18.062775 };
-var obsMarker;
-var witnessMarker;
+
+//Form buttons and boxes elements
+var getAadressBtn = document.getElementById('coords-to-adress-btn');
+var getCoordsBtn = document.getElementById('adress-to-coords-btn');
+var adressbox = document.getElementById('adress-box');
+
+//active objects
+var activeBox, activeMarker;
+
+//objects that can be made active
+var obsMarker, witnessMarker, palmeMarker;
+var obsBox = { lat: document.getElementById('obs-lat-box'), lng: document.getElementById('obs-lng-box') }
+
+var defaultSettings = (function defset() { //self invoking but can also be called, restores defaults
+    activeBox = obsBox;
+    activeMarker = obsMarker;
+    return defset;
+})();
+
+getAadressBtn.addEventListener('click', getAdress);
+getCoordsBtn.addEventListener('click', getCoords);
 
 function initMap() {
 
@@ -22,7 +41,7 @@ function initMap() {
     });
 
     // Static marker
-    const mainMarker = new google.maps.Marker({
+    const murderMarker = new google.maps.Marker({
         map: map,
         position: mordplatsen,
         title: 'Mordplatsen',
@@ -31,15 +50,15 @@ function initMap() {
 
     map.addListener('click', (e) => {
         placeMarker(e.latLng, map, false);
-        latBox.value = e.latLng.lat();
-        lngBox.value = e.latLng.lng();
+        activeBox.lat.value = e.latLng.lat();
+        activeBox.lng.value = e.latLng.lng();
     });
 
     //EDIT FORM function
     //Displays inherited marker 
     google.maps.event.addListenerOnce(map, 'idle', () => {
-        if (latBox.value && lngBox.value) { //If page loads with something in coords-fields --> display on map
-            return placeMarker({ lat: parseFloat(latBox.value), lng: parseFloat(lngBox.value) }, map, true);
+        if (activeBox.lat.value && activeBox.lng.value) { //If page loads with something in coords-fields --> display on map
+            return placeMarker({ lat: parseFloat(activeBox.lat.value), lng: parseFloat(activeBox.lng.value) }, map, true);
         }
         return;
     })
@@ -49,46 +68,55 @@ function initMap() {
  * 
  * @param {object} location 
  * @param {map} map 
- * @param {bool} pan - Pan to marker location after adding it?
+ * @param {bool} pan - If pan to marker location after adding it
  */
-function placeMarker(location, map, pan) {
-    if (typeof obsMarker === 'object') { //if we don't have a marker, place it
-        obsMarker.setPosition(location);
-    } else { //if we have a marker, move it
+function placeMarker(location, map, pan) { //Should have option to not always effect active marker (set position btn)
+    if (typeof activeMarker === 'object') { //if we have a marker, move it 
+        activeMarker.setPosition(location);
+    } else { //if we don't have a marker, place it
         obsMarker = new google.maps.Marker({
             position: location,
             map: map,
             title: 'Observation',
             label: { text: 'Observation' }
         });
+        activeMarker = obsMarker;
     }
     if (pan) {
         map.panTo(location);
     }
-
 }
 
-//Form buttons and boxes elements
-let getAadressBtn = document.getElementById('coords-to-adress-btn');
-let getCoordsBtn = document.getElementById('adress-to-coords-btn');
+/**
+ * creates new marker obj + input box refs and sets them as active
+ */
+function addWitnessMarker() {
+    let witnessBox = { lat: document.getElementById('witness-lat-box'), lng: document.getElementById('witness-lng-box') }
+    activeBox = witnessBox;
 
-let adressbox = document.getElementById('adress-box');
-let latBox = document.getElementById('obs-lat-box');
-let lngBox = document.getElementById('obs-lng-box');
+    witnessMarker = new google.maps.Marker({
+        position: mordplatsen,
+        map: map,
+        title: 'Vittne',
+        label: { text: 'Vittne' }
+    });
+    activeMarker = witnessMarker;
+}
 
-getAadressBtn.addEventListener('click', getAdress);
-getCoordsBtn.addEventListener('click', getCoords);
+function removeWitnessMarker() {
+    defaultSettings();
+}
 
 
 /**
  * Takes coords from latlong fields --> gets adress from Google geocode -> places it in adress field
  */
 function getAdress() {
-    if (!lngBox.value || !latBox.value) {
+    if (!obsBox.lat.value || !obsBox.lng.value) {
         alert('Det finns inga koordinater att hämta!')
     } else {
         getAadressBtn.firstChild.data = 'Hämtar...';
-        geoCode('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + latBox.value + ',' + lngBox.value, (response) => {
+        geoCode('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + obsBox.lat.value + ',' + obsBox.lng.value, (response) => {
             let street = response.results["0"].address_components[1].long_name;
             let streetno = response.results["0"].address_components["0"].long_name;
             adressbox.value = street + " " + streetno;
@@ -109,8 +137,8 @@ function getCoords() {
         geoCode('http://maps.google.com/maps/api/geocode/json?address=' + adress, (response) => {
             let lat = response.results["0"].geometry.location.lat;
             let lng = response.results["0"].geometry.location.lng;
-            latBox.value = lat;
-            lngBox.value = lng;
+            obsBox.lat.value = lat;
+            obsBox.lng.value = lng;
             placeMarker({ lat: lat, lng: lng }, map, true); //also places it on map
 
             getCoordsBtn.firstChild.data = 'Sätt koordinater';
@@ -136,19 +164,4 @@ function geoCode(url, callback) {
             alert('Fel vid hämtning! ' + err.statusText);
         }
     })
-}
-
-function addWitnessMarker() {
-    witnessMarker = new google.maps.Marker({
-        position: mordplatsen,
-        map: map,
-        title: 'Vittne',
-        label: { text: 'Vittne' }
-    });
-
-}
-
-function removeWitnessMarker() {
-    witnessMarker.setMap(null)
-
 }
