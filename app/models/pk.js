@@ -4,7 +4,7 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-const categories = ['Mordkvällen', 'Walkie Talkie', 'Möjlig övervakare', 'Förföljare', 'Grand', 'Gamla Stan', 'bil'];
+const tags = ['Mordkvällen', 'Walkie Talkie', 'Möjlig övervakare', 'Förföljare', 'Grand', 'Gamla Stan', 'Bil'];
 
 var pkSchema = new Schema({
     title: {
@@ -87,10 +87,10 @@ var pkSchema = new Schema({
     other: {
         type: String
     },
-    categories: [{
+    tags: [{
         type: String,
         // required: true,
-        enum: categories
+        enum: tags
     }],
     sources: [{
         name: {

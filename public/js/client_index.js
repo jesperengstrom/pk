@@ -58,7 +58,7 @@ function displayFullObs(res) {
                 </tr>
                 <tr>
                     <th scope="row">Vittne:</th>
-                    <td><a href="#" data-query="witness.name=${res.witness.name}">${res.witness.name}</a></td>
+                    <td><a href="/search?witness=${res.witness.name}" data-query="witness.name=${res.witness.name}">${res.witness.name}</a></td>
                 </tr>
                 ${renderTr('Observation',res.observation.summary)}
                 ${renderTr('Signalement', res.observation.description)}
@@ -70,6 +70,7 @@ function displayFullObs(res) {
                 ${renderProtocolArray()}
                 ${renderTr('Polisens uppföljning mm', res.policeContacts.followUp)}
                 ${renderTr('Övrigt', res.other)}
+                ${renderTags()}
                 ${renderSourceArray()}
             </tbody>
         </table>
@@ -115,6 +116,15 @@ function displayFullObs(res) {
             result += `</ul></td>`;
             return result;
         }
+        return result;
+    }
+
+    function renderTags() {
+        let result = `<th scope="row">Taggar:</th><td>`;
+        res.tags.forEach((el) => {
+            return result += `<span class="badge badge-default"><a class="white-link" href="/search?tags=${el}" target="_blank">${el}</a></span> `
+        })
+        result += `</td>`
         return result;
     }
 }

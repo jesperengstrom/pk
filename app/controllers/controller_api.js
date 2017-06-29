@@ -44,6 +44,7 @@ function ApiController() {
                 }
             },
             'other': reqBody.other,
+            'tags': reqBody.tags,
             'sources': constructSourceArray(),
             'created': {
                 'date': Date.now(),

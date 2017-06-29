@@ -66,6 +66,21 @@ ul {
 }
 
 
+/*links*/
+
+.white-link {
+    color: white;
+}
+
+.white-link:hover {
+    color: white;
+}
+
+.white-link:visited {
+    color: white;
+}
+
+
 /*Timeline*/
 
 .timeline-axis-text {
