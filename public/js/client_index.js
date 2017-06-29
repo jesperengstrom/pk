@@ -67,8 +67,10 @@ function displayFullObs(res) {
                     <td>${typeof res.policeContacts.calledIn == 'string' ? dateFormat(new Date(res.policeContacts.calledIn), 'isoDate') : '-'}</td>
                 </tr>
                 ${renderTr('Antal kända förhör', res.policeContacts.numInterrogations)}
-                ${renderArray()}
+                ${renderProtocolArray()}
                 ${renderTr('Polisens uppföljning mm', res.policeContacts.followUp)}
+                ${renderTr('Övrigt', res.other)}
+                ${renderSourceArray()}
             </tbody>
         </table>
         ${renderFootnote()}`;
@@ -88,14 +90,31 @@ function displayFullObs(res) {
         return `<tr><th scope="row">` + key + `:</th><td>${value || '-'}</td></tr>`;
     }
 
-    function renderArray() {
-        if (res.policeContacts.interrogations.length > 0) {
-            let result = `<th scope="row">Förhörsprotokoll:</th><td><ul>`;
-            res.policeContacts.interrogations.forEach((el) => {
-                result += `<li><a href="${el.protocolUrl}" target="_blank">${dateFormat(new Date(el.interrDate), 'isoDate')}</a></li>`;
+    function renderProtocolArray() {
+        let result = ``;
+        if (res.policeContacts.protocols.length > 0) {
+            result += `<th scope="row">Förhörsprotokoll:</th><td><ul>`;
+            res.policeContacts.protocols.forEach((el) => {
+                result += `<li><a href="${el.url}" target="_blank">${dateFormat(new Date(el.date), 'isoDate')}</a></li>`;
             })
             result += `</ul></td>`;
             return result;
         }
+        return result;
+    }
+    //refactor 2 combine this & above?
+    function renderSourceArray() {
+        let result = ``;
+        if (res.sources.length > 0) {
+            result += `<th scope="row">Källor:</th><td><ul>`;
+            res.sources.forEach((el) => {
+                if (el.url) {
+                    result += `<li><a href="${el.url}" target="_blank">${el.name}</a></li>`;
+                } else result += `<li>${el.name}`;
+            })
+            result += `</ul></td>`;
+            return result;
+        }
+        return result;
     }
 }

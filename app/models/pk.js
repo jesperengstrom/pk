@@ -4,7 +4,7 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-const categories = ['Walkie Talkie', 'Förföljare', 'Grand', 'Gamla Stan'];
+const categories = ['Mordkvällen', 'Walkie Talkie', 'Möjlig övervakare', 'Förföljare', 'Grand', 'Gamla Stan', 'bil'];
 
 var pkSchema = new Schema({
     title: {
@@ -63,10 +63,10 @@ var pkSchema = new Schema({
             type: Number
         },
         protocols: [{
-            protocolDate: {
+            date: {
                 type: Date
             },
-            protocolUrl: {
+            url: {
                 type: String
             }
         }],
@@ -84,6 +84,9 @@ var pkSchema = new Schema({
             }
         }
     },
+    other: {
+        type: String
+    },
     categories: [{
         type: String,
         // required: true,
@@ -98,9 +101,6 @@ var pkSchema = new Schema({
             type: String,
         }
     }],
-    other: {
-        type: String
-    },
     created: {
         date: {
             type: Date

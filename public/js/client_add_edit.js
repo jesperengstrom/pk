@@ -40,11 +40,11 @@ function addSourceFields(target) {
         newfield.innerHTML = `<label for="protocol-date" class="mr-2">Förhörsdatum:</label>
                             <input type="date" name="protocol-date" min="1986-02-28" class="form-control col-sm-3 mr-2" required pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))">`;
     } else {
-        newfield.innerHTML = `<label for="source-title" class="mr-2">Källa:</label>
-                                <input type="text" name="source-title" class="form-control col-sm-3 mr-2" required>`;
+        newfield.innerHTML = `<label for="source-name" class="mr-2">Källa:</label>
+                                <input type="text" name="source-name" class="form-control col-sm-5 mr-2" required>`;
     }
     newfield.innerHTML += `<label for="${target}-url" class="mr-2">URL-länk:</label>
-                <input type="url" name="${target}-url" class="form-control col-sm-3 mr-2" required pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*)(?::\d{2,})?(?:[\/?#]\S*)?$">
+                <input type="url" name="${target}-url" class="form-control col-sm-3 mr-2" ${target === 'protocol' ? 'required' : ''} pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*)(?::\d{2,})?(?:[\/?#]\S*)?$">
                 <button type="button" class="btn btn-sm btn-danger mr-2 remove-${target}-btn">Ta bort</button>
                 `;
 

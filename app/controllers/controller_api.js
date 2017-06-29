@@ -34,7 +34,7 @@ function ApiController() {
             'policeContacts': {
                 'calledIn': reqBody['called-in'] === "" ? null : new Date(reqBody['called-in']),
                 'numInterrogations': reqBody['num-interrogations'],
-                'protocols': constructArray(),
+                'protocols': constructProtcolArray(),
                 'followUp': reqBody['follow-up']
             },
             'opLocation': {
@@ -43,6 +43,8 @@ function ApiController() {
                     'lng': reqBody['palme-lng']
                 }
             },
+            'other': reqBody.other,
+            'sources': constructSourceArray(),
             'created': {
                 'date': Date.now(),
                 'user': req.user.username
@@ -58,16 +60,30 @@ function ApiController() {
          * since req.body delivers multi entries as [date, date] [url, url]
          * single entries are just sent as 'date', 'url', so need to handle them too
          */
-        function constructArray() {
+        function constructProtcolArray() {
             if (typeof reqBody['protocol-date'] === 'string') {
-                let singlearray
-                return [{ 'protocolDate': new Date(reqBody['protocol-date']), 'protocolUrl': reqBody['protocol-url'] }]
+                return [{ 'date': new Date(reqBody['protocol-date']), 'url': reqBody['protocol-url'] }]
             } else {
                 let array = [];
                 for (let i in reqBody['protocol-date']) {
                     array.push({
-                        'protocolDate': new Date(reqBody['protocol-date'][i]),
-                        'protocolUrl': reqBody['protocol-url'][i]
+                        'date': new Date(reqBody['protocol-date'][i]),
+                        'url': reqBody['protocol-url'][i]
+                    })
+                }
+                return array;
+            }
+        }
+        //refactor 2 combine this & above?
+        function constructSourceArray() {
+            if (typeof reqBody['source-name'] === 'string') {
+                return [{ 'name': reqBody['source-name'], 'url': reqBody['source-url'] || null }]
+            } else {
+                let array = [];
+                for (let i in reqBody['source-name']) {
+                    array.push({
+                        'name': reqBody['source-name'][i],
+                        'url': reqBody['source-url'][i] || null
                     })
                 }
                 return array;
