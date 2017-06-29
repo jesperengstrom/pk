@@ -34,12 +34,14 @@ function ApiController() {
             'policeContacts': {
                 'calledIn': reqBody['called-in'] === "" ? null : new Date(reqBody['called-in']),
                 'numInterrogations': reqBody['num-interrogations'],
-                'interrogations': constructArray(),
+                'protocols': constructArray(),
                 'followUp': reqBody['follow-up']
             },
             'opLocation': {
-                'lat': reqBody['palme-lat'],
-                'lng': reqBody['palme-lng']
+                'coords': {
+                    'lat': reqBody['palme-lat'],
+                    'lng': reqBody['palme-lng']
+                }
             },
             'created': {
                 'date': Date.now(),
@@ -57,14 +59,14 @@ function ApiController() {
          * single entries are just sent as 'date', 'url', so need to handle them too
          */
         function constructArray() {
-            if (typeof reqBody['interr-date'] === 'string') {
+            if (typeof reqBody['protocol-date'] === 'string') {
                 let singlearray
-                return [{ 'interrDate': new Date(reqBody['interr-date']), 'protocolUrl': reqBody['protocol-url'] }]
+                return [{ 'protocolDate': new Date(reqBody['protocol-date']), 'protocolUrl': reqBody['protocol-url'] }]
             } else {
                 let array = [];
-                for (let i in reqBody['interr-date']) {
+                for (let i in reqBody['protocol-date']) {
                     array.push({
-                        'interrDate': new Date(reqBody['interr-date'][i]),
+                        'protocolDate': new Date(reqBody['protocol-date'][i]),
                         'protocolUrl': reqBody['protocol-url'][i]
                     })
                 }

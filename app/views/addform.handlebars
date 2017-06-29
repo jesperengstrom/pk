@@ -52,7 +52,7 @@
                     <small class="form-text text-muted hidden" id="witness-pos-helper">En ny markör syns nu på kartan och du flyttar den genom att klicka på kartan. För att återgå till att styra markören för observationen och låsa vittnets position, klicka bort kryssrutan här ovanför.</small>
                 </div>
                 <label for="obs-summary">Observationen:</label>
-                <textarea name="obs-summary" class="form-control" rows="5" required></textarea>
+                <textarea name="obs-summary" class="form-control" rows="8" required></textarea>
                 <small class="form-text text-muted"></small>
                 <label for="description">Signalement:</label>
                 <textarea name="description" class="form-control" rows="2" required></textarea>
@@ -65,13 +65,13 @@
                 <label for="num-interrogations" class="mr-2">Antal kända förhör:</label>
                 <input type="number" name="num-interrogations" step="1" class="form-control col-sm-1 mr-2">
             </div>    
-            <button type="button" id="add-interrogation-btn" class="btn btn-primary mt-2 mr-2">Lägg till förhör</button>
+            <button type="button" id="add-protocol-btn" data-target="protocol" class="btn btn-primary mt-2 mr-2">Lägg till förhör</button>
             <small class="form-text text-muted mb-4">Klicka för att lägga till länk till ett förhör.</small>
-            <div class="form-group" id="interrogation-container">
+            <div class="form-group" id="protocol-container">
             </div>
             <div class="form-group">
                 <label for="follow-up">Polisens uppföljning mm:</label>
-                <textarea name="follow-up" class="form-control" rows="2"></textarea>
+                <textarea name="follow-up" class="form-control" rows="4"></textarea>
                 <small class="form-text text-muted">T.ex polisens kontroll av tipset, bemötande, förklaringar till observationen eller annat som kan vara relevant i sammanhanget.</small>
             </div>
             <div class="form-text mb-2"><strong>Palme:</strong></div>
@@ -89,7 +89,14 @@
                     <small class="form-text text-muted hidden" id="palme-pos-helper">En ny markör syns nu på kartan och du flyttar den genom att klicka på kartan. För att återgå till att styra markören för observationen och låsa Palmes position, klicka bort kryssrutan här ovanför.</small>
                 </div>
             </div>
+            <div class="form-text mb-2"><strong>Källor:</strong></div>
             <div class="form-group">
+                <small class="form-text text-muted my-3">Klicka nedan för att lägga till en källa. Uppgifterna på denna sida ska gå att kontrollera med hjälp av källor. De kan också fungera som relevant vidareläsning. En källa kan vara en länkar eller referenser till tidningsartiklar, tv-program eller sidhänvisningar i böcker. En källa kan inte vara en anonym post på ett forum. Förhörsprotokoll med vittnet bifogas längre upp på sidan.</small>
+                <button type="button" id="add-source-btn" data-target="source" class="btn btn-primary mt-2 mb-3">Lägg till källa</button>
+                <div class="form-group" id="source-container">
+                </div>
+            </div>
+            <div class="form-group mt-3">
                 <button type="submit" class="btn btn-danger">Skicka</button>
             </div>
         </form>

@@ -62,8 +62,8 @@ var pkSchema = new Schema({
         numInterrogations: {
             type: Number
         },
-        interrogations: [{
-            interrDate: {
+        protocols: [{
+            protocolDate: {
                 type: Date
             },
             protocolUrl: {
@@ -75,11 +75,13 @@ var pkSchema = new Schema({
         }
     },
     opLocation: {
-        lat: {
-            type: Number
-        },
-        lng: {
-            type: Number
+        coords: {
+            lat: {
+                type: Number
+            },
+            lng: {
+                type: Number
+            }
         }
     },
     categories: [{
