@@ -94,11 +94,11 @@ function displayFullObs(res) {
     function renderProtocolArray() {
         let result = ``;
         if (res.policeContacts.protocols.length > 0) {
-            result += `<th scope="row">Förhörsprotokoll:</th><td><ul>`;
+            result += `<tr><th scope="row">Förhörsprotokoll:</th><td><ul>`;
             res.policeContacts.protocols.forEach((el) => {
                 result += `<li><a href="${el.url}" target="_blank">${dateFormat(new Date(el.date), 'isoDate')}</a></li>`;
             })
-            result += `</ul></td>`;
+            result += `</ul></td></tr>`;
             return result;
         }
         return result;
@@ -107,24 +107,24 @@ function displayFullObs(res) {
     function renderSourceArray() {
         let result = ``;
         if (res.sources.length > 0) {
-            result += `<th scope="row">Källor:</th><td><ul>`;
+            result += `<tr><th scope="row">Källor:</th><td><ul>`;
             res.sources.forEach((el) => {
                 if (el.url) {
                     result += `<li><a href="${el.url}" target="_blank">${el.name}</a></li>`;
                 } else result += `<li>${el.name}`;
             })
-            result += `</ul></td>`;
+            result += `</ul></td></tr>`;
             return result;
         }
         return result;
     }
 
     function renderTags() {
-        let result = `<th scope="row">Taggar:</th><td>`;
+        let result = `<tr><th scope="row">Taggar:</th><td>`;
         res.tags.forEach((el) => {
             return result += `<span class="badge badge-default"><a class="white-link" href="/search?tags=${el}" target="_blank">${el}</a></span> `
         })
-        result += `</td>`
+        result += `</td></tr>`
         return result;
     }
 }

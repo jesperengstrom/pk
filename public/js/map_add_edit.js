@@ -109,13 +109,22 @@ function placeMarker(location, map, pan) { //Should have option to not always ef
  * displays target marker obj + input box refs and sets all as active
  */
 function activateMarker(target) {
+    activeBox = { lat: document.getElementById(target + '-lat-box'), lng: document.getElementById(target + '-lng-box') }
+
     target === 'witness' ? activeMarker = witnessMarker : activeMarker = palmeMarker;
     if (!activeMarker.moved) { //if we haven't moved marker previously...
-        activeMarker.setPosition(obsMarker === undefined ? mordplatsen : obsMarker.getPosition()); //place it at observation if it's defined, else mordplatsen
+        if (activeBox.lat.value && activeBox.lng.value) { //check if we're maybe on the edit page and there's an inherited value
+            console.log('theres something in the box, lets move marker there');
+            activeMarker.setPosition({ lat: parseFloat(activeBox.lat.value), lng: parseFloat(activeBox.lng.value) })
+        } else {
+            console.log('no previous value, fallback locations')
+            activeMarker.setPosition(obsMarker === undefined ? mordplatsen : obsMarker.getPosition()); //place it at observation if it's defined, else mordplatsen
+        }
         activeMarker.moved = true; //and say we've moved it, else it will reset on next check.
+
     }
     activeMarker.setMap(map);
-    activeBox = { lat: document.getElementById(target + '-lat-box'), lng: document.getElementById(target + '-lng-box') }
+
 
 }
 
