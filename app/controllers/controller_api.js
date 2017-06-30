@@ -7,89 +7,17 @@ function ApiController() {
     const ObjectId = require('mongodb').ObjectID;
 
     this.addDoc = (req) => {
-        console.log(req.body)
         let reqBody = req.body;
+        let addObj = makePkObj(reqBody);
 
-        let addObj = {
-            'title': reqBody.title,
-            'obsLocation': {
-                'adress': reqBody.adress,
-                'coords': {
-                    'lat': reqBody['obs-lat'],
-                    'lng': reqBody['obs-lng']
-                }
-            },
-            'obsDate': new Date(reqBody['obs-date'] + " " + reqBody['obs-time']),
-            'witness': {
-                'name': reqBody['witness-name'],
-                'coords': {
-                    'lat': reqBody['witness-lat'],
-                    'lng': reqBody['witness-lng']
-                }
-            },
-            'observation': {
-                'summary': reqBody['obs-summary'],
-                'description': reqBody.description
-            },
-            'policeContacts': {
-                'calledIn': reqBody['called-in'] === "" ? null : new Date(reqBody['called-in']),
-                'numInterrogations': reqBody['num-interrogations'],
-                'protocols': constructProtcolArray(),
-                'followUp': reqBody['follow-up']
-            },
-            'opLocation': {
-                'coords': {
-                    'lat': reqBody['palme-lat'],
-                    'lng': reqBody['palme-lng']
-                }
-            },
-            'other': reqBody.other,
-            'tags': reqBody.tags,
-            'sources': constructSourceArray(),
-            'created': {
-                'date': Date.now(),
-                'user': req.user.username
-            },
-            'updated': {
-                'date': null,
-                'user': null
-            }
+        addObj.created = {
+            'date': Date.now(),
+            'user': req.user.username
         };
-
-        /**
-         * Formats arrs as [{date, url}, {date:url}] 
-         * since req.body delivers multi entries as [date, date] [url, url]
-         * single entries are just sent as 'date', 'url', so need to handle them too
-         */
-        function constructProtcolArray() {
-            if (typeof reqBody['protocol-date'] === 'string') {
-                return [{ 'date': new Date(reqBody['protocol-date']), 'url': reqBody['protocol-url'] }]
-            } else {
-                let array = [];
-                for (let i in reqBody['protocol-date']) {
-                    array.push({
-                        'date': new Date(reqBody['protocol-date'][i]),
-                        'url': reqBody['protocol-url'][i]
-                    })
-                }
-                return array;
-            }
-        }
-        //refactor 2 combine this & above?
-        function constructSourceArray() {
-            if (typeof reqBody['source-name'] === 'string') {
-                return [{ 'name': reqBody['source-name'], 'url': reqBody['source-url'] || null }]
-            } else {
-                let array = [];
-                for (let i in reqBody['source-name']) {
-                    array.push({
-                        'name': reqBody['source-name'][i],
-                        'url': reqBody['source-url'][i] || null
-                    })
-                }
-                return array;
-            }
-        }
+        addObj.updated = {
+            'date': null,
+            'user': null
+        };
 
         Pk.create(addObj), (err, res) => {
             if (err) throw err;
@@ -97,34 +25,21 @@ function ApiController() {
     }
 
     this.updateDoc = (req) => {
-        let reqBody = req.body,
-            id = req.query.id,
-            title = reqBody.title,
-            obsDate = new Date(reqBody['obs-date'] + " " + reqBody['obs-time']),
-            adress = reqBody.adress,
-            lat = reqBody.lat,
-            lng = reqBody.lng,
-            user = req.user.username,
-            updated = Date.now();
-        Pk.update({ _id: ObjectId(id) }, {
-            'title': title,
-            'obsDate': obsDate,
-            'obsLocation': {
-                'adress': adress,
-                'coords': {
-                    'lat': lat,
-                    'lng': lng
-                }
-            },
-            'updated': {
-                'date': updated,
-                'user': user
-            }
-        }, (err, result) => {
+        let reqBody = req.body;
+        let updateObj = makePkObj(reqBody);
+        updateObj.updated = {
+            'date': Date.now(),
+            'user': req.user.username
+        };
+
+        let id = req.query.id;
+
+        Pk.update({ _id: ObjectId(id) }, updateObj, (err, result) => {
             if (err) throw err;
             console.log('Updated PK: ', result);
         })
     }
+
 
     //The list of docs used to render timeline & map
     this.getDocList = (req, res) => {
@@ -179,3 +94,85 @@ function ApiController() {
 }
 
 module.exports = ApiController;
+
+/**
+ * Returns a formatted Pk db object for create & update
+ * @param {object} reqBody 
+ */
+function makePkObj(reqBody) {
+    return {
+        'title': reqBody.title,
+        'obsLocation': {
+            'adress': reqBody.adress,
+            'coords': {
+                'lat': reqBody['obs-lat'],
+                'lng': reqBody['obs-lng']
+            }
+        },
+        'obsDate': new Date(reqBody['obs-date'] + " " + reqBody['obs-time']),
+        'witness': {
+            'name': reqBody['witness-name'],
+            'coords': {
+                'lat': reqBody['witness-lat'],
+                'lng': reqBody['witness-lng']
+            }
+        },
+        'observation': {
+            'summary': reqBody['obs-summary'],
+            'description': reqBody.description
+        },
+        'policeContacts': {
+            'calledIn': reqBody['called-in'] === "" ? null : new Date(reqBody['called-in']),
+            'numInterrogations': reqBody['num-interrogations'],
+            'protocols': constructProtcolArray(),
+            'followUp': reqBody['follow-up']
+        },
+        'opLocation': {
+            'coords': {
+                'lat': reqBody['palme-lat'],
+                'lng': reqBody['palme-lng']
+            }
+        },
+        'other': reqBody.other,
+        'tags': reqBody.tags,
+        'sources': constructSourceArray()
+    };
+
+    //makePkObj helper functions: 
+
+    /**
+     * Formats protocol arrs as [{date, url}, {date:url}] 
+     * since req.body delivers multi entries as [date, date] [url, url]
+     * single entries are just sent as 'date', 'url', so need to handle them too
+     */
+    function constructProtcolArray() {
+        if (typeof reqBody['protocol-date'] === 'string') {
+            return [{ 'date': new Date(reqBody['protocol-date']), 'url': reqBody['protocol-url'] }]
+        } else {
+            let array = [];
+            for (let i in reqBody['protocol-date']) {
+                array.push({
+                    'date': new Date(reqBody['protocol-date'][i]),
+                    'url': reqBody['protocol-url'][i]
+                })
+            }
+            return array;
+        }
+    }
+
+    //refactor 2 combine this & above?
+    function constructSourceArray() {
+        if (typeof reqBody['source-name'] === 'string') {
+            return [{ 'name': reqBody['source-name'], 'url': reqBody['source-url'] || null }]
+        } else {
+            let array = [];
+            for (let i in reqBody['source-name']) {
+                array.push({
+                    'name': reqBody['source-name'][i],
+                    'url': reqBody['source-url'][i] || null
+                })
+            }
+            return array;
+        }
+    }
+}

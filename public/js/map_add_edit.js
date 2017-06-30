@@ -118,21 +118,21 @@ function activateMarker(target) {
             activeMarker.setPosition({ lat: parseFloat(activeBox.lat.value), lng: parseFloat(activeBox.lng.value) })
         } else {
             console.log('no previous value, fallback locations')
-            activeMarker.setPosition(obsMarker === undefined ? mordplatsen : obsMarker.getPosition()); //place it at observation if it's defined, else mordplatsen
+            activeMarker.setPosition(obsMarker === undefined ? mordplatsen : obsMarker.getPosition()); //else place it at observation if it's defined, else mordplatsen
         }
         activeMarker.moved = true; //and say we've moved it, else it will reset on next check.
 
     }
     activeMarker.setMap(map);
-
-
+    map.panTo(activeMarker.getPosition()); //... and pan to it
 }
 
 /**
- * Sets observation as default marker
+ * Sets observation as default marker + pans back to it
  */
 function deactivateMarker() {
     defaultSettings();
+    map.panTo(activeMarker.getPosition());
 }
 
 

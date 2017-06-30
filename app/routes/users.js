@@ -45,10 +45,9 @@ router.get('/editform', (req, res) => {
     userController.getPost(id, (post) => {
         let params = userController.renderParams(req.flash('error'), req.user, 'Redigera post');
         params.form = post[0]; //saving the db result in my render params
-
         params.form.categoryHtml = renderTagsHtml();
         //parsing the fucking date back to form, creating new props
-        params.form.parsedObsdate = dateFormat(post[0].obsDdate, 'isoDate')
+        params.form.parsedObsdate = dateFormat(post[0].obsDate, 'isoDate')
         params.form.parsedObstime = dateFormat(post[0].obsDate, 'isoTime')
         params.form.parsedCalledindate = dateFormat(post[0].policeContacts.calledIn, 'isoDate')
         params.form.parsedProtocols = [];
