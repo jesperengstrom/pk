@@ -80,8 +80,8 @@ function storeObs(observations) {
         }
     }
     //calling page-specfic functions undefined on other pages
-    if (typeof createMarkers !== 'undefined') {
-        createMarkers(); //...now we have the coords -> do markers
+    if (typeof createObsMarkers !== 'undefined') {
+        createObsMarkers(); //...now we have the coords -> do markers
     }
     if (typeof renderlist !== 'undefined') {
         renderlist(); //.. or render edit obs list

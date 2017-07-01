@@ -1,35 +1,15 @@
-//check or uncheck 'show all box'
-document.addEventListener('DOMContentLoaded', checkboxCheck);
+document.addEventListener('DOMContentLoaded', allmarkersCheckbox); //check or uncheck 'show all box'
 
 /**
- * Monitors display all markers or not
- */
-function checkboxCheck() {
-    const markerBox = document.querySelector('#all-markers');
-    if (pkSettings.showAllMarkers) {
-        markerBox.checked = true;
-    }
-    if (!pkSettings.showAllMarkers) {
-        markerBox.checked = false;
-    }
-
-    markerBox.onchange = () => { //listen for changes & change setting / toggle view
-        pkSettings.showAllMarkers = markerBox.checked;
-        if (typeof(Storage) !== 'undefined') {
-            localStorage.setItem('allMarkers', markerBox.checked); //saving this setting in local storage
-        }
-        toggleMarkers();
-    }
-}
-
-/**
+ * is called when timeline is ready
  * displays marker + full observation on click
  */
 function timelineClick() {
     let places = document.querySelectorAll('.observation-link').forEach((el) => {
         el.addEventListener('click', () => {
             let id = el.getAttribute('data-id');
-            showMarker(id);
+            showObsMarker(id);
+            hideWitnessMarker();
             ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs);
         })
     })
@@ -40,6 +20,13 @@ function timelineClick() {
  * @param {object} res - ajax response
  */
 function displayFullObs(res) {
+
+    //the props object tells us if we should create event listeners for these objects
+    fullObsProps = {
+        witnessCoords: false,
+        opCoords: false
+    };
+
     //changes the URL to include id - to enable linking 
     window.history.pushState(null, "", "/observation?id=" + res._id); //need to handle GET requests to this adress
 
@@ -49,6 +36,7 @@ function displayFullObs(res) {
 
     obsContent.innerHTML =
         `<h2>${res.title}</h2>
+        ${renderTags()}
         <table class="table mt-4" id="fullpost-table">
             <tbody>
                 ${renderTr('Plats', res.obsLocation.adress)}
@@ -56,10 +44,7 @@ function displayFullObs(res) {
                     <th scope="row">Tidpunkt:</td>
                     <td>${dateFormat(obsDatetime, 'isoDate')} kl ${dateFormat(obsDatetime, 'isoTimeShort')}</td>
                 </tr>
-                <tr>
-                    <th scope="row">Vittne:</th>
-                    <td><a href="/search?witness=${res.witness.name}" data-query="witness.name=${res.witness.name}">${res.witness.name}</a></td>
-                </tr>
+                ${renderWitness('Vittnet', res.witness)}
                 ${renderTr('Observation',res.observation.summary)}
                 ${renderTr('Signalement', res.observation.description)}
                 <tr>
@@ -70,7 +55,6 @@ function displayFullObs(res) {
                 ${renderProtocolArray()}
                 ${renderTr('Polisens uppföljning mm', res.policeContacts.followUp)}
                 ${renderTr('Övrigt', res.other)}
-                ${renderTags()}
                 ${renderSourceArray()}
             </tbody>
         </table>
@@ -120,11 +104,64 @@ function displayFullObs(res) {
     }
 
     function renderTags() {
-        let result = `<tr><th scope="row">Taggar:</th><td>`;
+        let result = `<p>`;
         res.tags.forEach((el) => {
-            return result += `<span class="badge badge-default"><a class="white-link" href="/search?tags=${el}" target="_blank">${el}</a></span> `
+            return result += `<span class="badge badge-default mt-3"><a class="white-link" href="/search?tags=${el}" target="_blank">${el}</a></span> `
         })
-        result += `</td></tr>`
+        result += `</p>`
         return result;
+    }
+
+    function renderWitness() {
+        let result = `<tr>
+                    <th scope="row">Vittne:</th>
+                    <td><a href="/search?witness=${res.witness.name}" data-query="witness.name=${res.witness.name}">${res.witness.name}</a>`;
+        if (res.witness.coords.lat) {
+            fullObsProps.witnessCoords = true;
+            result += `<div id="witness-container">
+                            <div class="form-check mt-2">
+                                <label class="form-check-label">
+                                    <input id="witness-coords-checkbox" class="form-check-input" type="checkbox" data-lat="${res.witness.coords.lat}" data-lng=${res.witness.coords.lng}> Visa vittnets placering på kartan
+                                </label>
+                            </div>
+                            <button class="btn btn-sm btn-primary mt-3" id="witness-streetview" data-lat="${res.witness.coords.lat}" data-lng=${res.witness.coords.lng}>Visa i Street View</button>
+                        </div>`;
+        }
+        result += `</td></tr>`;
+        return result;
+    }
+
+    //add event listeners for checboxes & buttons in fullpost section
+    if (fullObsProps.witnessCoords) {
+        document.getElementById('witness-coords-checkbox').addEventListener('click', (el) => {
+            if (el.target.checked) showWitnessMarker(el.target);
+            else hideWitnessMarker()
+        })
+        document.getElementById('witness-streetview').addEventListener('click', (el) => {
+            showStreetView(el.target)
+        })
+    }
+
+
+}
+
+/**
+ * Monitors setting display all markers or not
+ */
+function allmarkersCheckbox() {
+    const markerBox = document.querySelector('#all-markers');
+    if (pkSettings.showAllMarkers) {
+        markerBox.checked = true;
+    }
+    if (!pkSettings.showAllMarkers) {
+        markerBox.checked = false;
+    }
+
+    markerBox.onchange = () => { //listen for changes & change setting / toggle view
+        pkSettings.showAllMarkers = markerBox.checked;
+        if (typeof(Storage) !== 'undefined') {
+            localStorage.setItem('allMarkers', markerBox.checked); //saving this setting in local storage
+        }
+        toggleObsMarkers();
     }
 }

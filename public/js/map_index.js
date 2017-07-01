@@ -1,6 +1,7 @@
 //remove these from global namespace, yet it has to be available for all map functions
 var map;
 var markers = [];
+var witnessMarker;
 const mordplatsen = { lat: 59.336615, lng: 18.062775 };
 
 function initMap() {
@@ -27,12 +28,20 @@ function initMap() {
         title: 'Mordplatsen',
         label: { text: 'Mordplatsen' }
     });
+
+    witnessMarker = new google.maps.Marker({
+        map: null,
+        title: 'Vittne',
+        label: { text: 'Vittne' },
+        animation: google.maps.Animation.DROP
+    });
+
 }
 
 /**
  * Creates all the markers when obs-array is available
  */
-function createMarkers() {
+function createObsMarkers() {
     var onMap;
     pkSettings.showAllMarkers ? onMap = map : onMap = null; //displaying them on map or not depending on setting
     obs.forEach((el) => {
@@ -42,7 +51,7 @@ function createMarkers() {
                 lat: el.obsLocation.coords.lat,
                 lng: el.obsLocation.coords.lng
             },
-            title: el.title,
+            title: "Observation " + el.title,
             marker_id: el._id,
             // label: { text: title },
         });
@@ -57,10 +66,10 @@ function createMarkers() {
 }
 
 /**
- * Displaying one marker (id match) on the map - if option:all not set
+ * Displaying one obs marker (id match) on the map - if checkbox option: all not set
  * @param {string} id 
  */
-function showMarker(id) {
+function showObsMarker(id) {
     markers.forEach((el) => {
         if (!pkSettings.showAllMarkers) {
             el.setMap(null);
@@ -78,9 +87,9 @@ function showMarker(id) {
 }
 
 /**
- * Shows or hides all markers
+ * Called on checkbox click in nav bar
  */
-function toggleMarkers() {
+function toggleObsMarkers() {
     let i = 0;
     markers.forEach((el) => {
         if (!pkSettings.showAllMarkers) {
@@ -94,4 +103,31 @@ function toggleMarkers() {
             map.panTo(mordplatsen);
         }
     })
+}
+
+/**
+ * called on checkbox click in full obs section
+ * @param {DOM element} target - contains coords as data-attr
+ * @param {bool} hide - when we click another item, just hide it
+ */
+function showWitnessMarker(target) {
+    witnessMarker.setPosition({
+        lat: parseFloat(target.getAttribute('data-lat')),
+        lng: parseFloat(target.getAttribute('data-lng'))
+    })
+    witnessMarker.setAnimation(google.maps.Animation.DROP)
+    witnessMarker.setMap(map)
+}
+
+function hideWitnessMarker() {
+    witnessMarker.setMap(null);
+}
+
+function showStreetView(target) {
+    let panorama = map.getStreetView();
+    panorama.setPosition({
+        lat: parseFloat(target.getAttribute('data-lat')),
+        lng: parseFloat(target.getAttribute('data-lng'))
+    });
+    panorama.setVisible(true);
 }

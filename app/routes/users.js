@@ -39,8 +39,8 @@ router.get('/editlist', userController.isLoggedIn, (req, res) => {
     res.render('editlist', params);
 });
 
-// router.get('/editform', userController.isLoggedIn, (req, res) => {
-router.get('/editform', (req, res) => {
+router.get('/editform', userController.isLoggedIn, (req, res) => {
+    // router.get('/editform', (req, res) => {
     let id = req.query.id;
     userController.getPost(id, (post) => {
         let params = userController.renderParams(req.flash('error'), req.user, 'Redigera post');
