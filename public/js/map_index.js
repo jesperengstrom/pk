@@ -36,6 +36,13 @@ function initMap() {
         animation: google.maps.Animation.DROP
     });
 
+    opMarker = new google.maps.Marker({
+        map: null,
+        title: 'Olof Palme',
+        label: { text: 'Olof Palme' },
+        animation: google.maps.Animation.DROP
+    });
+
 }
 
 /**
@@ -59,6 +66,8 @@ function createObsMarkers() {
         //Makes the labels clickable
         newMarker.addListener('click', () => {
             map.panTo(newMarker.position)
+            hideContextMarker('witnessLocation');
+            hideContextMarker('opLocation');
             let id = newMarker.marker_id;
             ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs);
         });
@@ -107,27 +116,44 @@ function toggleObsMarkers() {
 
 /**
  * called on checkbox click in full obs section
- * @param {DOM element} target - contains coords as data-attr
- * @param {bool} hide - when we click another item, just hide it
+ * @param {DOM element} el - contains coords as data-attr
+ * @param {string} target - which of the 2 markers we target
  */
-function showWitnessMarker(target) {
-    witnessMarker.setPosition({
-        lat: parseFloat(target.getAttribute('data-lat')),
-        lng: parseFloat(target.getAttribute('data-lng'))
+function showContextMarker(el, target) {
+    let activeMarker;
+    target === 'witnessLocation' ? activeMarker = witnessMarker : activeMarker = opMarker;
+    activeMarker.setPosition({
+        lat: parseFloat(el.getAttribute('data-lat')),
+        lng: parseFloat(el.getAttribute('data-lng'))
     })
-    witnessMarker.setAnimation(google.maps.Animation.DROP)
-    witnessMarker.setMap(map)
+    activeMarker.setAnimation(google.maps.Animation.DROP)
+    activeMarker.setMap(map)
 }
 
-function hideWitnessMarker() {
-    witnessMarker.setMap(null);
+function hideContextMarker(target) {
+    let activeMarker;
+    target === 'witnessLocation' ? activeMarker = witnessMarker : activeMarker = opMarker;
+    activeMarker.setMap(null);
 }
 
+/**
+ * Toggles street view and calculates the heading between two markers
+ * @param {DOM element} target 
+ */
 function showStreetView(target) {
+    var witnessLoc = new google.maps.LatLng(parseFloat(target.getAttribute('data-witnesslat')), parseFloat(target.getAttribute('data-witnesslng')));
+    var obsLoc = new google.maps.LatLng(parseFloat(target.getAttribute('data-obslat')), parseFloat(target.getAttribute('data-obslng')));
+
     let panorama = map.getStreetView();
-    panorama.setPosition({
-        lat: parseFloat(target.getAttribute('data-lat')),
-        lng: parseFloat(target.getAttribute('data-lng'))
+    panorama.setPosition(witnessLoc);
+
+    //calculates where the camera is aimed (from our witness to the observation)
+    let heading = google.maps.geometry.spherical.computeHeading(witnessLoc, obsLoc);
+
+    panorama.setPov({
+        heading: heading,
+        pitch: 0,
+        zoom: 1
     });
     panorama.setVisible(true);
 }

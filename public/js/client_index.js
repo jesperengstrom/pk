@@ -9,7 +9,8 @@ function timelineClick() {
         el.addEventListener('click', () => {
             let id = el.getAttribute('data-id');
             showObsMarker(id);
-            hideWitnessMarker();
+            hideContextMarker('witnessLocation');
+            hideContextMarker('opLocation')
             ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs);
         })
     })
@@ -54,6 +55,7 @@ function displayFullObs(res) {
                 ${renderTr('Antal kända förhör', res.policeContacts.numInterrogations)}
                 ${renderProtocolArray()}
                 ${renderTr('Polisens uppföljning mm', res.policeContacts.followUp)}
+                ${renderOpLocation()}
                 ${renderTr('Övrigt', res.other)}
                 ${renderSourceArray()}
             </tbody>
@@ -71,10 +73,12 @@ function displayFullObs(res) {
         return footer;
     }
 
+    //plain table row
     function renderTr(key, value) {
         return `<tr><th scope="row">` + key + `:</th><td>${value || '-'}</td></tr>`;
     }
 
+    //interrogation protocol ul list
     function renderProtocolArray() {
         let result = ``;
         if (res.policeContacts.protocols.length > 0) {
@@ -103,6 +107,7 @@ function displayFullObs(res) {
         return result;
     }
 
+    //tags
     function renderTags() {
         let result = `<p>`;
         res.tags.forEach((el) => {
@@ -112,6 +117,7 @@ function displayFullObs(res) {
         return result;
     }
 
+    //witness checkbox + button
     function renderWitness() {
         let result = `<tr>
                     <th scope="row">Vittne:</th>
@@ -121,47 +127,68 @@ function displayFullObs(res) {
             result += `<div id="witness-container">
                             <div class="form-check mt-2">
                                 <label class="form-check-label">
-                                    <input id="witness-coords-checkbox" class="form-check-input" type="checkbox" data-lat="${res.witness.coords.lat}" data-lng=${res.witness.coords.lng}> Visa vittnets placering på kartan
+                                    <input id="witness-coords-checkbox" class="form-check-input context-marker" data-target="witnessLocation" type="checkbox" data-lat="${res.witness.coords.lat}" data-lng=${res.witness.coords.lng}> Visa vittnets placering på kartan
                                 </label>
                             </div>
-                            <button class="btn btn-sm btn-primary mt-3" id="witness-streetview" data-lat="${res.witness.coords.lat}" data-lng=${res.witness.coords.lng}>Visa i Street View</button>
+                            <button class="btn btn-sm btn-primary mt-3" id="witness-streetview" data-witnesslat="${res.witness.coords.lat}" data-witnesslng=${res.witness.coords.lng} data-obslat="${res.obsLocation.coords.lat}" data-obslng=${res.obsLocation.coords.lng}>Visa i Street View</button>
                         </div>`;
         }
         result += `</td></tr>`;
         return result;
     }
 
+    //op location checkbox
+    function renderOpLocation() {
+        let result = ``;
+        if (res.opLocation.coords.lat) {
+            fullObsProps.opCoords = true;
+            result += `<tr>
+                        <th scope="row">Olof Palme:</th>
+                        <td>
+                            <div class="form-check mt-2">
+                                <label class="form-check-label">
+                                    <input id="op-coords-checkbox" class="form-check-input context-marker" type="checkbox" data-target="opLocation" data-lat="${res.opLocation.coords.lat}" data-lng=${res.opLocation.coords.lng}> Visa Olof Palmes placering vid tidpunkten.
+                                </label>
+                            </div>
+                        </td>
+                        </tr>`;
+        }
+        return result;
+    }
+
     //add event listeners for checboxes & buttons in fullpost section
-    if (fullObsProps.witnessCoords) {
-        document.getElementById('witness-coords-checkbox').addEventListener('click', (el) => {
-            if (el.target.checked) showWitnessMarker(el.target);
-            else hideWitnessMarker()
-        })
+    if (fullObsProps.witnessCoords || fullObsProps.opCoords) {
+        document.querySelectorAll('.context-marker').forEach((element) => {
+            addEventListener('click', (el) => {
+                let target = el.target.getAttribute('data-target');
+                if (el.target.checked) showContextMarker(el.target, target);
+                else hideContextMarker(target)
+            })
+        }, this);
+
         document.getElementById('witness-streetview').addEventListener('click', (el) => {
             showStreetView(el.target)
         })
     }
 
-
-}
-
-/**
- * Monitors setting display all markers or not
- */
-function allmarkersCheckbox() {
-    const markerBox = document.querySelector('#all-markers');
-    if (pkSettings.showAllMarkers) {
-        markerBox.checked = true;
-    }
-    if (!pkSettings.showAllMarkers) {
-        markerBox.checked = false;
-    }
-
-    markerBox.onchange = () => { //listen for changes & change setting / toggle view
-        pkSettings.showAllMarkers = markerBox.checked;
-        if (typeof(Storage) !== 'undefined') {
-            localStorage.setItem('allMarkers', markerBox.checked); //saving this setting in local storage
+    /**
+     * Monitors setting display all markers or not
+     */
+    function allmarkersCheckbox() {
+        const markerBox = document.querySelector('#all-markers');
+        if (pkSettings.showAllMarkers) {
+            markerBox.checked = true;
         }
-        toggleObsMarkers();
+        if (!pkSettings.showAllMarkers) {
+            markerBox.checked = false;
+        }
+
+        markerBox.onchange = () => { //listen for changes & change setting / toggle view
+            pkSettings.showAllMarkers = markerBox.checked;
+            if (typeof(Storage) !== 'undefined') {
+                localStorage.setItem('allMarkers', markerBox.checked); //saving this setting in local storage
+            }
+            toggleObsMarkers();
+        }
     }
 }
