@@ -148,9 +148,9 @@ function displayFullObs(res) {
     function renderTags() {
         let result = `<p>`;
         res.tags.forEach((el) => {
-            return result += `<span class="badge badge-default mt-3"><a class="white-link" href="/search?tags=${el}" target="_blank">${el}</a></span> `
+            return result += `<span class="badge badge-default mt-3 mr-1"><span class="white-link">${el}</span></span>`;
         })
-        result += `</p>`
+        result += `</p>`;
         return result;
     }
 
@@ -158,7 +158,7 @@ function displayFullObs(res) {
     function renderWitness() {
         let result = `<tr>
                     <th scope="row">Vittne:</th>
-                    <td><a href="/search?witness=${res.witness.name}" data-query="witness.name=${res.witness.name}">${res.witness.name}</a>`;
+                    <td><p data-query="witness.name=${res.witness.name}">${res.witness.name}</p>`;
         if (res.witness.coords.lat) {
             fullObsProps.witnessCoords = true;
             result += `<div id="witness-container">
