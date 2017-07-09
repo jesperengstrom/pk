@@ -63,15 +63,16 @@ function createObsMarkers() {
             // label: { text: title },
         });
         markers.push(newMarker);
-        //Makes the labels clickable
-        newMarker.addListener('click', () => {
+        newMarker.addListener('click', () => { //Makes the labels clickable
             map.panTo(newMarker.position)
             hideContextMarker('witnessLocation');
             hideContextMarker('opLocation');
             let id = newMarker.marker_id;
-            ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs);
+            window.history.pushState(null, "", "/observation?id=" + id); //changes the URL to include id query string to full post
+            checkUrlParams();
         });
     })
+    checkUrlParams(); //obs in storage, markers pushed --> now we can render a full obs
 }
 
 /**

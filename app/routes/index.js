@@ -10,6 +10,11 @@ router.get('/', (req, res, next) => {
     res.render('index', params)
 })
 
+router.get('/observation', (req, res, next) => { //same as index but has url param for displaying a single obs...
+    let params = userController.renderParams(req.flash('error'), req.user, 'Hem', true);
+    res.render('index', params)
+})
+
 router.get('/about', (req, res, next) => {
     let params = userController.renderParams(req.flash('error'), req.user, 'Om');
     res.render('about', params)

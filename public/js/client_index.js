@@ -1,19 +1,59 @@
 document.addEventListener('DOMContentLoaded', allmarkersCheckbox); //check or uncheck 'show all box'
 
+
 /**
  * is called when timeline is ready
  * displays marker + full observation on click
  */
 function timelineClick() {
     let places = document.querySelectorAll('.observation-link').forEach((el) => {
-        el.addEventListener('click', () => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault(); //so we don't refresh the page
             let id = el.getAttribute('data-id');
-            showObsMarker(id);
+            // showObsMarker(id);
             hideContextMarker('witnessLocation');
             hideContextMarker('opLocation')
-            ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs);
+            window.history.pushState(null, "", "/observation?id=" + id); //changes the URL to include id query string to full post
+            checkUrlParams(); //then run the function that check what we should load into our full post-section
         })
     })
+}
+
+/**
+ * Runs on DOM-load & timeline/marker click. Checks url params to get the right content.
+ */
+function checkUrlParams() {
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('id')) { //if we have an 'id' param...
+        let id = urlParams.get('id');
+        showObsMarker(id);
+        ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs, displayError); //...we want to fetch that item and render it
+    }
+    if (urlParams.toString().length === 0) {
+        console.log('no params!')
+    }
+    //else.. we might have a search or filter param
+}
+
+/**
+ * Monitors checkbox 'display all markers' true/false
+ */
+function allmarkersCheckbox() {
+    const markerBox = document.querySelector('#all-markers');
+    if (pkSettings.showAllMarkers) { //gets stored setting from localstorage
+        markerBox.checked = true;
+    }
+    if (!pkSettings.showAllMarkers) {
+        markerBox.checked = false;
+    }
+
+    markerBox.onchange = () => { //listen for changes & change setting / toggle view
+        pkSettings.showAllMarkers = markerBox.checked;
+        if (typeof(Storage) !== 'undefined') {
+            localStorage.setItem('allMarkers', markerBox.checked); //saving this setting in local storage
+        }
+        toggleObsMarkers();
+    }
 }
 
 /**
@@ -27,9 +67,6 @@ function displayFullObs(res) {
         witnessCoords: false,
         opCoords: false
     };
-
-    //changes the URL to include id - to enable linking 
-    window.history.pushState(null, "", "/observation?id=" + res._id); //need to handle GET requests to this adress
 
     //Defined? --> parse date/fallback
     let obsDatetime = new Date(res.obsDate);
@@ -170,25 +207,18 @@ function displayFullObs(res) {
             showStreetView(el.target)
         })
     }
-
-    /**
-     * Monitors setting display all markers or not
-     */
-    function allmarkersCheckbox() {
-        const markerBox = document.querySelector('#all-markers');
-        if (pkSettings.showAllMarkers) {
-            markerBox.checked = true;
-        }
-        if (!pkSettings.showAllMarkers) {
-            markerBox.checked = false;
-        }
-
-        markerBox.onchange = () => { //listen for changes & change setting / toggle view
-            pkSettings.showAllMarkers = markerBox.checked;
-            if (typeof(Storage) !== 'undefined') {
-                localStorage.setItem('allMarkers', markerBox.checked); //saving this setting in local storage
-            }
-            toggleObsMarkers();
-        }
-    }
 }
+
+
+function displayError() {
+    let obsContent = document.querySelector('#obs-content');
+    obsContent.innerHTML = `<p>Sorry, hittade inte innehållet!<p/>`;
+}
+
+// //stolen from https://davidwalsh.name/query-string-javascript
+// function getUrlParameter(name) {
+//     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+//     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+//     var results = regex.exec(location.search);
+//     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+// };

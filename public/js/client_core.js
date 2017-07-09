@@ -44,16 +44,19 @@ function checkLatestUpdate(callback) {
  * @param {string} url 
  * @param {function} callback 
  */
-function ajaxRequest(method, url, callback) {
+function ajaxRequest(method, url, successCallback, failCallback) {
     $.ajax({
         method: method,
         url: url,
         dataType: 'json',
         success: (response) => {
-            callback(response);
+            successCallback(response);
         },
         error: (err) => {
             console.log('Error!', err.statusText);
+            if (failCallback) {
+                failCallback();
+            }
         }
     })
 }
