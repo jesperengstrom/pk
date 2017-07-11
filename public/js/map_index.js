@@ -7,18 +7,62 @@ const mordplatsen = { lat: 59.336615, lng: 18.062775 };
 function initMap() {
 
     //map options
-    var noBusiness = [{
-        featureType: 'poi.business',
-        elementType: 'labels',
-        stylers: [{ visibility: 'off' }]
-    }]
+    // var noBusiness = [{
+    //     featureType: 'poi.business',
+    //     elementType: 'labels',
+    //     stylers: [{ visibility: 'off' }]
+    // }]
+
+    function mapPin(color) {
+        return {
+            path: 'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
+            fillColor: color,
+            fillOpacity: 0.5,
+            strokeColor: '',
+            strokeWeight: 0,
+            scale: 0.8,
+            labelOrigin: new google.maps.Point(0, -25)
+        };
+    }
+
+    let dark = [{
+            "stylers": [{
+                    "hue": "#ff1a00"
+                },
+                {
+                    "invert_lightness": true
+                },
+                {
+                    "saturation": -100
+                },
+                {
+                    "lightness": 33
+                },
+                {
+                    "gamma": 0.6
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{
+                "color": "#2D333C"
+            }]
+        },
+        {
+            'featureType': 'poi.business',
+            'elementType': 'labels',
+            'stylers': [{ 'visibility': 'off' }]
+        }
+    ];
 
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('indexmap'), {
         center: mordplatsen,
         scrollwheel: false,
         zoom: 15,
-        styles: noBusiness
+        styles: dark
     });
 
     // Static marker
@@ -26,8 +70,15 @@ function initMap() {
         map: map,
         position: mordplatsen,
         title: 'Mordplatsen',
-        label: { text: 'Mordplatsen' }
+        icon: mapPin('red'),
+        label: {
+            fontFamily: 'Fontawesome',
+            text: '\uf05b',
+            color: 'white',
+        }
     });
+
+    // '#00CCBB'
 
     witnessMarker = new google.maps.Marker({
         map: null,
