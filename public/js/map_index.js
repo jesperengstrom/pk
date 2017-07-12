@@ -1,7 +1,7 @@
 //remove these from global namespace, yet it has to be available for all map functions
 var map;
 var markers = [];
-var witnessMarker;
+var witnessMarker, opMarker;
 const mordplatsen = { lat: 59.336615, lng: 18.062775 };
 
 function initMap() {
@@ -12,18 +12,6 @@ function initMap() {
     //     elementType: 'labels',
     //     stylers: [{ visibility: 'off' }]
     // }]
-
-    function mapPin(color) {
-        return {
-            path: 'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
-            fillColor: color,
-            fillOpacity: 0.5,
-            strokeColor: '',
-            strokeWeight: 0,
-            scale: 0.8,
-            labelOrigin: new google.maps.Point(0, -25)
-        };
-    }
 
     let dark = [{
             "stylers": [{
@@ -71,29 +59,49 @@ function initMap() {
         position: mordplatsen,
         title: 'Mordplatsen',
         icon: mapPin('red'),
-        label: {
-            fontFamily: 'Fontawesome',
-            text: '\uf05b',
-            color: 'white',
-        }
+        label: mapLabel('\uf0f9'),
+        clickable: false
     });
 
-    // '#00CCBB'
 
     witnessMarker = new google.maps.Marker({
         map: null,
         title: 'Vittne',
-        label: { text: 'Vittne' },
+        icon: mapPin('#00CCBB'),
+        label: mapLabel('\uf06e'),
+        clickable: false,
         animation: google.maps.Animation.DROP
     });
 
     opMarker = new google.maps.Marker({
         map: null,
         title: 'Olof Palme',
-        label: { text: 'Olof Palme' },
+        icon: mapPin('brown'),
+        label: mapLabel('\uf05b'),
+        clickable: false,
         animation: google.maps.Animation.DROP
     });
 
+}
+
+function mapPin(color) {
+    return {
+        path: 'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
+        fillColor: color,
+        fillOpacity: 0.6,
+        strokeColor: '',
+        strokeWeight: 0,
+        scale: 0.8,
+        labelOrigin: new google.maps.Point(0, -25)
+    };
+}
+
+function mapLabel(facode) {
+    return {
+        fontFamily: 'Fontawesome',
+        text: facode,
+        color: 'white',
+    }
 }
 
 /**
@@ -105,6 +113,8 @@ function createObsMarkers() {
     obs.forEach((el) => {
         var newMarker = new google.maps.Marker({
             map: onMap,
+            icon: mapPin('#086787'),
+            label: mapLabel('\uf183'),
             position: {
                 lat: el.obsLocation.coords.lat,
                 lng: el.obsLocation.coords.lng
