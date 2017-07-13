@@ -1,44 +1,59 @@
-<nav class="navbar navbar-toggleable-md navbar-light">
+<nav class="navbar navbar-toggleable-md navbar-light d-flex">
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <a class="navbar-brand" href="/">Palmekartan</a>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    {{#if index}}
     <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="/about">Om</a>
-      </li>
-      {{#if index}}
-        <div class="nav-item form-inline">
-          <label for="all-markers" class="navbar-text">Visa alla</label>
-          <input class="mr-1" type="checkbox" name="all-markers" id="all-markers">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="nabvarSettings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-cog" aria-hidden="true"></i> Inställningar
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarSettings">
+          <div class="dropdown-item form-inline d-flex flex-nowrap">
+            <input class="mr-1" type="checkbox" name="all-markers" id="all-markers">
+            <label for="all-markers" class="">Visa samtliga observationer på kartan</label>
+          </div>
         </div>
-      {{/if}}
-      {{#if loggedin}}
-      <li class="nav-item">
-        <a class="nav-link" href="/users/addform">Ny post</a>
       </li>
+    </ul>
+    {{/if}}
+    <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/users/editlist">Redigera post</a>
+        <a class="nav-link" href="/about">
+          <i class="fa fa-info-circle" aria-hidden="true"></i> Om
+        </a>
       </li>
-      {{#if admin}}
-      <li class="nav-item">
-        <a class="nav-link" href="/users/register">Ny användare</a>
+    {{#if loggedin}}
+    <ul class="navbar-nav">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+          Inloggad som {{username}}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarAdmin">
+          <a class="dropdown-item" href="/users/addform">Ny post</a>
+          <a class="dropdown-item" href="/users/editlist">Redigera post</a>
+          {{#if admin}}
+          <a class="dropdown-item" href="/users/register">Ny användare</a>
+          <a class="dropdown-item" href="/users/register">Hantera användare</a>
+          {{/if}}
+        </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/users/register">Hantera användare</a>
-      </li>
-      {{/if}}
-        <span class="navbar-text">Inloggad som {{username}}</span>
-      <li class="nav-item">
-        <a class="nav-link" href="/users/logout">Logga ut</a>
+      <li>
+        <a class="nav-link" href="/users/logout">
+          <i class="fa fa-key" aria-hidden="true"></i> 
+          Logga ut
+        </a>
       </li>
       {{else}}
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown mr-5">
         <a class="nav-link dropdown-toggle" href="/users/login" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-key" aria-hidden="true"></i> 
           Logga in
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <div class="dropdown-menu" id="login-dropdown" aria-labelledby="navbarDropdownMenuLink">
             <form action="/users/login" method="post" class="form-inline">
                 <div class="form-group dropdown-item">
                     <label for="username">Användarnamn</label>
@@ -49,12 +64,12 @@
                     <input type="password" class="form-control mr-sm-2" name="password" />
                 </div>
                 <div class="dropdown-item">
-                    <input type="submit" class="form-control btn btn-outline-info btn-sm my-2 my-sm-0" value="Logga in" />
+                    <input type="submit" class="form-control btn btn-secondary btn-sm my-2 my-sm-0" value="Logga in" />
                 </div>
             </form>
         </div>
-        </li>
-      {{/if}}
+      </li>
+    {{/if}}
     </ul>
   </div>
 </nav>

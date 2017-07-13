@@ -4,6 +4,7 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
+    font-family: 'Droid Serif', serif;
 }
 
 .full-height {
@@ -30,8 +31,21 @@ body {
 
 /*Bootstrap tweaks*/
 
+.badge {
+    font-weight: initial;
+    line-height: initial;
+}
+
+.badge-default {
+    background-color: #468e9f;
+}
+
 
 /*navbar*/
+
+.navbar-light .navbar-nav .nav-link {
+    color: rgba(0, 0, 0, .7);
+}
 
 .navbar-text {
     padding: 0.5em;
@@ -47,15 +61,17 @@ body {
     background-color: #fff;
 }
 
+#login-dropdown {
+    right: 0;
+    left: initial;
+}
+
 
 /*table*/
 
-
-/*
-#fullpost-table {
-    table-layout: fixed;
-    word-wrap: break-word;
-}*/
+th {
+    font-family: 'Roboto', sans-serif;
+}
 
 
 /*list*/
@@ -67,6 +83,17 @@ ul {
 
 
 /*links*/
+
+.dropdown-menu a:hover {
+    text-decoration: underline !important;
+}
+
+#fullpost-table a,
+a:focus,
+a:hover {
+    color: #292b2c;
+    text-decoration: underline;
+}
 
 .white-link {
     color: white;
@@ -83,12 +110,24 @@ ul {
 
 /*Timeline*/
 
+.timeline-content {
+    font-family: 'Roboto', sans-serif;
+}
+
 .timeline-axis-text {
     font-size: 10px;
 }
 
+div.timeline-event {
+    background-color: #f8f8f8;
+    border-color: #747474;
+    color: #636C72;
+    margin-top: 2px;
+}
+
 div.timeline-event-box {
     border-radius: 0px;
+    box-shadow: -3px 2px 7px 0px rgba(0, 0, 0, 0.05);
 }
 
 div.timeline-event-content {
@@ -96,9 +135,8 @@ div.timeline-event-content {
 }
 
 a.observation-link {
-    color: black;
+    color: rgba(0, 0, 0, .7);
     font-size: 12px;
-    font-weight: bold;
 }
 
 
