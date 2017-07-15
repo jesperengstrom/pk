@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', allmarkersCheckbox); //check or uncheck 'show all box'
 
+//global vars to make sure all parts are loaded before we load full obs
+var timelineReady = false;
+var obsPlaced = false;
 
 /**
  * is called when timeline is ready
@@ -21,18 +24,31 @@ function timelineClick() {
 
 /**
  * Runs on DOM-load & timeline/marker click. Checks url params to get the right content.
+ * Needs to make sure everything is loaded to highlight elements properly
  */
 function checkUrlParams() {
-    var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('id')) { //if we have an 'id' param...
-        let id = urlParams.get('id');
-        showObsMarker(id);
-        ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs, displayError); //...we want to fetch that item and render it
+    if (timelineReady && obsPlaced) {
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('id')) { //if we have an 'id' param...
+            let id = urlParams.get('id');
+            highlightTimeline(id);
+            showObsMarker(id);
+            ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs, displayError); //...we want to fetch that item and render it
+        }
+        if (urlParams.toString().length === 0) {
+            console.log('no params!')
+        }
+        //else.. we might have a search or filter param
     }
-    if (urlParams.toString().length === 0) {
-        console.log('no params!')
-    }
-    //else.. we might have a search or filter param
+}
+
+function highlightTimeline(id) {
+    document.querySelectorAll('.observation-link').forEach((el) => {
+        el.parentElement.parentElement.classList.remove('highlight-timeline');
+        if (el.getAttribute('data-id') === id) {
+            el.parentElement.parentElement.classList.add('highlight-timeline');
+        };
+    });
 }
 
 /**
@@ -119,9 +135,9 @@ function displayFullObs(res) {
     function renderProtocolArray() {
         let result = ``;
         if (res.policeContacts.protocols.length > 0) {
-            result += `<tr><th scope="row">Förhörsprotokoll:</th><td><ul>`;
+            result += `<tr><th scope="row">Förhörsprotokoll:</th><td><ul class="fa-ul">`;
             res.policeContacts.protocols.forEach((el) => {
-                result += `<li><a href="${el.url}" target="_blank">${dateFormat(new Date(el.date), 'isoDate')}</a></li>`;
+                result += `<li><i class="fa-li fa fa-check-square"></i><a href="${el.url}" target="_blank">${dateFormat(new Date(el.date), 'isoDate')}</a></li>`;
             })
             result += `</ul></td></tr>`;
             return result;
@@ -132,11 +148,11 @@ function displayFullObs(res) {
     function renderSourceArray() {
         let result = ``;
         if (res.sources.length > 0) {
-            result += `<tr><th scope="row">Källor:</th><td><ul>`;
+            result += `<tr><th scope="row">Källor:</th><td><ul class="fa-ul">`;
             res.sources.forEach((el) => {
                 if (el.url) {
-                    result += `<li><a href="${el.url}" target="_blank">${el.name}</a></li>`;
-                } else result += `<li>${el.name}`;
+                    result += `<li><i class="fa-li fa fa-check-square"></i><a href="${el.url}" target="_blank">${el.name}</a></li>`;
+                } else result += `<li><i class="fa-li fa fa-check-square"></i> ${el.name}`;
             })
             result += `</ul></td></tr>`;
             return result;

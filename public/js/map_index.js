@@ -50,7 +50,8 @@ function initMap() {
         center: mordplatsen,
         scrollwheel: false,
         zoom: 15,
-        styles: dark
+        styles: dark,
+        clickableIcons: false
     });
 
     // Static marker
@@ -133,6 +134,7 @@ function createObsMarkers() {
             checkUrlParams();
         });
     })
+    obsPlaced = true;
     checkUrlParams(); //obs in storage, markers pushed --> now we can render a full obs
 }
 
@@ -147,6 +149,8 @@ function showObsMarker(id) {
         }
         if (el.marker_id === id) {
             el.setMap(map);
+            // el.icon.scale = 1;
+            // el.icon.fillOpacity = 1;
             el.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(() => { el.setAnimation(null); }, 750);
             map.panTo(el.position);

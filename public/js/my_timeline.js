@@ -16,7 +16,6 @@ function drawVisualization() {
     //calling the functions that return the observations that we wanna insert
     data.addRows(insertObs());
 
-
     // specify options
     const options = {
         "width": "100%",
@@ -32,15 +31,20 @@ function drawVisualization() {
         // "style": "dot",
         "zoomMax": 31536000000,
         "zoomMin": 60000
-
     };
 
     // Instantiate our timeline object.
     var timeline = new links.Timeline(document.getElementById('mytimeline'));
+
     // Draw our timeline with the created data and options
     timeline.setOptions(options);
-    // listener 2 know when draw is ready -> create event listeners etc
-    google.visualization.events.addListener(timeline, 'ready', timelineClick);
+
+    // draw is ready -> create event listeners etc, set ready to true and check for url-params
+    google.visualization.events.addListener(timeline, 'ready', () => {
+        timelineClick();
+        timelineReady = true;
+        checkUrlParams();
+    });
     timeline.draw(data);
 }
 
@@ -49,8 +53,6 @@ function drawVisualization() {
  */
 function insertObs() {
     let rows = [];
-
-    //are all of these really necessary?
     obs.forEach((element) => {
         rows.push([element.obsDate, ,
             `<a href="" class="observation-link" data-id=${element._id}>${element.title}</a>`

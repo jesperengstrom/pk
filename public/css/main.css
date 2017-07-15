@@ -32,6 +32,7 @@ body {
 /*Bootstrap tweaks*/
 
 .badge {
+    font-family: 'Roboto', sans-serif;
     font-weight: initial;
     line-height: initial;
 }
@@ -128,6 +129,7 @@ div.timeline-event {
 div.timeline-event-box {
     border-radius: 0px;
     box-shadow: -3px 2px 7px 0px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
 }
 
 div.timeline-event-content {
@@ -139,11 +141,23 @@ a.observation-link {
     font-size: 12px;
 }
 
+.highlight-timeline {
+    font-weight: bold;
+    z-index: 999;
+    background-color: #f8edd3 !important;
+    transform: scale(1.1);
+}
+
 
 /*Observation window*/
 
+#indexmap {
+    resize: horizontal;
+}
+
 #obs-wrapper {
     overflow-y: scroll;
+    resize: horizontal;
 }
 
 
