@@ -30,7 +30,7 @@ function drawVisualization() {
         "showCurrentTime": false,
         // "style": "dot",
         "zoomMax": 31536000000,
-        "zoomMin": 60000
+        "zoomMin": 60000,
     };
 
     // Instantiate our timeline object.

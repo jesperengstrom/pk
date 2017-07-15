@@ -3,11 +3,10 @@
 //need to put this in a module
 const server = 'http://localhost:3000';
 var obs = [];
-var pkSettings = { showAllMarkers: JSON.parse(localStorage.allMarkers) || false }
+var pkSettings = { showAllMarkers: JSON.parse(localStorage.allMarkers) || true }
 var dbUpdated = '';
 
 //init 
-// $(document).ready(init);
 document.addEventListener('DOMContentLoaded', init);
 
 function init() {
@@ -20,7 +19,7 @@ function init() {
             storeObs(retrieved);
         } else {
             console.log('Nah, ' + sessionStorage.getItem('pk_updated') + ' is in storage, ajaxing');
-            ajaxRequest('GET', server + '/api/all', storeObs);
+            ajaxRequest('GET', server + '/api/all', 'json', storeObs);
         }
     });
 }
@@ -32,7 +31,7 @@ function init() {
 function checkLatestUpdate(callback) {
     console.log('checking latest version of pk db...')
     let checkUrl = server + '/api/lastupdated';
-    ajaxRequest('GET', checkUrl, (res) => {
+    ajaxRequest('GET', checkUrl, 'json', (res) => {
         console.log('was changed ' + res.timestamp)
         callback(res.timestamp);
     })
@@ -44,11 +43,11 @@ function checkLatestUpdate(callback) {
  * @param {string} url 
  * @param {function} callback 
  */
-function ajaxRequest(method, url, successCallback, failCallback) {
+function ajaxRequest(method, url, dataType, successCallback, failCallback) {
     $.ajax({
         method: method,
         url: url,
-        dataType: 'json',
+        dataType: dataType,
         success: (response) => {
             successCallback(response);
         },

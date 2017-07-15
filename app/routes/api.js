@@ -39,4 +39,9 @@ module.exports = function(app) {
     app.get('/api/lastupdated', (req, res) => {
         apiController.getLastPkUpdate(req, res);
     })
+
+    app.get('/api/about', (req, res) => {
+        // res.send('<h1>Hi!</h1>');
+        res.sendFile(process.cwd() + '/app/views/about.html')
+    })
 }

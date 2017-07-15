@@ -18,15 +18,15 @@
         </div>
       </li>
     </ul>
-    {{/if}}
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/about">
+        <a class="nav-link" href="" id="about-btn">
           <i class="fa fa-info-circle" aria-hidden="true"></i> Om
         </a>
       </li>
+    {{/if}}
     {{#if loggedin}}
-    <ul class="navbar-nav">
+    <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-user-circle-o" aria-hidden="true"></i>

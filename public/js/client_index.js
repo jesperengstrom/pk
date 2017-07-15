@@ -4,6 +4,14 @@ document.addEventListener('DOMContentLoaded', allmarkersCheckbox); //check or un
 var timelineReady = false;
 var obsPlaced = false;
 
+//renders about-text on nav-click
+document.getElementById('about-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.history.pushState(null, "", "/about")
+    checkUrlParams();
+
+})
+
 /**
  * is called when timeline is ready
  * displays marker + full observation on click
@@ -22,7 +30,8 @@ function timelineClick() {
 }
 
 /**
- * Runs on DOM-load & timeline/marker click. Checks url params to get the right content.
+ * Runs on DOM-load / timeline/marker click / 'about'-click. 
+ * Checks url params to get the right content.
  * Needs to make sure everything is loaded to highlight elements properly
  */
 function checkUrlParams() {
@@ -32,10 +41,10 @@ function checkUrlParams() {
             let id = urlParams.get('id');
             highlightTimeline(id);
             showObsMarker(id);
-            ajaxRequest('GET', server + '/api/search?id=' + id, displayFullObs, displayError); //...we want to fetch that item and render it
+            ajaxRequest('GET', server + '/api/search?id=' + id, 'json', displayFullObs, displayError); //...we want to fetch that item and render it
         }
-        if (urlParams.toString().length === 0) {
-            console.log('no params!')
+        if (urlParams.toString().length === 0 || window.location.pathname === "/about") {
+            ajaxRequest('GET', server + '/api/about', 'html', displayAbout, displayError);
         }
         //else.. we might have a search or filter param
     }
@@ -199,7 +208,7 @@ function displayFullObs(res) {
                         <td>
                             <div class="form-check mt-2">
                                 <label class="form-check-label">
-                                    <input id="op-coords-checkbox" class="form-check-input context-marker" type="checkbox" data-target="opLocation" data-lat="${res.opLocation.coords.lat}" data-lng=${res.opLocation.coords.lng}> Visa Olof Palmes placering vid tidpunkten.
+                                    <input id="op-coords-checkbox" class="form-check-input context-marker" type="checkbox" data-target="opLocation" data-lat="${res.opLocation.coords.lat}" data-lng=${res.opLocation.coords.lng}> Visa Olof Palmes placering vid tidpunkten
                                 </label>
                             </div>
                         </td>
@@ -228,6 +237,11 @@ function displayFullObs(res) {
 function displayError() {
     let obsContent = document.querySelector('#obs-content');
     obsContent.innerHTML = `<p>Sorry, hittade inte innehållet!<p/>`;
+}
+
+function displayAbout(res) {
+    let aboutContent = document.querySelector('#obs-content');
+    aboutContent.innerHTML = res;
 }
 
 // //stolen from https://davidwalsh.name/query-string-javascript

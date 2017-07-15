@@ -16,8 +16,8 @@ router.get('/observation', (req, res, next) => { //same as index but has url par
 })
 
 router.get('/about', (req, res, next) => {
-    let params = userController.renderParams(req.flash('error'), req.user, 'Om');
-    res.render('about', params)
+    let params = userController.renderParams(req.flash('error'), req.user, 'Om', true);
+    res.render('index', params)
 })
 
 module.exports = router;
