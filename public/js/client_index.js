@@ -13,7 +13,6 @@ function timelineClick() {
         el.addEventListener('click', (e) => {
             e.preventDefault(); //so we don't refresh the page
             let id = el.getAttribute('data-id');
-            // showObsMarker(id);
             hideContextMarker('witnessLocation');
             hideContextMarker('opLocation')
             window.history.pushState(null, "", "/observation?id=" + id); //changes the URL to include id query string to full post

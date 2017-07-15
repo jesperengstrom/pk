@@ -59,7 +59,7 @@ function initMap() {
         map: map,
         position: mordplatsen,
         title: 'Mordplatsen',
-        icon: mapPin('red'),
+        icon: mapPin('red', 0.8, 0.6),
         label: mapLabel('\uf0f9'),
         clickable: false
     });
@@ -68,7 +68,7 @@ function initMap() {
     witnessMarker = new google.maps.Marker({
         map: null,
         title: 'Vittne',
-        icon: mapPin('#00CCBB'),
+        icon: mapPin('#00CCBB', 0.8, 0.6),
         label: mapLabel('\uf06e'),
         clickable: false,
         animation: google.maps.Animation.DROP
@@ -77,7 +77,7 @@ function initMap() {
     opMarker = new google.maps.Marker({
         map: null,
         title: 'Olof Palme',
-        icon: mapPin('brown'),
+        icon: mapPin('brown', 0.8, 0.6),
         label: mapLabel('\uf05b'),
         clickable: false,
         animation: google.maps.Animation.DROP
@@ -85,14 +85,14 @@ function initMap() {
 
 }
 
-function mapPin(color) {
+function mapPin(color, scale, opac) {
     return {
         path: 'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
         fillColor: color,
-        fillOpacity: 0.6,
+        fillOpacity: opac,
         strokeColor: '',
         strokeWeight: 0,
-        scale: 0.8,
+        scale: scale,
         labelOrigin: new google.maps.Point(0, -25)
     };
 }
@@ -114,7 +114,7 @@ function createObsMarkers() {
     obs.forEach((el) => {
         var newMarker = new google.maps.Marker({
             map: onMap,
-            icon: mapPin('#086787'),
+            icon: mapPin('#086787', 0.8, 0.6),
             label: mapLabel('\uf183'),
             position: {
                 lat: el.obsLocation.coords.lat,
@@ -139,7 +139,7 @@ function createObsMarkers() {
 }
 
 /**
- * Displaying one obs marker (id match) on the map - if checkbox option: all not set
+ * Displaying / highlighting one obs marker (id match) on the map
  * @param {string} id 
  */
 function showObsMarker(id) {
@@ -149,14 +149,15 @@ function showObsMarker(id) {
         }
         if (el.marker_id === id) {
             el.setMap(map);
-            // el.icon.scale = 1;
-            // el.icon.fillOpacity = 1;
+            el.setOptions({ icon: mapPin('#086787', 1, 0.6) })
             el.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(() => { el.setAnimation(null); }, 750);
             map.panTo(el.position);
             if (!pkSettings.showAllMarkers) {
                 el.setAnimation(google.maps.Animation.DROP);
             }
+        } else {
+            el.setOptions({ icon: mapPin('#086787', 0.8, 0.3) })
         }
     }, this);
 }
