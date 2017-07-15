@@ -37,7 +37,7 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, '/app/views'));
 
 //hide warning message about promise
-mongoose.Promise = global.Promise;
+// mongoose.Promise = global.Promise; //removed for cloudnode
 //connect to db
 mongoose.connect(process.env.mongodb, (err) => {
     if (err) console.log('could not connect to db!', err);
