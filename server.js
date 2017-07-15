@@ -39,7 +39,7 @@ app.set('views', path.join(__dirname, '/app/views'));
 //hide warning message about promise
 mongoose.Promise = global.Promise;
 //connect to db
-mongoose.connect(process.env.DB_HOST, (err) => {
+mongoose.connect(process.env.mongodb, (err) => {
     if (err) console.log('could not connect to db!', err);
 })
 
@@ -101,7 +101,7 @@ app.use((err, req, res, next) => {
 });
 
 //listen
-const port = process.env.PORT || 3000;
+const port = process.env["app_port"] || 3000;
 app.listen(port, () => {
     console.log('listening to port ' + port);
 })
