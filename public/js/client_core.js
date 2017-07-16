@@ -51,7 +51,6 @@ function checkLatestUpdate(callback) {
  * @param {function} callback 
  */
 function ajaxRequest(method, url, dataType, successCallback, failCallback) {
-    console.log('ajax requesting to', url)
     $.ajax({
         method: method,
         url: url,

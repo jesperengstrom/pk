@@ -86,14 +86,14 @@ router.get('/editform', userController.isLoggedIn, (req, res) => {
 
 
 //ADMIN ROUTES
-// router.get('/register', userController.isAdmin, (req, res, next) => {
-router.get('/register', (req, res, next) => {
+router.get('/register', userController.isAdmin, (req, res, next) => {
+    // router.get('/register', (req, res, next) => {
     let params = userController.renderParams(req.flash('error'), req.user, 'Registrera användare');
     res.render('register', params);
 });
 
-// router.post('/register', userController.isAdmin, (req, res, next) => {
-router.post('/register', (req, res, next) => {
+router.post('/register', userController.isAdmin, (req, res, next) => {
+    // router.post('/register', (req, res, next) => {
     User.register(new User({ username: req.body.username }), req.body.password, (err, user) => {
         if (err) {
             req.flash('error', err.message)
