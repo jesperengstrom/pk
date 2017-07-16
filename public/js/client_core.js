@@ -17,11 +17,10 @@ var dbUpdated = '';
 document.addEventListener('DOMContentLoaded', init);
 
 function init() {
-    console.log('init!')
-        //check when db was updated first thing. Then decide if we use session storage or ajax.
+    //check when db was updated first thing. Then decide if we use session storage or ajax.
     checkLatestUpdate((updated) => {
         dbUpdated = updated;
-        if (dbUpdated === sessionStorage.getItem('pk_updated')) {
+        if (dbUpdated === sessionStorage.getItem('pk_updated') && dbUpdated !== null) {
             console.log(sessionStorage.getItem('pk_updated') + '  is in session storage, using that');
             let retrieved = JSON.parse(sessionStorage.getItem('obs'));
             storeObs(retrieved);

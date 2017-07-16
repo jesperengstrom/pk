@@ -53,10 +53,13 @@ function drawVisualization() {
  */
 function insertObs() {
     let rows = [];
-    obs.forEach((element) => {
-        rows.push([element.obsDate, ,
-            `<a href="" class="observation-link" data-id=${element._id}>${element.title}</a>`
-        ])
-    }, this);
+    if (obs !== null) {
+        obs.forEach((element) => {
+            rows.push([element.obsDate, ,
+                `<a href="" class="observation-link" data-id=${element._id}>${element.title}</a>`
+            ])
+        }, this);
+    } else console.log('obs was empty, could not place timeline items.')
+
     return rows;
 }

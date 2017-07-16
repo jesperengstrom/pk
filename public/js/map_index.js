@@ -111,29 +111,32 @@ function mapLabel(facode) {
 function createObsMarkers() {
     var onMap;
     pkSettings.showAllMarkers ? onMap = map : onMap = null; //displaying them on map or not depending on setting
-    obs.forEach((el) => {
-        var newMarker = new google.maps.Marker({
-            map: onMap,
-            icon: mapPin('#086787', 0.8, 0.6),
-            label: mapLabel('\uf183'),
-            position: {
-                lat: el.obsLocation.coords.lat,
-                lng: el.obsLocation.coords.lng
-            },
-            title: "Observation " + el.title,
-            marker_id: el._id,
-            // label: { text: title },
-        });
-        markers.push(newMarker);
-        newMarker.addListener('click', () => { //Makes the labels clickable
-            map.panTo(newMarker.position)
-            hideContextMarker('witnessLocation');
-            hideContextMarker('opLocation');
-            let id = newMarker.marker_id;
-            window.history.pushState(null, "", "/observation?id=" + id); //changes the URL to include id query string to full post
-            checkUrlParams();
-        });
-    })
+    if (obs !== null) {
+        obs.forEach((el) => {
+            var newMarker = new google.maps.Marker({
+                map: onMap,
+                icon: mapPin('#086787', 0.8, 0.6),
+                label: mapLabel('\uf183'),
+                position: {
+                    lat: el.obsLocation.coords.lat,
+                    lng: el.obsLocation.coords.lng
+                },
+                title: "Observation " + el.title,
+                marker_id: el._id,
+                // label: { text: title },
+            });
+            markers.push(newMarker);
+            newMarker.addListener('click', () => { //Makes the labels clickable
+                map.panTo(newMarker.position)
+                hideContextMarker('witnessLocation');
+                hideContextMarker('opLocation');
+                let id = newMarker.marker_id;
+                window.history.pushState(null, "", "/observation?id=" + id); //changes the URL to include id query string to full post
+                checkUrlParams();
+            });
+        })
+    } else console.log('obs was empty, could not place markers.');
+
     obsPlaced = true;
     checkUrlParams(); //obs in storage, markers pushed --> now we can render a full obs
 }
