@@ -43,6 +43,13 @@ mongoose.connect(process.env.mongodb, (err) => {
     if (err) console.log('could not connect to db!', err);
 })
 
+//allowing CORS
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
+
 //setting my static paths
 app.use('/client_assets', express.static(path.join(__dirname, 'client_assets')));
 app.use('/public', express.static(path.join(__dirname, '/public')));

@@ -1,7 +1,13 @@
 //Init function + those needed to get obs, regardless of page
 
 //need to put this in a module
-const server = 'http://localhost:3000';
+
+//dev
+// const server = 'http://localhost:3000';
+
+//production
+const server = 'http://palmekartan.cloudno.de';
+
 var obs = [];
 // var pkSettings = { showAllMarkers: JSON.parse(localStorage.allMarkers) || true }
 var pkSettings = { showAllMarkers: true }
