@@ -3,7 +3,8 @@
 //need to put this in a module
 const server = 'http://localhost:3000';
 var obs = [];
-var pkSettings = { showAllMarkers: JSON.parse(localStorage.allMarkers) || true }
+// var pkSettings = { showAllMarkers: JSON.parse(localStorage.allMarkers) || true }
+var pkSettings = { showAllMarkers: true }
 var dbUpdated = '';
 
 //init 
