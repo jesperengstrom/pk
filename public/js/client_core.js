@@ -10,7 +10,8 @@ var dbUpdated = '';
 document.addEventListener('DOMContentLoaded', init);
 
 function init() {
-    //check when db was updated first thing. Then decide if we use session storage or ajax.
+    console.log('init!')
+        //check when db was updated first thing. Then decide if we use session storage or ajax.
     checkLatestUpdate((updated) => {
         dbUpdated = updated;
         if (dbUpdated === sessionStorage.getItem('pk_updated')) {
@@ -44,6 +45,7 @@ function checkLatestUpdate(callback) {
  * @param {function} callback 
  */
 function ajaxRequest(method, url, dataType, successCallback, failCallback) {
+    console.log('ajax requesting to', url)
     $.ajax({
         method: method,
         url: url,
