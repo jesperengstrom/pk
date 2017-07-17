@@ -46,7 +46,7 @@ mongoose.connect(process.env.mongodb, (err) => {
     if (err) console.log('could not connect to db!', err);
 })
 
-app.use(cors())
+app.use(cors()); //remove this later?
 
 //setting my static paths
 app.use('/client_assets', express.static(path.join(__dirname, 'client_assets')));
