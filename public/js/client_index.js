@@ -143,9 +143,12 @@ function displayFullObs(res) {
     function renderProtocolArray() {
         let result = ``;
         if (res.policeContacts.protocols.length > 0) {
-            result += `<tr><th scope="row">Förhörsprotokoll:</th><td><ul class="fa-ul">`;
+            result += `<tr><th scope="row">Förhör:</th><td><ul class="fa-ul">`;
             res.policeContacts.protocols.forEach((el) => {
-                result += `<li><i class="fa-li fa fa-check-square"></i><a href="${el.url}" target="_blank">${dateFormat(new Date(el.date), 'isoDate')}</a></li>`;
+                if (el.url) {
+                    result += `<li><i class="fa-li fa fa-check-square"></i><a href="${el.url}" target="_blank">${dateFormat(new Date(el.date), 'isoDate')}</a></li>`;
+                } else result += `<li><i class="fa-li fa fa-check-square"></i>${dateFormat(new Date(el.date), 'isoDate')}</li>`;
+
             })
             result += `</ul></td></tr>`;
             return result;

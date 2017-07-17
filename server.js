@@ -15,6 +15,8 @@ const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
 
+const cors = require('cors')
+
 const routes = require('./app/routes/index');
 const userRoutes = require('./app/routes/users')
 const api = require('./app/routes/api')
@@ -43,6 +45,8 @@ app.set('views', path.join(__dirname, '/app/views'));
 mongoose.connect(process.env.mongodb, (err) => {
     if (err) console.log('could not connect to db!', err);
 })
+
+app.use(cors())
 
 //setting my static paths
 app.use('/client_assets', express.static(path.join(__dirname, 'client_assets')));
