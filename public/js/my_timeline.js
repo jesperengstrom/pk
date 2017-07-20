@@ -23,8 +23,8 @@ function drawVisualization() {
         "style": "box", // optional
         "axisOnTop": true,
         "selectable": false,
-        "min": [new Date(1986, 1, 01)],
-        "max": [new Date(1986, 2, 28)],
+        "min": new Date('1986-01-01'),
+        "max": new Date('1986-03-10'),
         "locale": "se_SE",
         "stackEvents": false,
         "showCurrentTime": false,
@@ -46,6 +46,8 @@ function drawVisualization() {
         checkUrlParams();
     });
     timeline.draw(data);
+    timeline.setVisibleChartRange(new Date("1986-01-01"), new Date('1986-03-10'))
+
 }
 
 /**
@@ -55,11 +57,15 @@ function insertObs() {
     let rows = [];
     if (obs !== null) {
         obs.forEach((element) => {
-            rows.push([element.obsDate, ,
+            rows.push([dateToUTC(element.obsDate), ,
                 `<a href="" class="observation-link" data-id=${element._id}>${element.title}</a>`
             ])
         }, this);
     } else console.log('obs was empty, could not place timeline items.')
 
     return rows;
+}
+
+function dateToUTC(date) {
+    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
 }

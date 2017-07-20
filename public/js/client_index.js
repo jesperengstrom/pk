@@ -115,7 +115,7 @@ function displayFullObs(res) {
                 </tr>
                 ${renderTr('Antal kända förhör', res.policeContacts.numInterrogations)}
                 ${renderProtocolArray()}
-                ${renderTr('Polisens uppföljning mm', res.policeContacts.followUp)}
+                ${renderTr('Polisens uppföljning', res.policeContacts.followUp)}
                 ${renderOpLocation()}
                 ${renderTr('Övrigt', res.other)}
                 ${renderSourceArray()}
