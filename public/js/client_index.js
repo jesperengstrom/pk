@@ -126,17 +126,20 @@ function displayFullObs(res) {
     //footnote
     function renderFootnote() {
         let footer = `<small>Skapad av 
-        ${res.created.user} ${dateFormat(new Date(res.created.date), 'isoDate')} 
-        kl ${dateFormat(res.created.date, 'isoTimeShort')}</small>`;
+        ${res.created.user} ${dateFormat(new Date(res.created.date), 'isoDateTwo')} 
+        kl ${dateFormat(res.created.date, 'isoTimeShortTwo')}</small>`;
         if (res.updated.user) {
-            footer += `<br><small>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDate')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShort')}</small>`;
+            footer += `<br><small>Senast uppdaterad av ${res.updated.user} ${dateFormat(new Date(res.updated.date), 'isoDateTwo')} kl ${dateFormat(new Date(res.updated.date), 'isoTimeShortTwo')}</small>`;
         }
         return footer;
     }
 
     //plain table row
     function renderTr(key, value) {
-        return `<tr><th scope="row">` + key + `:</th><td>${value || '-'}</td></tr>`;
+        if (value) {
+            return `<tr><th scope="row">` + key + `:</th><td>${value}</td></tr>`;
+        }
+        return ``;
     }
 
     //interrogation protocol ul list

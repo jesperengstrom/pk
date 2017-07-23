@@ -102,8 +102,10 @@ dateFormat.masks = {
     mediumTime: "h:MM:ss TT",
     longTime: "h:MM:ss TT Z",
     isoDate: "UTC:yyyy-mm-dd",
+    isoDateTwo: "yyyy-mm-dd",
     isoTime: "HH:MM:ss",
     isoTimeShort: "UTC:HH:MM",
+    isoTimeShortTwo: "HH:MM",
     isoDateTime: "yyyy-mm-dd'T'HH:MM:ss",
     isoDateTimeShort: "yyyy-mm-dd HH:MM",
     isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
