@@ -4,7 +4,7 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-const tags = ['Mordkvällen', 'Walkie Talkie', 'Möjlig övervakare', 'Förföljare', 'Grand', 'Gamla Stan', 'Bil'];
+const tags = ['Mordkvällen', 'Walkie Talkie', 'Förföljare', 'Grand', 'Gamla Stan', 'Bil'];
 
 var pkSchema = new Schema({
     title: {

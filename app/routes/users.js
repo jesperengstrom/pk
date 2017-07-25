@@ -64,7 +64,7 @@ router.get('/editform', userController.isLoggedIn, (req, res) => {
         function renderTagsHtml() {
             let match = false;
             let result = ``;
-            const tags = ['Mordkvällen', 'Walkie Talkie', 'Möjlig övervakare', 'Förföljare', 'Grand', 'Gamla Stan', 'Bil'];
+            const tags = ['Mordkvällen', 'Walkie Talkie', 'Förföljare', 'Grand', 'Gamla Stan', 'Bil'];
             tags.forEach((el) => {
                 result += `<div class="form-check form-check-inline"><label class="form-check-label">`;
                 params.form.tags.forEach((e) => {
