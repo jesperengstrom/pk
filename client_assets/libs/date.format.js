@@ -108,7 +108,7 @@ dateFormat.masks = {
     isoTimeShortTwo: "HH:MM",
     isoDateTime: "yyyy-mm-dd'T'HH:MM:ss",
     isoDateTimeShort: "yyyy-mm-dd HH:MM",
-    isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
+    isoUtcDateTime: "UTC:yyyy-mm-dd HH:MM"
 };
 
 // Internationalization strings

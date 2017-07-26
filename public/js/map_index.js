@@ -2,7 +2,7 @@
 var map;
 var markers = [];
 var witnessMarker, opMarker;
-const mordplatsen = { lat: 59.336615, lng: 18.062775 };
+const mordplatsen = { lat: 59.33663539974593, lng: 18.062767580127 };
 
 function initMap() {
 
@@ -47,23 +47,37 @@ function initMap() {
 
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('indexmap'), {
-        center: mordplatsen,
+        // center: mordplatsen,
         scrollwheel: false,
-        zoom: 15,
+        // zoom: 15,
         styles: dark,
         clickableIcons: false
     });
 
-    // Static marker
-    const mainMarker = new google.maps.Marker({
+    // Static markers
+    const mordplatsenMarker = new google.maps.Marker({
         map: map,
         position: mordplatsen,
         title: 'Mordplatsen',
         icon: mapPin('red', 0.8, 0.6),
         label: mapLabel('\uf0f9'),
-        clickable: false
     });
 
+    const opResidence = new google.maps.Marker({
+        map: map,
+        position: { lat: 59.32504170000001, lng: 18.0694926 },
+        title: 'Palmes bostad',
+        icon: mapPin('red', 0.8, 0.6),
+        label: mapLabel('\uf015'),
+    });
+
+    const grand = new google.maps.Marker({
+        map: map,
+        position: { lat: 59.33923649999999, lng: 18.0594918 },
+        title: 'Biografen Grand',
+        icon: mapPin('red', 0.8, 0.6),
+        label: mapLabel('\uf03d'),
+    });
 
     witnessMarker = new google.maps.Marker({
         map: null,
@@ -142,6 +156,17 @@ function createObsMarkers() {
 }
 
 /**
+ * Set bounds for map to show all markers
+ */
+function setMapBounds() {
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].getPosition());
+    }
+    map.fitBounds(bounds);
+}
+
+/**
  * Displaying / highlighting one obs marker (id match) on the map
  * @param {string} id 
  */
@@ -156,6 +181,8 @@ function showObsMarker(id) {
             el.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(() => { el.setAnimation(null); }, 750);
             map.panTo(el.position);
+            map.setZoom(17); //zoom in marker on click
+            console.log(map.getZoom())
             if (!pkSettings.showAllMarkers) {
                 el.setAnimation(google.maps.Animation.DROP);
             }
@@ -179,7 +206,8 @@ function toggleObsMarkers() {
                 el.setAnimation(google.maps.Animation.DROP)
             }, i * 100);
             i++;
-            map.panTo(mordplatsen);
+            // map.panTo(mordplatsen);
+            setMapBounds();
         }
     })
 }

@@ -12,7 +12,7 @@ function renderlist() {
     for (let i in sorted) {
         html += `<tr>
                         <td>${sorted[i].title}</td>
-                        <td>${dateFormat(sorted[i].obsDate, 'isoDateTimeShort')}</td>
+                        <td>${dateFormat(sorted[i].obsDate, 'isoUtcDateTime')}</td>
                         <td>${sorted[i].obsLocation.adress}</td>
                         <td><a href="/users/editform?id=${sorted[i]._id}">redigera</a> 
                     </tr>`

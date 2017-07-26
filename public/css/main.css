@@ -44,6 +44,11 @@ body {
 
 /*navbar*/
 
+.navbar,
+#mytimeline {
+    background-color: rgba(39, 66, 83, 0.04);
+}
+
 .navbar-light .navbar-nav .nav-link {
     color: rgba(0, 0, 0, .7);
 }
@@ -72,6 +77,10 @@ body {
 
 th {
     font-family: 'Roboto', sans-serif;
+}
+
+.keep-whitespace {
+    white-space: pre-wrap;
 }
 
 
@@ -121,7 +130,7 @@ a:hover {
 }
 
 div.timeline-event {
-    background-color: #f8f8f8;
+    background-color: rgb(205, 224, 231);
     border-color: #747474;
     color: #636C72;
     margin-top: 2px;
@@ -137,7 +146,8 @@ div.timeline-event-content {
     margin: 2px 4px;
 }
 
-a.observation-link {
+a.timeline-text,
+span.timeline-text {
     color: rgba(0, 0, 0, .7);
     font-size: 12px;
 }
@@ -147,6 +157,10 @@ a.observation-link {
     z-index: 999;
     background-color: #f8edd3 !important;
     transform: scale(1.1);
+}
+
+div.op-event {
+    background-color: rgb(235, 204, 204);
 }
 
 

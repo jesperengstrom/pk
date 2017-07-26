@@ -85,6 +85,7 @@ function allmarkersCheckbox() {
  * @param {object} res - ajax response
  */
 function displayFullObs(res) {
+    document.title = 'Palmekartan - ' + res.title;
 
     //the props object tells us if we should create event listeners for these objects
     fullObsProps = {
@@ -137,7 +138,7 @@ function displayFullObs(res) {
     //plain table row
     function renderTr(key, value) {
         if (value) {
-            return `<tr><th scope="row">` + key + `:</th><td>${value}</td></tr>`;
+            return `<tr><th scope="row">` + key + `:</th><td class="keep-whitespace">${value}</td></tr>`;
         }
         return ``;
     }
