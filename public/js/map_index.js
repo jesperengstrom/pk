@@ -182,7 +182,6 @@ function showObsMarker(id) {
             setTimeout(() => { el.setAnimation(null); }, 750);
             map.panTo(el.position);
             map.setZoom(17); //zoom in marker on click
-            console.log(map.getZoom())
             if (!pkSettings.showAllMarkers) {
                 el.setAnimation(google.maps.Animation.DROP);
             }
@@ -197,16 +196,17 @@ function showObsMarker(id) {
  */
 function toggleObsMarkers() {
     let i = 0;
+
     markers.forEach((el) => {
         if (!pkSettings.showAllMarkers) {
-            el.setMap(null)
+            if (activeId === el.marker_id) el.setMap(map); //keep the currently open observation marker
+            else el.setMap(null)
         } else {
             setTimeout(function() {
                 el.setMap(map);
                 el.setAnimation(google.maps.Animation.DROP)
             }, i * 100);
             i++;
-            // map.panTo(mordplatsen);
             setMapBounds();
         }
     })

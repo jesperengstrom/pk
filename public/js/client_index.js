@@ -4,12 +4,14 @@ document.addEventListener('DOMContentLoaded', allmarkersCheckbox); //check or un
 var timelineReady = false;
 var obsPlaced = false;
 
+//saves current id displayed on page (for marker toggle)
+var activeId = false;
+
 //renders about-text on nav-click
 document.getElementById('about-btn').addEventListener('click', (e) => {
     e.preventDefault();
     window.history.pushState(null, "", "/about")
     checkUrlParams();
-
 })
 
 /**
@@ -39,12 +41,14 @@ function checkUrlParams() {
         var urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('id')) { //if we have an 'id' param...
             let id = urlParams.get('id');
+            activeId = id;
             highlightTimeline(id);
             showObsMarker(id);
             ajaxRequest('GET', server + '/api/search?id=' + id, 'json', displayFullObs, displayError); //...we want to fetch that item and render it
         }
-        if (urlParams.toString().length === 0 || window.location.pathname === "/about") {
+        if (urlParams.toString().length === 0 || window.location.pathname === "/about") { //index or /about - render about
             ajaxRequest('GET', server + '/api/about', 'html', displayAbout, displayError);
+            activeId = false;
         }
         //else.. we might have a search or filter param
     }
@@ -87,7 +91,7 @@ function allmarkersCheckbox() {
 function displayFullObs(res) {
     document.title = 'Palmekartan - ' + res.title;
 
-    //the props object tells us if we should create event listeners for these objects
+    //the props object tell us if we should create event listeners for these objects
     fullObsProps = {
         witnessCoords: false,
         opCoords: false
@@ -123,6 +127,9 @@ function displayFullObs(res) {
             </tbody>
         </table>
         ${renderFootnote()}`;
+
+    //scroll to top of obs wrapper
+    obsContent.parentElement.scrollTop = 0;
 
     //footnote
     function renderFootnote() {
@@ -250,11 +257,3 @@ function displayAbout(res) {
     let aboutContent = document.querySelector('#obs-content');
     aboutContent.innerHTML = res;
 }
-
-// //stolen from https://davidwalsh.name/query-string-javascript
-// function getUrlParameter(name) {
-//     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-//     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-//     var results = regex.exec(location.search);
-//     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-// };
