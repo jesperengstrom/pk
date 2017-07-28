@@ -141,6 +141,7 @@ function createObsMarkers() {
             });
             markers.push(newMarker);
             newMarker.addListener('click', () => { //Makes the labels clickable
+                timeline.setVisibleChartRangeAuto(); //fits all events on timeline so we see the obs clicked
                 map.panTo(newMarker.position)
                 hideContextMarker('witnessLocation');
                 hideContextMarker('opLocation');

@@ -1,4 +1,13 @@
 //Client-side, handles rendering of map
+var timeline;
+
+//static events on timeline
+let redEvents = [
+    [new Date('1986/02/28 23:21:00'), , '<span class="timeline-text op-event-content">Mordet</span>'],
+    [new Date('1986/02/28 20:35:00'), , '<span class="timeline-text op-event-content">Lämnar bostaden</span>'],
+    [new Date('1986/02/28 20:55:00'), , '<span class="timeline-text op-event-content">Ankommer Grand</span>'],
+    [new Date('1986/02/28 23:15:00'), , '<span class="timeline-text op-event-content">Lämnar Grand</span>'],
+];
 
 google.load("visualization", "1");
 
@@ -8,13 +17,6 @@ google.setOnLoadCallback(drawVisualization);
 // Called when the Visualization API is loaded.
 function drawVisualization() {
 
-    //static events on timeline
-    let redEvents = [
-        [new Date('1986/02/28 23:21:00'), , '<span class="timeline-text op-event-content">Mordet</span>'],
-        [new Date('1986/02/28 20:35:00'), , '<span class="timeline-text op-event-content">Lämnar bostaden</span>'],
-        [new Date('1986/02/28 20:55:00'), , '<span class="timeline-text op-event-content">Ankommer Grand</span>'],
-        [new Date('1986/02/28 23:15:00'), , '<span class="timeline-text op-event-content">Lämnar Grand</span>'],
-    ];
     // Create and populate a data table.
     var data = new google.visualization.DataTable();
     data.addColumn('datetime', 'start');
@@ -22,8 +24,9 @@ function drawVisualization() {
     data.addColumn('string', 'content');
 
     //calling the functions that return the observations that we wanna insert
-    data.addRows(insertObs());
-    data.addRows(redEvents);
+    // data.addRows(redEvents);
+    data.addRows(insertEvents());
+
 
     // specify options
     const options = {
@@ -43,7 +46,7 @@ function drawVisualization() {
     };
 
     // Instantiate our timeline object.
-    var timeline = new links.Timeline(document.getElementById('mytimeline'));
+    timeline = new links.Timeline(document.getElementById('mytimeline'));
 
     // Draw our timeline with the created data and options
     timeline.setOptions(options);
@@ -60,9 +63,9 @@ function drawVisualization() {
 }
 
 /**
- * Returns array of arrays / inserts observations as rows into timeline
+ * Returns array of arrays to insert as rows into timeline
  */
-function insertObs() {
+function insertEvents() {
     let rows = [];
     if (obs !== null) {
         obs.forEach((element) => {
@@ -70,6 +73,7 @@ function insertObs() {
                 `<a href="" class="observation-link timeline-text" data-id=${element._id}>${element.title}</a>`
             ])
         }, this);
+        rows.push(...redEvents) //add static events w spread!
     } else console.log('obs was empty, could not place timeline items.')
 
     return rows;
@@ -79,7 +83,6 @@ function insertObs() {
 function dateToUTC(date) {
     return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
 }
-
 
 //colours all op-events on timeline bg red
 function opRedBox() {
