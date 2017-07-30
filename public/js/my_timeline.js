@@ -16,6 +16,7 @@ google.setOnLoadCallback(drawVisualization);
 
 // Called when the Visualization API is loaded.
 function drawVisualization() {
+    pkStatus.timelineLoaded = true;
 
     // Create and populate a data table.
     var data = new google.visualization.DataTable();
@@ -23,10 +24,10 @@ function drawVisualization() {
     data.addColumn('datetime', 'end');
     data.addColumn('string', 'content');
 
-    //calling the functions that return the observations that we wanna insert
-    // data.addRows(redEvents);
-    data.addRows(insertEvents());
-
+    if (checkLoadStatus() && !pkStatus.timelineEvents) { //if status ok and timeline events not added, add them and proceed
+        data.addRows(insertEvents());
+        pkStatus.timelineEvents = true;
+    } else return; //else abort timeline
 
     // specify options
     const options = {
@@ -40,8 +41,8 @@ function drawVisualization() {
         "locale": "se_SE",
         "stackEvents": false,
         "showCurrentTime": false,
-        "zoomMax": 31536000000,
-        "zoomMin": 60000,
+        // "zoomMax": 31536000000,
+        "zoomMin": 3600000,
         "cluster": true
     };
 
@@ -55,7 +56,7 @@ function drawVisualization() {
     google.visualization.events.addListener(timeline, 'ready', () => {
         opRedBox();
         timelineClick();
-        timelineReady = true;
+        pkStatus.timelineReady = true;
         checkUrlParams();
         setMapBounds(); //set map bounds once timeline is loaded to prevent hidden markers
     });
@@ -75,7 +76,6 @@ function insertEvents() {
         }, this);
         rows.push(...redEvents) //add static events w spread!
     } else console.log('obs was empty, could not place timeline items.')
-
     return rows;
 }
 

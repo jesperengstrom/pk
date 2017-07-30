@@ -1,18 +1,26 @@
 document.addEventListener('DOMContentLoaded', allmarkersCheckbox); //check or uncheck 'show all box'
 
-//global vars to make sure all parts are loaded before we load full obs
-var timelineReady = false;
-var obsPlaced = false;
-
-//saves current id displayed on page (for marker toggle)
-var activeId = false;
-
 //renders about-text on nav-click
 document.getElementById('about-btn').addEventListener('click', (e) => {
     e.preventDefault();
     window.history.pushState(null, "", "/about")
     checkUrlParams();
 })
+
+checkFilter();
+
+/**
+ * To prevent drawing timeline bf obs are ready...
+ */
+function checkLoadStatus() {
+    if (pkStatus.timelineLoaded && pkStatus.obsFetched) {
+        console.log('status check succeeded at: ' + arguments.callee.caller.name);
+        return true;
+    } else {
+        console.log('status check failed at ' + arguments.callee.caller.name + '. Timeline loaded: ' + pkStatus.timelineLoaded, ' Obs fetched: ' + pkStatus.obsFetched);
+        return false;
+    }
+}
 
 /**
  * is called when timeline is ready
@@ -32,23 +40,33 @@ function timelineClick() {
 }
 
 /**
+ * checks if url has a filter, sets status props
+ */
+function checkFilter() {
+    if (urlParams.has('filter')) {
+        pkStatus.activeFilter = true;
+        pkStatus.filter = urlParams.get('tag');
+    }
+}
+
+/**
  * Runs on DOM-load / timeline/marker click / 'about'-click. 
  * Checks url params to get the right content.
  * Needs to make sure everything is loaded to highlight elements properly
  */
 function checkUrlParams() {
-    if (timelineReady && obsPlaced) {
+    if (pkStatus.timelineReady && pkStatus.markersPlaced) {
         var urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('id')) { //if we have an 'id' param...
             let id = urlParams.get('id');
-            activeId = id;
+            pkStatus.activeId = id;
             highlightTimeline(id);
             showObsMarker(id);
             ajaxRequest('GET', server + '/api/search?id=' + id, 'json', displayFullObs, displayError); //...we want to fetch that item and render it
         }
         if (urlParams.toString().length === 0 || window.location.pathname === "/about") { //index or /about - render about
             ajaxRequest('GET', server + '/api/about', 'html', displayAbout, displayError);
-            activeId = false;
+            pkStatus.activeId = false;
         }
         //else.. we might have a search or filter param
     }

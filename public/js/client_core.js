@@ -1,5 +1,4 @@
 //Init function + those needed to get obs, regardless of page
-
 //need to put this in a module
 
 //dev
@@ -11,7 +10,18 @@ const server = 'http://palmekartan.cloudno.de';
 var obs = [];
 // var pkSettings = { showAllMarkers: JSON.parse(localStorage.allMarkers) || true }
 var pkSettings = { showAllMarkers: true }
-var dbUpdated = '';
+
+//object monitoring loading & status of app client
+var pkStatus = {
+    dbUpdated: '',
+    obsFetched: false, //object of observations in storage
+    timelineLoaded: false, //my_timeline.js loaded
+    timelineEvents: false, //obs added as timeline rows
+    timelineReady: false, //timeline drawn (can be seleced in DOM)
+    markersPlaced: false, //map markers placed (can be selected in DOM)
+    activeId: false, //saves current id displayed on page (for marker toggle)
+    activeFilter: false
+}
 
 //init 
 document.addEventListener('DOMContentLoaded', init);
@@ -19,8 +29,8 @@ document.addEventListener('DOMContentLoaded', init);
 function init() {
     //check when db was updated first thing. Then decide if we use session storage or ajax.
     checkLatestUpdate((updated) => {
-        dbUpdated = updated;
-        if (dbUpdated === sessionStorage.getItem('pk_updated') && dbUpdated !== null) {
+        pkStatus.dbUpdated = updated;
+        if (pkStatus.dbUpdated === sessionStorage.getItem('pk_updated') && pkStatus.dbUpdated !== null) {
             console.log(sessionStorage.getItem('pk_updated') + '  is in session storage, using that');
             let retrieved = JSON.parse(sessionStorage.getItem('obs'));
             storeObs(retrieved);
@@ -81,16 +91,23 @@ function storeObs(observations) {
         obs[i].obsLocation.coords.lng = parseFloat(observations[i].obsLocation.coords.lng);
     }
     if (typeof(Storage) !== "undefined") { //session storage available
-        if (sessionStorage.getItem('obs') == null || sessionStorage.getItem('pk_updated') !== dbUpdated) {
+        if (sessionStorage.getItem('obs') == null || sessionStorage.getItem('pk_updated') !== pkStatus.dbUpdated) {
             //pk session not stored or needs to update 
             sessionStorage.setItem('obs', JSON.stringify(obs));
-            sessionStorage.setItem('pk_updated', dbUpdated);
+            sessionStorage.setItem('pk_updated', pkStatus.dbUpdated);
             console.log('Saved in session storage.')
         }
     }
+
+    pkStatus.obsFetched = true; //tell app obs are in storage
+
     //calling page-specfic functions undefined on other pages
     if (typeof createObsMarkers !== 'undefined') {
         createObsMarkers(); //...now we have the coords -> do markers
+
+        if (checkLoadStatus() && !pkStatus.timelineEvents) { //..if timeline failed due to late ajax, redraw it
+            drawVisualization();
+        }
     }
     if (typeof renderlist !== 'undefined') {
         renderlist(); //.. or render edit obs list

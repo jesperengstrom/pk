@@ -152,7 +152,7 @@ function createObsMarkers() {
         })
     } else console.log('obs was empty, could not place markers.');
 
-    obsPlaced = true;
+    pkStatus.markersPlaced = true;
     checkUrlParams(); //obs in storage, markers pushed --> now we can render a full obs
 }
 
@@ -200,7 +200,7 @@ function toggleObsMarkers() {
 
     markers.forEach((el) => {
         if (!pkSettings.showAllMarkers) {
-            if (activeId === el.marker_id) el.setMap(map); //keep the currently open observation marker
+            if (pkStatus.activeId === el.marker_id) el.setMap(map); //keep the currently open observation marker
             else el.setMap(null)
         } else {
             setTimeout(function() {
