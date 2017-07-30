@@ -43,6 +43,7 @@ function timelineClick() {
  * checks if url has a filter, sets status props
  */
 function checkFilter() {
+    var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('filter')) {
         pkStatus.activeFilter = true;
         pkStatus.filter = urlParams.get('tag');
