@@ -44,7 +44,7 @@ function ApiController() {
     //The list of docs used to render timeline & map
     this.getDocList = (req, res) => {
         Pk.find({})
-            .select('_id title obsDate obsLocation') //we only need these fields
+            .select('_id title obsDate obsLocation tags') //we only need these fields
             .exec((err, docs) => {
                 if (err) throw err;
                 return res.json(docs);

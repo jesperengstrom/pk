@@ -2,11 +2,12 @@
 //need to put this in a module
 
 //dev
-// const server = 'http://localhost:3000';
+const server = 'http://localhost:3000';
 
 //production
-const server = 'http://palmekartan.cloudno.de';
+// const server = 'http://palmekartan.cloudno.de';
 
+var allObs = [];
 var obs = [];
 // var pkSettings = { showAllMarkers: JSON.parse(localStorage.allMarkers) || true }
 var pkSettings = { showAllMarkers: true }
@@ -32,7 +33,7 @@ function init() {
         pkStatus.dbUpdated = updated;
         if (pkStatus.dbUpdated === sessionStorage.getItem('pk_updated') && pkStatus.dbUpdated !== null) {
             console.log(sessionStorage.getItem('pk_updated') + '  is in session storage, using that');
-            let retrieved = JSON.parse(sessionStorage.getItem('obs'));
+            let retrieved = JSON.parse(sessionStorage.getItem('allObs'));
             storeObs(retrieved);
         } else {
             console.log('Nah, ' + sessionStorage.getItem('pk_updated') + ' is in storage, ajaxing');
@@ -84,16 +85,16 @@ function ajaxRequest(method, url, dataType, successCallback, failCallback) {
  * @param {bool} setitem - should we save this in session storage? 
  */
 function storeObs(observations) {
-    obs = observations;
-    for (let i in obs) {
-        obs[i].obsDate = new Date(observations[i].obsDate);
-        obs[i].obsLocation.coords.lat = parseFloat(observations[i].obsLocation.coords.lat);
-        obs[i].obsLocation.coords.lng = parseFloat(observations[i].obsLocation.coords.lng);
+    allObs = observations;
+    for (let i in allObs) {
+        allObs[i].obsDate = new Date(observations[i].obsDate);
+        allObs[i].obsLocation.coords.lat = parseFloat(observations[i].obsLocation.coords.lat);
+        allObs[i].obsLocation.coords.lng = parseFloat(observations[i].obsLocation.coords.lng);
     }
     if (typeof(Storage) !== "undefined") { //session storage available
-        if (sessionStorage.getItem('obs') == null || sessionStorage.getItem('pk_updated') !== pkStatus.dbUpdated) {
+        if (sessionStorage.getItem('allObs') == null || sessionStorage.getItem('pk_updated') !== pkStatus.dbUpdated) {
             //pk session not stored or needs to update 
-            sessionStorage.setItem('obs', JSON.stringify(obs));
+            sessionStorage.setItem('allObs', JSON.stringify(allObs));
             sessionStorage.setItem('pk_updated', pkStatus.dbUpdated);
             console.log('Saved in session storage.')
         }
@@ -103,13 +104,15 @@ function storeObs(observations) {
 
     //calling page-specfic functions undefined on other pages
     if (typeof createObsMarkers !== 'undefined') {
-        createObsMarkers(); //...now we have the coords -> do markers
+        filterObs(); //now we have the coords -> check if we need to filter..
+        createObsMarkers(); //... do markers
 
         if (checkLoadStatus() && !pkStatus.timelineEvents) { //..if timeline failed due to late ajax, redraw it
             drawVisualization();
         }
     }
     if (typeof renderlist !== 'undefined') {
+        obs = allObs;
         renderlist(); //.. or render edit obs list
     }
 }

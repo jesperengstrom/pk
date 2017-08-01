@@ -7,8 +7,6 @@ document.getElementById('about-btn').addEventListener('click', (e) => {
     checkUrlParams();
 })
 
-checkFilter();
-
 /**
  * To prevent drawing timeline bf obs are ready...
  */
@@ -40,17 +38,6 @@ function timelineClick() {
 }
 
 /**
- * checks if url has a filter, sets status props
- */
-function checkFilter() {
-    var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('filter')) {
-        pkStatus.activeFilter = true;
-        pkStatus.filter = urlParams.get('tag');
-    }
-}
-
-/**
  * Runs on DOM-load / timeline/marker click / 'about'-click. 
  * Checks url params to get the right content.
  * Needs to make sure everything is loaded to highlight elements properly
@@ -65,7 +52,7 @@ function checkUrlParams() {
             showObsMarker(id);
             ajaxRequest('GET', server + '/api/search?id=' + id, 'json', displayFullObs, displayError); //...we want to fetch that item and render it
         }
-        if (urlParams.toString().length === 0 || window.location.pathname === "/about") { //index or /about - render about
+        if (urlParams.toString().length === 0 || window.location.pathname === "/about" || window.location.pathname === "/filter") { //index or /about - render about
             ajaxRequest('GET', server + '/api/about', 'html', displayAbout, displayError);
             pkStatus.activeId = false;
         }
@@ -205,7 +192,7 @@ function displayFullObs(res) {
     function renderTags() {
         let result = `<p>`;
         res.tags.forEach((el) => {
-            return result += `<span class="badge badge-default mt-3 mr-1"><span class="white-link">${el}</span></span>`;
+            return result += `<span class="badge badge-default mt-3 mr-1"><a class="white-link" href="/filter?tag=${el}">${el}</a></span>`;
         })
         result += `</p>`;
         return result;
@@ -275,4 +262,28 @@ function displayError() {
 function displayAbout(res) {
     let aboutContent = document.querySelector('#obs-content');
     aboutContent.innerHTML = res;
+}
+
+
+/**
+ * if URL has filter, filter all obs with selection = obs
+ */
+function filterObs() {
+    var urlParams = new URLSearchParams(window.location.search);
+    // if (urlParams.has('tag')) {
+    if (window.location.pathname === "/filter") {
+        pkStatus.activeFilter = true;
+        pkStatus.filter = urlParams.get('tag');
+        obs = allObs.filter((e) => { //if we have a tag param, filter allObs
+            let result = false
+            e.tags.forEach((el) => {
+                if (el === pkStatus.filter) {
+                    result = true
+                }
+                return result;
+            })
+            return result;
+        })
+        console.log('Filter! Found ' + obs.length + ' observations containing ' + pkStatus.filter);
+    } else obs = allObs //if we don't have a filter, go with allObs as obs
 }
