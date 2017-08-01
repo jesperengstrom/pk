@@ -2,10 +2,10 @@
 //need to put this in a module
 
 //dev
-const server = 'http://localhost:3000';
+// const server = 'http://localhost:3000';
 
 //production
-// const server = 'http://palmekartan.cloudno.de';
+const server = 'http://palmekartan.cloudno.de';
 
 var allObs = [];
 var obs = [];
