@@ -48,6 +48,20 @@ function initMap() {
         label: { text: 'Mordplatsen' }
     });
 
+    const Grand = new google.maps.Marker({
+        map: map,
+        position: { lat: 59.33923649999999, lng: 18.0594918 },
+        title: 'Grand',
+        label: { text: 'Grand' }
+    });
+
+    const residence = new google.maps.Marker({
+        map: map,
+        position: { lat: 59.32504170000001, lng: 18.0694926 },
+        title: 'Bostad',
+        label: { text: 'Bostad' }
+    });
+
     //witness marker invisible by default
     witnessMarker = new google.maps.Marker({
         position: mordplatsen,

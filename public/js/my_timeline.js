@@ -43,7 +43,7 @@ function drawVisualization() {
         "showCurrentTime": false,
         // "zoomMax": 31536000000,
         "zoomMin": 3600000,
-        "cluster": true
+        // "cluster": true //bug: hides elements so we cant add listeners etc
     };
 
     // Instantiate our timeline object.

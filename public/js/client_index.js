@@ -266,14 +266,15 @@ function displayAbout(res) {
 
 
 /**
- * if URL has filter, filter all obs with selection = obs
+ * if URL has filter, obs = allObs === filter
  */
 function filterObs() {
     var urlParams = new URLSearchParams(window.location.search);
     // if (urlParams.has('tag')) {
-    if (window.location.pathname === "/filter") {
+    if (window.location.pathname === "/filter" && urlParams.has('tag')) {
         pkStatus.activeFilter = true;
         pkStatus.filter = urlParams.get('tag');
+        document.title = 'Palmekartan - ' + pkStatus.filter;
         obs = allObs.filter((e) => { //if we have a tag param, filter allObs
             let result = false
             e.tags.forEach((el) => {

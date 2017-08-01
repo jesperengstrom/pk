@@ -16,7 +16,7 @@ router.get('/observation', (req, res, next) => { //same as index but has url par
 })
 
 router.get('/filter', (req, res, next) => { //same as index but has url param for displaying a single obs...
-    let params = userController.renderParams(req.flash('error'), req.user, 'Filtrerar', true);
+    let params = userController.renderParams(req.flash('error'), req.user, 'Filtrera', true);
     res.render('index', params)
 })
 
