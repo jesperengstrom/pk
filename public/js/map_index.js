@@ -47,9 +47,7 @@ function initMap() {
 
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('indexmap'), {
-        // center: mordplatsen,
         scrollwheel: false,
-        // zoom: 15,
         styles: dark,
         clickableIcons: false
     });
@@ -140,9 +138,12 @@ function createObsMarkers() {
                 // label: { text: title },
             });
             markers.push(newMarker);
-            newMarker.addListener('click', () => { //Makes the labels clickable
-                timeline.setVisibleChartRangeAuto(); //fits all events on timeline so we see the obs clicked
-                map.panTo(newMarker.position)
+            newMarker.addListener('click', () => {
+                //what happens when we click a marker
+                timeline.setVisibleChartRangeAuto(); //fits all events on timeline so we see the active obs
+                if (map.getBounds().contains(newMarker.position) == false) { //pan map if marker not in bounds
+                    map.panTo(newMarker.position);
+                }
                 hideContextMarker('witnessLocation');
                 hideContextMarker('opLocation');
                 let id = newMarker.marker_id;
@@ -180,9 +181,13 @@ function showObsMarker(id) {
             el.setMap(map);
             el.setOptions({ icon: mapPin('#086787', 1, 0.6) })
             el.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(() => { el.setAnimation(null); }, 750);
-            map.panTo(el.position);
-            map.setZoom(17); //zoom in marker on click
+            setTimeout(() => {
+                el.setAnimation(null);
+            }, 750);
+            map.setZoom(16); //zoom in marker on click
+            if (map.getBounds().contains(el.position) == false) { //pan map if marker not in bounds
+                map.panTo(el.position);
+            }
             if (!pkSettings.showAllMarkers) {
                 el.setAnimation(google.maps.Animation.DROP);
             }
