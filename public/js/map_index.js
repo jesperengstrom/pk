@@ -71,7 +71,7 @@ function initMap() {
 
     const grand = new google.maps.Marker({
         map: map,
-        position: { lat: 59.33923649999999, lng: 18.0594918 },
+        position: { lat: 59.339166289828945, lng: 18.059799850052514 },
         title: 'Biografen Grand',
         icon: mapPin('red', 0.8, 0.6),
         label: mapLabel('\uf03d'),
@@ -184,9 +184,11 @@ function showObsMarker(id) {
             setTimeout(() => {
                 el.setAnimation(null);
             }, 750);
-            map.setZoom(16); //zoom in marker on click
-            if (map.getBounds().contains(el.position) == false) { //pan map if marker not in bounds
+            if (map.getBounds() && map.getBounds().contains(el.position) == false) { //pan map if marker not in bounds
                 map.panTo(el.position);
+                map.setZoom(16);
+            } else {
+                if (map.getZoom() < 16) map.setZoom(16); //zoom in marker on click, don't zoom out
             }
             if (!pkSettings.showAllMarkers) {
                 el.setAnimation(google.maps.Animation.DROP);

@@ -287,4 +287,14 @@ function filterObs() {
         })
         console.log('Filter! Found ' + obs.length + ' observations containing ' + pkStatus.filter);
     } else obs = allObs //if we don't have a filter, go with allObs as obs
+    renderFilterStatus();
+}
+
+function renderFilterStatus() {
+    let filterStatus = document.getElementById('nav-filterstatus');
+    if (!pkStatus.activeFilter) {
+        filterStatus.innerHTML = `<span class="nav-filter-status">Visar alla ${obs.length} observationer</span>`;
+    } else {
+        filterStatus.innerHTML = `<span class="nav-filter-status">Visar ${obs.length} observationer: <span class="filter-color">${pkStatus.filter}</span></span>`;
+    }
 }

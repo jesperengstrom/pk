@@ -72,6 +72,10 @@ body {
     left: initial;
 }
 
+.nav-filter-status {
+    font-size: 0.9rem;
+}
+
 
 /*table*/
 
@@ -187,4 +191,8 @@ div.op-event {
 
 .doggy {
     color: white;
+}
+
+.filter-color {
+    color: rgb(171, 84, 84);
 }

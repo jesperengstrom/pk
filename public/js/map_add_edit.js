@@ -50,7 +50,7 @@ function initMap() {
 
     const Grand = new google.maps.Marker({
         map: map,
-        position: { lat: 59.33923649999999, lng: 18.0594918 },
+        position: { lat: 59.339166289828945, lng: 18.059799850052514 },
         title: 'Grand',
         label: { text: 'Grand' }
     });
