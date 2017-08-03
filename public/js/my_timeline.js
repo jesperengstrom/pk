@@ -3,10 +3,10 @@ var timeline;
 
 //static events on timeline
 let redEvents = [
-    [new Date('1986/02/28 23:21:00'), , '<span class="timeline-text op-event-content">Mordet</span>'],
     [new Date('1986/02/28 20:35:00'), , '<span class="timeline-text op-event-content">Lämnar bostaden</span>'],
-    [new Date('1986/02/28 20:55:00'), , '<span class="timeline-text op-event-content">Ankommer Grand</span>'],
+    [new Date('1986/02/28 20:55:00'), , '<span class="timeline-text op-event-content">Anländer Grand</span>'],
     [new Date('1986/02/28 23:15:00'), , '<span class="timeline-text op-event-content">Lämnar Grand</span>'],
+    [new Date('1986/02/28 23:21:00'), , '<span class="timeline-text op-event-content">Mordet</span>']
 ];
 
 google.load("visualization", "1");
