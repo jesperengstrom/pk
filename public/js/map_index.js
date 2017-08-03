@@ -184,13 +184,13 @@ function showObsMarker(id) {
             setTimeout(() => {
                 el.setAnimation(null);
             }, 750);
+            if (map.getZoom() < 16) { //zoom to 16 if less, don't zoom out
+                map.setZoom(16);
+            }
             if (map.getBounds() && map.getBounds().contains(el.position) == false) { //pan map if marker not in bounds
                 map.panTo(el.position);
-                map.setZoom(16);
-            } else {
-                if (map.getZoom() < 16) map.setZoom(16); //zoom in marker on click, don't zoom out
             }
-            if (!pkSettings.showAllMarkers) {
+            if (!pkSettings.showAllMarkers) { //drop a single marker (bounce if all)
                 el.setAnimation(google.maps.Animation.DROP);
             }
         } else {
