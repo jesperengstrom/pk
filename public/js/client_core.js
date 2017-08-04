@@ -103,7 +103,7 @@ function storeObs(observations) {
     pkStatus.obsFetched = true; //tell app obs are in storage
 
     //calling page-specfic functions undefined on other pages
-    if (typeof createObsMarkers !== 'undefined') {
+    if (typeof createObsMarkers !== 'undefined') { //= index
         filterObs(); //now we have the coords -> check if we need to filter..
         createObsMarkers(); //... do markers
 
@@ -111,7 +111,7 @@ function storeObs(observations) {
             drawVisualization();
         }
     }
-    if (typeof renderlist !== 'undefined') {
+    if (typeof renderlist !== 'undefined') { //= edit list
         obs = allObs;
         renderlist(); //.. or render edit obs list
     }

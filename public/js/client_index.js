@@ -7,6 +7,9 @@ document.getElementById('about-btn').addEventListener('click', (e) => {
     checkUrlParams();
 })
 
+//'ok' nav filtering 
+document.getElementById('filter-ok').addEventListener('click', getFilterDropdown);
+
 /**
  * To prevent drawing timeline bf obs are ready...
  */
@@ -288,13 +291,43 @@ function filterObs() {
         console.log('Filter! Found ' + obs.length + ' observations containing ' + pkStatus.filter);
     } else obs = allObs //if we don't have a filter, go with allObs as obs
     renderFilterStatus();
+    setFilterDropDown();
 }
 
 function renderFilterStatus() {
     let filterStatus = document.getElementById('nav-filterstatus');
     if (!pkStatus.activeFilter) {
-        filterStatus.innerHTML = `<span class="nav-filter-status">Visar alla ${obs.length} observationer</span>`;
+        filterStatus.innerHTML = `Visar alla ${obs.length} observationer`;
     } else {
-        filterStatus.innerHTML = `<span class="nav-filter-status">Visar ${obs.length} observationer: <span class="filter-color">${pkStatus.filter}</span></span>`;
+        if (obs.length === 0) {
+            filterStatus.innerHTML = `<span class="filter-color">Inga observationer taggade ${pkStatus.filter}!</span>`;
+        } else filterStatus.innerHTML = `Visar ${obs.length} observationer: <span class="filter-color">${pkStatus.filter}</span>`;
     }
+}
+
+/**
+ * sets navbar filter checkbox from url param
+ */
+function setFilterDropDown() {
+    document.querySelectorAll('.filter-checkbox').forEach((el) => {
+        if (el.getAttribute('data-id') === pkStatus.filter) {
+            el.checked = true;
+        }
+    })
+}
+
+/**
+ * Gets navbar filter checkboxes --> url param
+ */
+function getFilterDropdown() {
+    let query = '/filter?tag='
+    let value = '';
+    document.querySelectorAll('.filter-checkbox').forEach((el) => {
+        if (el.checked) {
+            value += el.getAttribute('data-id') + '&';
+        }
+    })
+    if (value.length === 0) {
+        window.location.href = '/';
+    } else window.location.href = query + value;
 }

@@ -6,8 +6,52 @@
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     {{#if index}}
     <ul class="navbar-nav">
-      <span class="navbar-text" id="nav-filterstatus">
+      <span class="navbar-text">
+        <span class="nav-filter-status mr-2" id="nav-filterstatus"></span>
       </span>
+    </ul>
+    <ul class="navbar-nav">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="nav-filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-binoculars" aria-hidden="true"></i> Filtrera
+        </a>
+        <div class="dropdown-menu" aria-labelledby="nav-filter">
+          {{!--mordkvällen--}}
+          <div class="dropdown-item form-inline d-flex flex-nowrap">
+            <input class="filter-checkbox mr-1" type="checkbox" name="filter-mordkvallen" data-id="Mordkvällen">
+            <label for="filter-mordkvallen">Mordkvällen</label>
+          </div>
+          {{!--Walkie talkie--}}
+          <div class="dropdown-item form-inline d-flex flex-nowrap">
+            <input class="filter-checkbox mr-1" type="checkbox" name="filter-walkie-talkie" data-id="Walkie Talkie">
+            <label for="filter-walkie-talkie">Walkie Talkie</label>
+          </div>
+          {{!--Grand--}}
+          <div class="dropdown-item form-inline d-flex flex-nowrap">
+            <input class="filter-checkbox mr-1" type="checkbox" name="filter-grand" data-id="Grand">
+            <label for="filter-grand">Grand</label>
+          </div>
+          {{!--Förföljare--}}
+          <div class="dropdown-item form-inline d-flex flex-nowrap">
+            <input class="filter-checkbox mr-1" type="checkbox" name="filter-follower" data-id="Förföljare">
+            <label for="filter-follower">Förföljare</label>
+          </div>
+          {{!--Polis--}}
+          <div class="dropdown-item form-inline d-flex flex-nowrap">
+            <input class="filter-checkbox mr-1" type="checkbox" name="filter-polis" data-id="Polis">
+            <label for="filter-polis">Polis</label>
+          </div>
+          {{!--Bil--}}
+          <div class="dropdown-item form-inline d-flex flex-nowrap">
+            <input class="filter-checkbox mr-1" type="checkbox" name="filter-bil" data-id="Bil">
+            <label for="filter-bil">Bil</label>
+          </div>
+          <div class="dropdown-item">
+            <button class="form-control btn btn-secondary btn-sm my-2 my-sm-0" id="filter-ok">OK
+            </button>
+          </div>
+        </div>
+      </li>
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item dropdown">
@@ -17,7 +61,7 @@
         <div class="dropdown-menu" aria-labelledby="navbarSettings">
           <div class="dropdown-item form-inline d-flex flex-nowrap">
             <input class="mr-1" type="checkbox" name="all-markers" id="all-markers">
-            <label for="all-markers" class="">Visa samtliga observationer på kartan</label>
+            <label for="all-markers">Visa samtliga observationer på kartan</label>
           </div>
         </div>
       </li>

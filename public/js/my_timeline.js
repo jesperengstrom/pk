@@ -58,7 +58,14 @@ function drawVisualization() {
         timelineClick();
         pkStatus.timelineReady = true;
         checkUrlParams();
-        setMapBounds(); //set map bounds once timeline is loaded to prevent hidden markers
+        if (markers.length > 0) {
+            setMapBounds(); //set map bounds once timeline is loaded to prevent hidden markers
+            console.log(map.getCenter());
+        } else {
+            map.setCenter(mordplatsen); //in case filter returns 0 for example 
+            console.log(map.getCenter());
+        }
+
     });
     timeline.draw(data);
 }

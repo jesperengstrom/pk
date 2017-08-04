@@ -31,6 +31,9 @@ body {
 
 /*Bootstrap tweaks*/
 
+
+/*badge*/
+
 .badge {
     font-family: 'Roboto', sans-serif;
     font-weight: initial;
@@ -39,6 +42,18 @@ body {
 
 .badge-default {
     background-color: #468e9f;
+}
+
+
+/*button */
+
+button,
+input {
+    font-family: 'Droid Serif', serif;
+}
+
+.btn {
+    cursor: pointer;
 }
 
 
