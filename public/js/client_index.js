@@ -1,4 +1,7 @@
-document.addEventListener('DOMContentLoaded', allmarkersCheckbox); //check or uncheck 'show all box'
+document.addEventListener('DOMContentLoaded', () => {
+    monitorMapSettings();
+    monitorTimelineSettings();
+});
 
 //renders about-text on nav-click
 document.getElementById('about-btn').addEventListener('click', (e) => {
@@ -59,7 +62,6 @@ function checkUrlParams() {
             ajaxRequest('GET', server + '/api/about', 'html', displayAbout, displayError);
             pkStatus.activeId = false;
         }
-        //else.. we might have a search or filter param
     }
 }
 
@@ -73,24 +75,34 @@ function highlightTimeline(id) {
 }
 
 /**
- * Monitors checkbox 'display all markers' true/false
+ * Renders & monitors settings in nav bar
  */
-function allmarkersCheckbox() {
-    const markerBox = document.querySelector('#all-markers');
-    if (pkSettings.showAllMarkers) { //gets stored setting from localstorage
-        markerBox.checked = true;
-    }
-    if (!pkSettings.showAllMarkers) {
-        markerBox.checked = false;
-    }
+function monitorMapSettings() {
+    const allMarkers = document.getElementById('options-all-markers');
+    const oneMarker = document.getElementById('options-one-marker');
+    pkSettings.allMarkers ? allMarkers.checked = true : oneMarker.checked = true;
 
-    markerBox.onchange = () => { //listen for changes & change setting / toggle view
-        pkSettings.showAllMarkers = markerBox.checked;
-        if (typeof(Storage) !== 'undefined') {
-            localStorage.setItem('allMarkers', markerBox.checked); //saving this setting in local storage
-        }
-        toggleObsMarkers();
+    [allMarkers, oneMarker].forEach((el) => {
+        el.addEventListener('change', () => {
+            setOption(allMarkers, 'allMarkers', toggleObsMarkers)
+        })
+    })
+}
+
+function monitorTimelineSettings() {
+    const showStatic = document.getElementById('options-static-events');
+    pkSettings.showStatic ? showStatic.checked = true : showStatic.checked = false;
+    showStatic.addEventListener('change', () => {
+        setOption(showStatic, 'showStatic', toggleStaticEvents);
+    })
+}
+
+function setOption(element, option, callback) {
+    element.checked ? pkSettings[option] = true : pkSettings[option] = false;
+    if (typeof(Storage) !== 'undefined') {
+        localStorage.setItem(option, pkSettings[option]);
     }
+    callback();
 }
 
 /**

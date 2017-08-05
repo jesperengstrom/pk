@@ -9,13 +9,17 @@ const server = 'http://palmekartan.cloudno.de';
 
 var allObs = [];
 var obs = [];
-// var pkSettings = { showAllMarkers: JSON.parse(localStorage.allMarkers) || true }
-var pkSettings = { showAllMarkers: true }
 
-//object monitoring loading & status of app client
+//settings obj
+var pkSettings = {
+    allMarkers: fetchSettings('allMarkers'),
+    showStatic: fetchSettings('showStatic')
+}
+
+//obj monitoring loading & status of app client
 var pkStatus = {
     dbUpdated: '',
-    obsFetched: false, //object of observations in storage
+    obsFetched: false, //obs-arr in storage
     timelineLoaded: false, //my_timeline.js loaded
     timelineEvents: false, //obs added as timeline rows
     timelineReady: false, //timeline drawn (can be seleced in DOM)
@@ -115,4 +119,15 @@ function storeObs(observations) {
         obs = allObs;
         renderlist(); //.. or render edit obs list
     }
+}
+
+/**
+ * checks for stored settings, else return defaults
+ * @param {string} setting 
+ */
+function fetchSettings(setting) {
+    if (typeof(Storage) !== "undefined" && localStorage.getItem(setting) !== null) {
+        return JSON.parse(localStorage[setting]);
+    }
+    return true;
 }

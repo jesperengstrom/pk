@@ -64,9 +64,20 @@
         <i class="fa fa-cog" aria-hidden="true"></i> Inställningar
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarSettings">
+          <span class="dropdown-item">Kartan:</span>
           <div class="dropdown-item form-inline d-flex flex-nowrap">
-            <input class="mr-1" type="checkbox" name="all-markers" id="all-markers">
-            <label for="all-markers">Visa samtliga observationer på kartan</label>
+            <input class="mr-1 options-marker" id="options-all-markers" type="radio" name="map-options">
+            <label for="all-markers">Visa samtliga observationer</label>
+          </div>
+          <div class="dropdown-item form-inline d-flex flex-nowrap">
+            <input class="mr-1 options-marker" id="options-one-marker" type="radio" name="map-options">
+            <label for="single-marker">Visa en i taget</label>
+          </div>
+          <hr>
+          <span class="dropdown-item">Tidslinjen:</span>
+          <div class="dropdown-item form-inline d-flex flex-nowrap">
+            <input class="mr-1" id="options-static-events" type="checkbox" name="options-static-events">
+            <label for="options-static-events">Visa röda hållpunkter</label>
           </div>
         </div>
       </li>

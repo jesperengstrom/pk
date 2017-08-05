@@ -47,7 +47,7 @@ function drawVisualization() {
     };
 
     // Instantiate our timeline object.
-    timeline = new links.Timeline(document.getElementById('mytimeline'));
+    timeline = new links.Timeline(document.getElementById('pktimeline'));
 
     // Draw our timeline with the created data and options
     timeline.setOptions(options);
@@ -78,7 +78,9 @@ function insertEvents() {
                 `<a href="" class="observation-link timeline-text" data-id=${element._id}>${element.title}</a>`
             ])
         }, this);
-        rows.push(...redEvents) //add static events w spread!
+        if (pkSettings.showStatic) {
+            rows.push(...redEvents) //add static events w spread!
+        }
     } else console.log('obs was empty, could not place timeline items.')
     return rows;
 }
@@ -93,4 +95,8 @@ function opRedBox() {
     document.querySelectorAll('.op-event-content').forEach(function(element) {
         element.parentElement.parentElement.classList.add('op-event');
     }, this);
+}
+
+function toggleStaticEvents() {
+    location.reload();
 }

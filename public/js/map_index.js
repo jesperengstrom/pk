@@ -122,7 +122,7 @@ function mapLabel(facode) {
  */
 function createObsMarkers() {
     var onMap;
-    pkSettings.showAllMarkers ? onMap = map : onMap = null; //displaying them on map or not depending on setting
+    pkSettings.allMarkers ? onMap = map : onMap = null; //displaying them on map or not depending on setting
     if (obs !== null) {
         obs.forEach((el) => {
             var newMarker = new google.maps.Marker({
@@ -174,7 +174,7 @@ function setMapBounds() {
  */
 function showObsMarker(id) {
     markers.forEach((el) => {
-        if (!pkSettings.showAllMarkers) {
+        if (!pkSettings.allMarkers) {
             el.setMap(null);
         }
         if (el.marker_id === id) {
@@ -190,7 +190,7 @@ function showObsMarker(id) {
             if (map.getBounds() && map.getBounds().contains(el.position) == false) { //pan map if marker not in bounds
                 map.panTo(el.position);
             }
-            if (!pkSettings.showAllMarkers) { //drop a single marker (bounce if all)
+            if (!pkSettings.allMarkers) { //drop a single marker (bounce if all)
                 el.setAnimation(google.maps.Animation.DROP);
             }
         } else {
@@ -206,7 +206,7 @@ function toggleObsMarkers() {
     let i = 0;
 
     markers.forEach((el) => {
-        if (!pkSettings.showAllMarkers) {
+        if (!pkSettings.allMarkers) {
             if (pkStatus.activeId === el.marker_id) el.setMap(map); //keep the currently open observation marker
             else el.setMap(null)
         } else {
