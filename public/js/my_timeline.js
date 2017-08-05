@@ -60,12 +60,9 @@ function drawVisualization() {
         checkUrlParams();
         if (markers.length > 0) {
             setMapBounds(); //set map bounds once timeline is loaded to prevent hidden markers
-            console.log(map.getCenter());
         } else {
-            map.setCenter(mordplatsen); //in case filter returns 0 for example 
-            console.log(map.getCenter());
+            document.getElementById('indexmap').innerHTML = `<div class="full-height d-flex justify-content-center align-items-center"><p>Det finns inget att visa!</p></div>`;
         }
-
     });
     timeline.draw(data);
 }

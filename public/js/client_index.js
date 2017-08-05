@@ -273,25 +273,21 @@ function displayAbout(res) {
  */
 function filterObs() {
     var urlParams = new URLSearchParams(window.location.search);
-    // if (urlParams.has('tag')) {
     if (window.location.pathname === "/filter" && urlParams.has('tag')) {
         pkStatus.activeFilter = true;
-        pkStatus.filter = urlParams.get('tag');
-        document.title = 'Palmekartan - ' + pkStatus.filter;
-        obs = allObs.filter((e) => { //if we have a tag param, filter allObs
-            let result = false
-            e.tags.forEach((el) => {
-                if (el === pkStatus.filter) {
-                    result = true
-                }
-                return result;
+        pkStatus.filter = urlParams.getAll('tag');
+        document.title = 'Palmekartan - ' + printFilterString(pkStatus.filter);
+        obs = allObs.filter((o) => { //if we have a tag param, filter allObs
+            return pkStatus.filter.every((f) => { //every filter must be present in tags
+                return o.tags.some((t) => { //...but can be some of all tags
+                    return t === f;
+                })
             })
-            return result;
         })
-        console.log('Filter! Found ' + obs.length + ' observations containing ' + pkStatus.filter);
+        setFilterDropDown();
+        console.log('Filter! Found ' + obs.length + ' observations containing ', printFilterString(pkStatus.filter));
     } else obs = allObs //if we don't have a filter, go with allObs as obs
     renderFilterStatus();
-    setFilterDropDown();
 }
 
 function renderFilterStatus() {
@@ -300,8 +296,8 @@ function renderFilterStatus() {
         filterStatus.innerHTML = `Visar alla ${obs.length} observationer`;
     } else {
         if (obs.length === 0) {
-            filterStatus.innerHTML = `<span class="filter-color">Inga observationer taggade ${pkStatus.filter}!</span>`;
-        } else filterStatus.innerHTML = `Visar ${obs.length} observationer: <span class="filter-color">${pkStatus.filter}</span>`;
+            filterStatus.innerHTML = `<span class="filter-color">Inga observationer taggade ${printFilterString(pkStatus.filter)}!</span>`;
+        } else filterStatus.innerHTML = `Visar ${obs.length} ${obs.length === 1 ? 'observation': 'observationer'}: <span class="filter-color">${printFilterString(pkStatus.filter)}</span>`;
     }
 }
 
@@ -309,10 +305,12 @@ function renderFilterStatus() {
  * sets navbar filter checkbox from url param
  */
 function setFilterDropDown() {
-    document.querySelectorAll('.filter-checkbox').forEach((el) => {
-        if (el.getAttribute('data-id') === pkStatus.filter) {
-            el.checked = true;
-        }
+    document.querySelectorAll('.filter-checkbox').forEach((checkbox) => {
+        pkStatus.filter.forEach((f) => {
+            if (checkbox.getAttribute('data-id') === f) {
+                checkbox.checked = true;
+            }
+        })
     })
 }
 
@@ -320,14 +318,41 @@ function setFilterDropDown() {
  * Gets navbar filter checkboxes --> url param
  */
 function getFilterDropdown() {
-    let query = '/filter?tag='
-    let value = '';
+    let query = '/filter?';
+    var value = '';
     document.querySelectorAll('.filter-checkbox').forEach((el) => {
         if (el.checked) {
-            value += el.getAttribute('data-id') + '&';
+            value += 'tag=' + el.getAttribute('data-id') + '&';
         }
     })
+
     if (value.length === 0) {
-        window.location.href = '/';
-    } else window.location.href = query + value;
+        return window.location.href = '/';
+    }
+    if (value[value.length - 1] === '&') {
+        value = value.slice(0, value.lastIndexOf('&')); //removing last '&'
+    }
+    return window.location.href = query + value;
+}
+
+/**
+ * prints mutiple filters more nicely
+ * @param {array} arr 
+ */
+function printFilterString(arr) {
+    if (arr.length > 0) {
+        if (arr.length === 1) {
+            return arr[0];
+        }
+        let result = '';
+        for (let i = 0; i < arr.length; i++) {
+
+            result += arr[i];
+            if (i < arr.length - 1) {
+                result += ' + '
+            }
+        }
+        return result;
+    }
+    return "";
 }
