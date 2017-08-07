@@ -11,16 +11,16 @@ module.exports = function(app) {
 
     app.post('/api/post', apiController.isLoggedIn, (req, res) => {
         apiController.setLastPkUpdate();
-        apiController.addDoc(req);
-        res.writeHead(302, { 'Location': '/' });
-        res.end();
+        apiController.addDoc(req, (result) => {
+            res.status(result.status).json({ "success": result.success, "msg": result.msg, "err": result.err });
+        });
     });
 
     app.post('/api/update', apiController.isLoggedIn, (req, res) => {
         apiController.setLastPkUpdate();
-        apiController.updateDoc(req);
-        res.writeHead(302, { 'Location': '/' });
-        res.end();
+        apiController.updateDoc(req, (result) => {
+            res.status(result.status).json({ "success": result.success, "msg": result.msg, "err": result.err });
+        });
     });
 
     app.get('/api/all', (req, res) => {
@@ -41,7 +41,6 @@ module.exports = function(app) {
     })
 
     app.get('/api/about', (req, res) => {
-        // res.send('<h1>Hi!</h1>');
         res.sendFile(process.cwd() + '/app/views/about.html')
     })
 }

@@ -6,7 +6,7 @@ const PkTimestamp = require('../models/pk_timestamp');
 function ApiController() {
     const ObjectId = require('mongodb').ObjectID;
 
-    this.addDoc = (req) => {
+    this.addDoc = (req, callback) => {
         let reqBody = req.body;
         let addObj = makePkObj(reqBody);
 
@@ -19,12 +19,12 @@ function ApiController() {
             'user': null
         };
 
-        Pk.create(addObj), (err, res) => {
-            if (err) throw err;
-        };
+        Pk.create(addObj, (err, res) => {
+            this.handleErrors(err, res, callback);
+        });
     }
 
-    this.updateDoc = (req) => {
+    this.updateDoc = (req, callback) => {
         let reqBody = req.body;
         let updateObj = makePkObj(reqBody);
         updateObj.updated = {
@@ -34,9 +34,8 @@ function ApiController() {
 
         let id = req.query.id;
 
-        Pk.update({ _id: ObjectId(id) }, updateObj, (err, result) => {
-            if (err) throw err;
-            console.log('Updated PK: ', result);
+        Pk.update({ _id: ObjectId(id) }, updateObj, (err, res) => {
+            this.handleErrors(err, res, callback);
         })
     }
 
@@ -46,7 +45,10 @@ function ApiController() {
         Pk.find({})
             .select('_id title obsDate obsLocation tags') //we only need these fields
             .exec((err, docs) => {
-                if (err) throw err;
+                if (err) {
+                    console.log('error getting the obs list!', err);
+                    return res.send('error getting the obs list!')
+                }
                 return res.json(docs);
             })
     }
@@ -54,7 +56,10 @@ function ApiController() {
     this.findDocById = (req, res) => {
         let id = req.query.id;
         Pk.findById(ObjectId(id), (err, doc) => {
-            if (err) throw err;
+            if (err) {
+                console.log('error getting findbyid!', err);
+                return res.send('error!');
+            }
             if (doc) {
                 return res.json(doc)
             } else res.send('Hittade ingen post med det ID:t')
@@ -72,7 +77,10 @@ function ApiController() {
     this.getLastPkUpdate = (req, res) => {
         PkTimestamp.findOne({})
             .exec((err, docs) => {
-                if (err) throw err;
+                if (err) {
+                    console.log('Error getting last pk update!', err);
+                    return res.send('Error getting last pk update!')
+                }
                 //if timestamp is empty, we create it to return something
                 if (docs === null) {
                     return res.json({ 'timestamp': null })
@@ -87,9 +95,24 @@ function ApiController() {
     this.setLastPkUpdate = () => {
         PkTimestamp.update({ name: 'timestamp' }, { 'timestamp': Date.now() }, { upsert: true, setDefaultsOnInsert: true },
             (err, result) => {
-                if (err) throw err;
-                console.log('wrote to last updated', result)
+                if (err) {
+                    console.log('error updating pk timestamp', err)
+                } else {
+                    console.log('updated pk timestamp', result)
+                }
             });
+    }
+
+    this.handleErrors = (err, result, callback) => {
+        if (err) {
+            let res = { status: 400, success: false, msg: 'Ett fel har inträffat. Informationen postades inte. Försök att tyda vad problemet är i meddelandet nedan, eller rapportera till palmekartan@hotmail.com för hjälp.', err: err };
+            console.log('Error updating!', err);
+            return callback(res);
+        } else {
+            let res = { status: 200, success: true, msg: 'Observationen har postats!', err: false }
+            console.log('Updated PK: ', result);
+            return callback(res);
+        }
     }
 }
 

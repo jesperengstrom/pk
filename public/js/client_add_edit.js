@@ -1,17 +1,27 @@
 //Non-map functions etc.
 
+//submit event is fired on the form...
+var pkform = document.getElementById('pk-post-form');
+
 //Form buttons and boxes elements
 let addProtocolBtn = document.getElementById('add-protocol-btn');
 let addSourceBtn = document.getElementById('add-source-btn');
 let posCheckboxes = document.querySelectorAll('.pos-checkbox');
 
 //event listeners
+pkform.addEventListener('submit', (e) => {
+    e.preventDefault();
+    ajaxFormPost();
+});
+
 addProtocolBtn.addEventListener('click', (e) => {
     addSourceFields(e.target.getAttribute('data-target'))
 });
 addSourceBtn.addEventListener('click', (e) => {
     addSourceFields(e.target.getAttribute('data-target'))
 });
+
+
 /**
  * We only want to control one marker at a time so we have to switch off/disable the others
  * not to cause confusion.
@@ -79,4 +89,35 @@ function togglePositionInput(element) {
         deactivateMarker(target);
     }
 
+}
+
+/**
+ * Using ajax instead of default http post
+ */
+function ajaxFormPost() {
+    var form = $(pkform); //converting to jq-obj
+    var postMessage = document.getElementById('post-message');
+    var postError = document.getElementById('post-error')
+    postMessage.innerHTML = 'Vänta...'
+
+    var submitBtn = document.getElementById('form-post-btn');
+    submitBtn.setAttribute('disabled', true);
+
+    $.ajax({
+        type: form.attr('method'),
+        url: form.attr('action'),
+        data: form.serialize(),
+        success: (data) => {
+            console.log('post success!');
+            postMessage.innerHTML = data.msg; //printing the status message recieved from server 2 user
+            postError.innerHTML = '';
+            setTimeout(function() { window.location.replace('/'); }, 1000); //redirecting to index after 1 sec
+        },
+        error: function(data) {
+            console.log('post error!');
+            postMessage.innerHTML = data.responseJSON.msg;
+            postError.innerHTML = data.responseJSON.err.message || data.responseJSON.err.errmsg;
+            submitBtn.removeAttribute('disabled');
+        },
+    });
 }

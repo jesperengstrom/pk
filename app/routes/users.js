@@ -67,11 +67,13 @@ router.get('/editform', userController.isLoggedIn, (req, res) => {
             const tags = ['Mordkvällen', 'Walkie Talkie', 'Förföljare', 'Grand', 'Gamla Stan', 'Bil', 'Polis'];
             tags.forEach((el) => {
                 result += `<div class="form-check form-check-inline"><label class="form-check-label">`;
-                params.form.tags.forEach((e) => {
-                    if (el === e) {
-                        match = true;
-                    }
-                }, this);
+                if (params.form.tags) { //there may be no tags...
+                    params.form.tags.forEach((e) => {
+                        if (el === e) {
+                            match = true;
+                        }
+                    }, this);
+                }
                 if (match) result += `<input class="form-check-input" type="checkbox" name="tags" value="${el}" checked> ${el}`;
                 else result += `<input class="form-check-input" type="checkbox" name="tags" value="${el}"> ${el}`;
                 result += `</label></div>`;

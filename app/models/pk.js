@@ -10,6 +10,7 @@ var pkSchema = new Schema({
     title: {
         type: String,
         required: true
+
     },
     obsLocation: {
         adress: {
@@ -48,7 +49,8 @@ var pkSchema = new Schema({
     observation: {
         summary: {
             type: String,
-            required: true
+            required: true,
+            unique: true
         },
         description: {
             type: String
@@ -88,13 +90,11 @@ var pkSchema = new Schema({
     },
     tags: [{
         type: String,
-        // required: true,
         enum: tags
     }],
     sources: [{
         name: {
-            type: String,
-            // required: true
+            type: String
         },
         url: {
             type: String,

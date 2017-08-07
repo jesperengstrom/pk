@@ -208,6 +208,7 @@ div.op-event {
     color: white;
 }
 
-.filter-color {
+.filter-color,
+.warning {
     color: rgb(171, 84, 84);
 }
