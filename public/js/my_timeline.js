@@ -5,7 +5,7 @@ var timeline;
 let redEvents = [
     [new Date('1986/02/28 20:35:00'), , '<span class="timeline-text op-event-content">Lämnar bostaden</span>'],
     [new Date('1986/02/28 20:55:00'), , '<span class="timeline-text op-event-content">Anländer Grand</span>'],
-    [new Date('1986/02/28 23:15:00'), , '<span class="timeline-text op-event-content">Lämnar Grand</span>'],
+    [new Date('1986/02/28 23:12:00'), , '<span class="timeline-text op-event-content">Lämnar Grand</span>'],
     [new Date('1986/02/28 23:21:00'), , '<span class="timeline-text op-event-content">Mordet</span>']
 ];
 
@@ -32,6 +32,7 @@ function drawVisualization() {
     // specify options
     const options = {
         "width": "100%",
+        // "height": "99%",
         "height": "auto",
         "style": "box",
         "axisOnTop": true,
@@ -42,7 +43,7 @@ function drawVisualization() {
         "stackEvents": false,
         "showCurrentTime": false,
         // "zoomMax": 31536000000,
-        "zoomMin": 3600000,
+        "zoomMin": 1800000,
         // "cluster": true //bug: hides elements so we cant add listeners etc
     };
 

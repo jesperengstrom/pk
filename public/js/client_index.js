@@ -135,10 +135,7 @@ function displayFullObs(res) {
                 ${renderWitness('Vittnet', res.witness)}
                 ${renderTr('Observation',res.observation.summary)}
                 ${renderTr('Signalement', res.observation.description)}
-                <tr>
-                    <th scope="row">Kontaktade polisen:</th>
-                    <td>${typeof res.policeContacts.calledIn == 'string' ? dateFormat(new Date(res.policeContacts.calledIn), 'isoDate') : '-'}</td>
-                </tr>
+                ${typeof res.policeContacts.calledIn == 'string' ? '<tr><th scope="row">Kontaktade polisen:</th><td>' + dateFormat(new Date(res.policeContacts.calledIn), 'isoDate') + '</td></tr>' : ''}
                 ${renderTr('Antal kända förhör', res.policeContacts.numInterrogations)}
                 ${renderProtocolArray()}
                 ${renderTr('Polisens uppföljning', res.policeContacts.followUp)}
@@ -147,6 +144,7 @@ function displayFullObs(res) {
                 ${renderSourceArray()}
             </tbody>
         </table>
+        <hr>
         ${renderFootnote()}`;
 
     //scroll to top of obs wrapper
