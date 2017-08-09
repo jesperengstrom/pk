@@ -1,3 +1,5 @@
+'use strict';
+
 //Client-side, handles rendering of map
 var timeline;
 
@@ -16,7 +18,7 @@ google.setOnLoadCallback(drawVisualization);
 
 // Called when the Visualization API is loaded.
 function drawVisualization() {
-    pkStatus.timelineLoaded = true;
+    core.setPkStatus('timelineLoaded', true);
 
     // Create and populate a data table.
     var data = new google.visualization.DataTable();
@@ -24,9 +26,9 @@ function drawVisualization() {
     data.addColumn('datetime', 'end');
     data.addColumn('string', 'content');
 
-    if (checkLoadStatus() && !pkStatus.timelineEvents) { //if status ok and timeline events not added, add them and proceed
+    if (checkLoadStatus() && !core.getPkStatus('timelineEvents')) { //if status ok and timeline events not added, add them and proceed
         data.addRows(insertEvents());
-        pkStatus.timelineEvents = true;
+        core.setPkStatus('timelineEvents', true);
     } else return; //else abort timeline
 
     // specify options
@@ -57,7 +59,7 @@ function drawVisualization() {
     google.visualization.events.addListener(timeline, 'ready', () => {
         opRedBox();
         timelineClick();
-        pkStatus.timelineReady = true;
+        core.setPkStatus('timelineReady', true);
         checkUrlParams();
         if (markers.length > 0) {
             setMapBounds(); //set map bounds once timeline is loaded to prevent hidden markers
@@ -72,6 +74,7 @@ function drawVisualization() {
  * Returns array of arrays to insert as rows into timeline
  */
 function insertEvents() {
+    let obs = core.getObs();
     let rows = [];
     if (obs !== null) {
         obs.forEach((element) => {
@@ -79,7 +82,7 @@ function insertEvents() {
                 `<a href="" class="observation-link timeline-text" data-id=${element._id}>${element.title}</a>`
             ])
         }, this);
-        if (pkSettings.showStatic) {
+        if (core.getPkSettings('showStatic')) {
             rows.push(...redEvents) //add static events w spread!
         }
     } else console.log('obs was empty, could not place timeline items.')

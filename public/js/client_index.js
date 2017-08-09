@@ -1,3 +1,5 @@
+'use strict';
+
 document.addEventListener('DOMContentLoaded', () => {
     monitorMapSettings();
     monitorTimelineSettings();
@@ -17,11 +19,11 @@ document.getElementById('filter-ok').addEventListener('click', getFilterDropdown
  * To prevent drawing timeline bf obs are ready...
  */
 function checkLoadStatus() {
-    if (pkStatus.timelineLoaded && pkStatus.obsFetched) {
-        console.log('status check succeeded at: ' + arguments.callee.caller.name);
+    if (core.getPkStatus('timelineLoaded') && core.getPkStatus('obsFetched')) {
+        console.log('status check succeeded');
         return true;
     } else {
-        console.log('status check failed at ' + arguments.callee.caller.name + '. Timeline loaded: ' + pkStatus.timelineLoaded, ' Obs fetched: ' + pkStatus.obsFetched);
+        console.log('status check failed. Timeline loaded: ' + core.getPkStatus('timelineLoaded'), ' Obs fetched: ' + core.getPkStatus('obsFetched'));
         return false;
     }
 }
@@ -49,18 +51,18 @@ function timelineClick() {
  * Needs to make sure everything is loaded to highlight elements properly
  */
 function checkUrlParams() {
-    if (pkStatus.timelineReady && pkStatus.markersPlaced) {
+    if (core.getPkStatus('timelineReady') && core.getPkStatus('markersPlaced')) {
         var urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('id')) { //if we have an 'id' param...
             let id = urlParams.get('id');
-            pkStatus.activeId = id;
+            core.setPkStatus('activeId', id);
             highlightTimeline(id);
             showObsMarker(id);
-            ajaxRequest('GET', server + '/api/search?id=' + id, 'json', displayFullObs, displayError); //...we want to fetch that item and render it
+            core.ajaxRequest('GET', core.server + '/api/search?id=' + id, 'json', displayFullObs, displayError); //...we want to fetch that item and render it
         }
         if (urlParams.toString().length === 0 || window.location.pathname === "/about" || window.location.pathname === "/filter") { //index or /about - render about
-            ajaxRequest('GET', server + '/api/about', 'html', displayAbout, displayError);
-            pkStatus.activeId = false;
+            core.ajaxRequest('GET', core.server + '/api/about', 'html', displayAbout, displayError);
+            core.setPkStatus('activeId', false);
         }
     }
 }
@@ -80,7 +82,7 @@ function highlightTimeline(id) {
 function monitorMapSettings() {
     const allMarkers = document.getElementById('options-all-markers');
     const oneMarker = document.getElementById('options-one-marker');
-    pkSettings.allMarkers ? allMarkers.checked = true : oneMarker.checked = true;
+    core.getPkSettings('allMarkers') ? allMarkers.checked = true : oneMarker.checked = true;
 
     [allMarkers, oneMarker].forEach((el) => {
         el.addEventListener('change', () => {
@@ -91,16 +93,16 @@ function monitorMapSettings() {
 
 function monitorTimelineSettings() {
     const showStatic = document.getElementById('options-static-events');
-    pkSettings.showStatic ? showStatic.checked = true : showStatic.checked = false;
+    core.getPkSettings('showStatic') ? showStatic.checked = true : showStatic.checked = false;
     showStatic.addEventListener('change', () => {
         setOption(showStatic, 'showStatic', toggleStaticEvents);
     })
 }
 
 function setOption(element, option, callback) {
-    element.checked ? pkSettings[option] = true : pkSettings[option] = false;
+    element.checked ? core.setPkSettings(option, true) : core.setPkSettings(option, false);
     if (typeof(Storage) !== 'undefined') {
-        localStorage.setItem(option, pkSettings[option]);
+        localStorage.setItem(option, core.getPkSettings(option));
     }
     callback();
 }
@@ -113,7 +115,7 @@ function displayFullObs(res) {
     document.title = 'Palmekartan - ' + res.title;
 
     //the props object tell us if we should create event listeners for these objects
-    fullObsProps = {
+    var fullObsProps = {
         witnessCoords: false,
         opCoords: false
     };
@@ -284,30 +286,33 @@ function displayAbout(res) {
 function filterObs() {
     var urlParams = new URLSearchParams(window.location.search);
     if (window.location.pathname === "/filter" && urlParams.has('tag')) {
-        pkStatus.activeFilter = true;
-        pkStatus.filter = urlParams.getAll('tag');
-        document.title = 'Palmekartan - ' + printFilterString(pkStatus.filter);
-        obs = allObs.filter((o) => { //if we have a tag param, filter allObs
-            return pkStatus.filter.every((f) => { //every filter must be present in tags
+        core.setPkStatus('activeFilter', true);
+        core.setPkStatus('filter', urlParams.getAll('tag'));
+        document.title = 'Palmekartan - ' + printFilterString(core.getPkStatus('filter'));
+        let obs = core.getAllObs().filter((o) => { //if we have a tag param, filter allObs
+            return core.getPkStatus('filter').every((f) => { //every filter must be present in tags
                 return o.tags.some((t) => { //...but can be some of all tags
                     return t === f;
                 })
             })
         })
+        core.setObs(obs);
         setFilterDropDown();
-        console.log('Filter! Found ' + obs.length + ' observations containing ', printFilterString(pkStatus.filter));
-    } else obs = allObs //if we don't have a filter, go with allObs as obs
+        console.log('Filter! Found ' + obs.length + ' observations containing ', printFilterString(core.getPkStatus('filter')));
+    } else core.setObs(core.getAllObs()); //if we don't have a filter, go with allObs as obs
     renderFilterStatus();
 }
 
 function renderFilterStatus() {
+    let obs = core.getObs();
+    let filters = core.getPkStatus('filter');
     let filterStatus = document.getElementById('nav-filterstatus');
-    if (!pkStatus.activeFilter) {
+    if (!core.getPkStatus('activeFilter')) {
         filterStatus.innerHTML = `Visar alla ${obs.length} observationer`;
     } else {
         if (obs.length === 0) {
-            filterStatus.innerHTML = `<span class="filter-color">Inga observationer taggade ${printFilterString(pkStatus.filter)}!</span>`;
-        } else filterStatus.innerHTML = `Visar ${obs.length} ${obs.length === 1 ? 'observation': 'observationer'}: <span class="filter-color">${printFilterString(pkStatus.filter)}</span>`;
+            filterStatus.innerHTML = `<span class="filter-color">Inga observationer taggade ${printFilterString(filters)}!</span>`;
+        } else filterStatus.innerHTML = `Visar ${obs.length} ${obs.length === 1 ? 'observation': 'observationer'}: <span class="filter-color">${printFilterString(filters)}</span>`;
     }
 }
 
@@ -316,7 +321,7 @@ function renderFilterStatus() {
  */
 function setFilterDropDown() {
     document.querySelectorAll('.filter-checkbox').forEach((checkbox) => {
-        pkStatus.filter.forEach((f) => {
+        core.getPkStatus('filter').forEach((f) => {
             if (checkbox.getAttribute('data-id') === f) {
                 checkbox.checked = true;
             }

@@ -1,3 +1,5 @@
+'use strict';
+
 //remove these from global namespace, yet it has to be available for all map functions
 var map;
 var markers = [];
@@ -94,7 +96,6 @@ function initMap() {
         clickable: false,
         animation: google.maps.Animation.DROP
     });
-
 }
 
 function mapPin(color, scale, opac) {
@@ -121,8 +122,9 @@ function mapLabel(facode) {
  * Creates all the markers when obs-array is available
  */
 function createObsMarkers() {
+    let obs = core.getObs();
     var onMap;
-    pkSettings.allMarkers ? onMap = map : onMap = null; //displaying them on map or not depending on setting
+    core.getPkSettings('allMarkers') ? onMap = map : onMap = null; //displaying them on map or not depending on setting
     if (obs !== null) {
         obs.forEach((el) => {
             var newMarker = new google.maps.Marker({
@@ -135,7 +137,6 @@ function createObsMarkers() {
                 },
                 title: "Observation " + el.title,
                 marker_id: el._id,
-                // label: { text: title },
             });
             markers.push(newMarker);
             newMarker.addListener('click', () => {
@@ -153,7 +154,7 @@ function createObsMarkers() {
         })
     } else console.log('obs was empty, could not place markers.');
 
-    pkStatus.markersPlaced = true;
+    core.setPkStatus('markersPlaced', true);
     checkUrlParams(); //obs in storage, markers pushed --> now we can render a full obs
 }
 
@@ -174,7 +175,7 @@ function setMapBounds() {
  */
 function showObsMarker(id) {
     markers.forEach((el) => {
-        if (!pkSettings.allMarkers) {
+        if (!core.getPkSettings('allMarkers')) {
             el.setMap(null);
         }
         if (el.marker_id === id) {
@@ -190,7 +191,7 @@ function showObsMarker(id) {
             if (map.getBounds() && map.getBounds().contains(el.position) == false) { //pan map if marker not in bounds
                 map.panTo(el.position);
             }
-            if (!pkSettings.allMarkers) { //drop a single marker (bounce if all)
+            if (!core.getPkSettings('allMarkers')) { //drop a single marker (bounce if all)
                 el.setAnimation(google.maps.Animation.DROP);
             }
         } else {
@@ -206,8 +207,8 @@ function toggleObsMarkers() {
     let i = 0;
 
     markers.forEach((el) => {
-        if (!pkSettings.allMarkers) {
-            if (pkStatus.activeId === el.marker_id) el.setMap(map); //keep the currently open observation marker
+        if (!core.getPkSettings('allMarkers')) {
+            if (core.getPkStatus('activeId') === el.marker_id) el.setMap(map); //keep the currently open observation marker
             else el.setMap(null)
         } else {
             setTimeout(function() {
