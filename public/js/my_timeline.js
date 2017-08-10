@@ -1,106 +1,121 @@
 'use strict';
 
-//Client-side, handles rendering of map
-var timeline;
+//module for my timeline
+var indexTimeline = (function() {
 
-//static events on timeline
-let redEvents = [
-    [new Date('1986/02/28 20:35:00'), , '<span class="timeline-text op-event-content">Lämnar bostaden</span>'],
-    [new Date('1986/02/28 20:55:00'), , '<span class="timeline-text op-event-content">Anländer Grand</span>'],
-    [new Date('1986/02/28 23:12:00'), , '<span class="timeline-text op-event-content">Lämnar Grand</span>'],
-    [new Date('1986/02/28 23:21:00'), , '<span class="timeline-text op-event-content">Mordet</span>']
-];
+    var timeline;
 
-google.load("visualization", "1");
+    //static events on timeline
+    let redEvents = [
+        [new Date('1986/02/28 20:35:00'), , '<span class="timeline-text op-event-content">Lämnar bostaden</span>'],
+        [new Date('1986/02/28 20:55:00'), , '<span class="timeline-text op-event-content">Anländer Grand</span>'],
+        [new Date('1986/02/28 23:12:00'), , '<span class="timeline-text op-event-content">Lämnar Grand</span>'],
+        [new Date('1986/02/28 23:21:00'), , '<span class="timeline-text op-event-content">Mordet</span>']
+    ];
 
-// Set callback to run when API is loaded
-google.setOnLoadCallback(drawVisualization);
+    google.load("visualization", "1");
 
-// Called when the Visualization API is loaded.
-function drawVisualization() {
-    core.setPkStatus('timelineLoaded', true);
+    // Set callback to run when API is loaded
+    google.setOnLoadCallback(drawVisualization);
 
-    // Create and populate a data table.
-    var data = new google.visualization.DataTable();
-    data.addColumn('datetime', 'start');
-    data.addColumn('datetime', 'end');
-    data.addColumn('string', 'content');
+    // Called when the Visualization API is loaded.
+    function drawVisualization() {
+        core.setPkStatus('timelineLoaded', true);
 
-    if (checkLoadStatus() && !core.getPkStatus('timelineEvents')) { //if status ok and timeline events not added, add them and proceed
-        data.addRows(insertEvents());
-        core.setPkStatus('timelineEvents', true);
-    } else return; //else abort timeline
+        // Create and populate a data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('datetime', 'start');
+        data.addColumn('datetime', 'end');
+        data.addColumn('string', 'content');
 
-    // specify options
-    const options = {
-        "width": "100%",
-        // "height": "99%",
-        "height": "auto",
-        "style": "box",
-        "axisOnTop": true,
-        "selectable": false,
-        "min": new Date('1986-02-01'),
-        "max": new Date('1986-03-02'),
-        "locale": "se_SE",
-        "stackEvents": false,
-        "showCurrentTime": false,
-        // "zoomMax": 31536000000,
-        "zoomMin": 1800000,
-        // "cluster": true //bug: hides elements so we cant add listeners etc
-    };
+        if (index.checkLoadStatus() && !core.getPkStatus('timelineEvents')) { //if status ok and timeline events not added, add them and proceed
+            data.addRows(insertEvents());
+            core.setPkStatus('timelineEvents', true);
+        } else return; //else abort timeline
 
-    // Instantiate our timeline object.
-    timeline = new links.Timeline(document.getElementById('pktimeline'));
+        // specify options
+        const options = {
+            "width": "100%",
+            // "height": "99%",
+            "height": "auto",
+            "style": "box",
+            "axisOnTop": true,
+            "selectable": false,
+            "min": new Date('1986-02-01'),
+            "max": new Date('1986-03-02'),
+            "locale": "se_SE",
+            "stackEvents": false,
+            "showCurrentTime": false,
+            // "zoomMax": 31536000000,
+            "zoomMin": 1800000,
+            // "cluster": true //bug: hides elements so we cant add listeners etc
+        };
 
-    // Draw our timeline with the created data and options
-    timeline.setOptions(options);
+        // Instantiate our timeline object.
+        timeline = new links.Timeline(document.getElementById('pktimeline'));
 
-    // draw is ready -> create event listeners etc, set ready to true and check for url-params
-    google.visualization.events.addListener(timeline, 'ready', () => {
-        opRedBox();
-        timelineClick();
-        core.setPkStatus('timelineReady', true);
-        checkUrlParams();
-        if (markers.length > 0) {
-            setMapBounds(); //set map bounds once timeline is loaded to prevent hidden markers
-        } else {
-            document.getElementById('indexmap').innerHTML = `<div class="full-height d-flex justify-content-center align-items-center"><p>Det finns inget att visa!</p></div>`;
-        }
-    });
-    timeline.draw(data);
-}
+        // Draw our timeline with the created data and options
+        timeline.setOptions(options);
 
-/**
- * Returns array of arrays to insert as rows into timeline
- */
-function insertEvents() {
-    let obs = core.getObs();
-    let rows = [];
-    if (obs !== null) {
-        obs.forEach((element) => {
-            rows.push([dateToUTC(element.obsDate), ,
-                `<a href="" class="observation-link timeline-text" data-id=${element._id}>${element.title}</a>`
-            ])
+        // draw is ready -> create event listeners etc, set ready to true and check for url-params
+        google.visualization.events.addListener(timeline, 'ready', () => {
+            opRedBox();
+            index.timelineClick();
+            core.setPkStatus('timelineReady', true);
+            index.checkUrlParams();
+            if (indexMap.getMarkers().length > 0) {
+                indexMap.setMapBounds(); //set map bounds once timeline is loaded to prevent hidden markers
+            } else {
+                document.getElementById('indexmap').innerHTML = `<div class="full-height d-flex justify-content-center align-items-center"><p>Det finns inget att visa!</p></div>`;
+            }
+        });
+        timeline.draw(data);
+    }
+
+    /**
+     * Returns array of arrays to insert as rows into timeline
+     */
+    function insertEvents() {
+        let obs = core.getObs();
+        let rows = [];
+        if (obs !== null) {
+            obs.forEach((element) => {
+                rows.push([dateToUTC(element.obsDate), ,
+                    `<a href="" class="observation-link timeline-text" data-id=${element._id}>${element.title}</a>`
+                ])
+            }, this);
+            if (core.getPkSettings('showStatic')) {
+                rows.push(...redEvents) //add static events w spread!
+            }
+        } else console.log('obs was empty, could not place timeline items.')
+        return rows;
+    }
+
+    //place items at UTC time, no strange timezone conversion
+    function dateToUTC(date) {
+        return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+    }
+
+    //colours all op-events on timeline bg red
+    function opRedBox() {
+        document.querySelectorAll('.op-event-content').forEach(function(element) {
+            element.parentElement.parentElement.classList.add('op-event');
         }, this);
-        if (core.getPkSettings('showStatic')) {
-            rows.push(...redEvents) //add static events w spread!
-        }
-    } else console.log('obs was empty, could not place timeline items.')
-    return rows;
-}
+    }
 
-//place items at UTC time, no strange timezone conversion
-function dateToUTC(date) {
-    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-}
+    function toggleStaticEvents() {
+        location.reload();
+    }
 
-//colours all op-events on timeline bg red
-function opRedBox() {
-    document.querySelectorAll('.op-event-content').forEach(function(element) {
-        element.parentElement.parentElement.classList.add('op-event');
-    }, this);
-}
+    function fitAllOnTimeLine() {
+        timeline.setVisibleChartRangeAuto();
+    }
 
-function toggleStaticEvents() {
-    location.reload();
-}
+    return {
+        timeline: timeline,
+        drawVisualization: drawVisualization,
+        toggleStaticEvents: toggleStaticEvents,
+        fitAllOnTimeLine: fitAllOnTimeLine,
+    }
+
+})();

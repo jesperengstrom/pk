@@ -147,17 +147,17 @@ var core = (function() {
         pkStatus.obsFetched = true; //tell app obs are in storage
 
         //calling page-specfic functions undefined on other pages
-        if (typeof createObsMarkers !== 'undefined') { //= index
-            filterObs(); //now we have the coords -> check if we need to filter..
-            createObsMarkers(); //... do markers
+        if (typeof indexMap.createObsMarkers !== 'undefined') { //= index
+            index.filterObs(); //now we have the coords -> check if we need to filter..
+            indexMap.createObsMarkers(); //... do markers
 
-            if (checkLoadStatus() && !pkStatus.timelineEvents) { //..if timeline failed due to late ajax, redraw it
-                drawVisualization();
+            if (index.checkLoadStatus() && !pkStatus.timelineEvents) { //..if timeline failed due to late ajax, redraw it
+                indexTimeline.drawVisualization();
             }
         }
-        if (typeof renderlist !== 'undefined') { //= edit list
-            obs = allObs;
-            renderlist(); //.. or render edit obs list
+        if (typeof editList.renderList !== 'undefined') { //= edit list
+            setObs(getAllObs());
+            editList.renderList(); //.. or render edit obs list
         }
     }
 
