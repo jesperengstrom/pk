@@ -7,7 +7,7 @@ var editList = (function() {
     function renderList() {
         let listEl = document.getElementById('edit-list-body');
         //sorting obs list by date descending
-        let sorted = obs.sort((a, b) => {
+        let sorted = core.getObs().sort((a, b) => {
             return b.obsDate - a.obsDate;
         });
 

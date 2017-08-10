@@ -193,12 +193,15 @@ var index = (function() {
 
         //tags
         function renderTags() {
-            let result = `<p>`;
-            res.tags.forEach((el) => {
-                return result += `<span class="badge badge-default mt-3 mr-1"><a class="white-link" href="/filter?tag=${el}">${el}</a></span>`;
-            })
-            result += `</p>`;
-            return result;
+            if (res.tags) {
+                let result = `<p>`;
+                res.tags.forEach((el) => {
+                    return result += `<span class="badge badge-default mt-3 mr-1"><a class="white-link" href="/filter?tag=${el}">${el}</a></span>`;
+                })
+                result += `</p>`;
+                return result;
+            }
+            return '';
         }
 
         //witness checkbox + button
@@ -249,10 +252,11 @@ var index = (function() {
                     else indexMap.hideContextMarker(target);
                 })
             }, this);
-
-            document.getElementById('witness-streetview').addEventListener('click', (el) => {
-                indexMap.showStreetView(el.target);
-            })
+            if (fullObsProps.witnessCoords) {
+                document.getElementById('witness-streetview').addEventListener('click', (el) => {
+                    indexMap.showStreetView(el.target);
+                })
+            }
         }
     }
 
@@ -274,14 +278,18 @@ var index = (function() {
     function filterObs() {
         var urlParams = new URLSearchParams(window.location.search);
         if (window.location.pathname === "/filter" && urlParams.has('tag')) {
+
             core.setPkStatus('activeFilter', true);
             core.setPkStatus('filter', urlParams.getAll('tag'));
+
             document.title = 'Palmekartan - ' + printFilterString(core.getPkStatus('filter'));
             let obs = core.getAllObs().filter((o) => { //if we have a tag param, filter allObs
                 return core.getPkStatus('filter').every((f) => { //every filter must be present in tags
-                    return o.tags.some((t) => { //...but can be some of all tags
-                        return t === f;
-                    })
+                    if (o.tags) { //...if there are tags...
+                        return o.tags.some((t) => { //...but can be some of all tags
+                            return t === f;
+                        })
+                    }
                 })
             })
             core.setObs(obs);

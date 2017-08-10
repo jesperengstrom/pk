@@ -147,7 +147,7 @@ var core = (function() {
         pkStatus.obsFetched = true; //tell app obs are in storage
 
         //calling page-specfic functions undefined on other pages
-        if (typeof indexMap.createObsMarkers !== 'undefined') { //= index
+        if (typeof indexMap !== 'undefined') { //= index
             index.filterObs(); //now we have the coords -> check if we need to filter..
             indexMap.createObsMarkers(); //... do markers
 
@@ -155,7 +155,7 @@ var core = (function() {
                 indexTimeline.drawVisualization();
             }
         }
-        if (typeof editList.renderList !== 'undefined') { //= edit list
+        if (typeof editList !== 'undefined') { //= edit list
             setObs(getAllObs());
             editList.renderList(); //.. or render edit obs list
         }
