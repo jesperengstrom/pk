@@ -51,6 +51,7 @@ app.use(cors()); //remove this later?
 //setting my static paths
 app.use('/client_assets', express.static(path.join(__dirname, 'client_assets')));
 app.use('/public', express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, '/public')));
 
 //Hooking up middleware
 app.use(helmet());
