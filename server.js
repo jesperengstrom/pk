@@ -51,11 +51,12 @@ app.use(cors()); //remove this later?
 //setting my static paths
 app.use('/client_assets', express.static(path.join(__dirname, 'client_assets')));
 app.use('/public', express.static(path.join(__dirname, '/public')));
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, '/public'))); //for google verification
 
 //Hooking up middleware
 app.use(helmet());
 app.use(logger('dev'));
+app.use(require('prerender-node').set('prerenderToken', 'RtfjSVgjKiorJannp4Ph'));
 
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(bodyParser.urlencoded({ extended: false }));
