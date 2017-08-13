@@ -81,7 +81,7 @@ var indexTimeline = (function() {
         if (obs !== null) {
             obs.forEach((element) => {
                 rows.push([dateToUTC(element.obsDate), ,
-                    `<a href="" class="observation-link timeline-text" data-id=${element._id}>${element.title}</a>`
+                    `<a href="/observation?id=${element._id}" class="observation-link timeline-text" data-id=${element._id}>${element.title}</a>`
                 ])
             }, this);
             if (core.getPkSettings('showStatic')) {
