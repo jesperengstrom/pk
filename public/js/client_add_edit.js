@@ -8,7 +8,7 @@ var addEditForm = (function() {
     //Form buttons and boxes elements
     let addProtocolBtn = document.getElementById('add-protocol-btn');
     let addSourceBtn = document.getElementById('add-source-btn');
-    let posCheckboxes = document.querySelectorAll('.pos-checkbox');
+    let posCheckboxes = Array.from(document.querySelectorAll('.pos-checkbox'));
 
     //event listeners
     pkform.addEventListener('submit', (e) => {
@@ -62,7 +62,7 @@ var addEditForm = (function() {
 
         interContainer.appendChild(newfield);
 
-        let btns = document.querySelectorAll('.remove-' + target + '-btn').forEach((el) => {
+        let btns = Array.from(document.querySelectorAll('.remove-' + target + '-btn')).forEach((el) => {
             el.addEventListener('click', (e) => {
                 e.target.parentNode.remove();
             })
@@ -74,7 +74,7 @@ var addEditForm = (function() {
      */
     function togglePositionInput(element) {
         let target = element.getAttribute(['data-target'])
-        let targetBox = document.querySelectorAll('.' + target + '-pos-box')
+        let targetBox = Array.from(document.querySelectorAll('.' + target + '-pos-box'));
         let helptext = document.getElementById(target + '-pos-helper');
         if (element.checked) {
             targetBox.forEach((el) => {

@@ -98,7 +98,7 @@ var indexTimeline = (function() {
 
     //colours all op-events on timeline bg red
     function opRedBox() {
-        document.querySelectorAll('.op-event-content').forEach(function(element) {
+        Array.from(document.querySelectorAll('.op-event-content')).forEach(function(element) {
             element.parentElement.parentElement.classList.add('op-event');
         }, this);
     }

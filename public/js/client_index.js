@@ -21,7 +21,7 @@ var index = (function() {
      * displays marker + full observation on click
      */
     function timelineClick() {
-        let places = document.querySelectorAll('.observation-link').forEach((el) => {
+        Array.from(document.querySelectorAll('.observation-link')).forEach((el) => {
             el.addEventListener('click', (e) => {
                 e.preventDefault(); //so we don't refresh the page
                 let id = el.getAttribute('data-id');
@@ -56,7 +56,7 @@ var index = (function() {
     }
 
     function highlightTimeline(id) {
-        document.querySelectorAll('.observation-link').forEach((el) => {
+        Array.from(document.querySelectorAll('.observation-link')).forEach((el) => {
             el.parentElement.parentElement.classList.remove('highlight-timeline');
             if (el.getAttribute('data-id') === id) {
                 el.parentElement.parentElement.classList.add('highlight-timeline');
@@ -245,7 +245,7 @@ var index = (function() {
 
         //add event listeners for checboxes & buttons in fullpost section
         if (fullObsProps.witnessCoords || fullObsProps.opCoords) {
-            document.querySelectorAll('.context-marker').forEach((element) => {
+            Array.from(document.querySelectorAll('.context-marker')).forEach((element) => {
                 addEventListener('click', (el) => {
                     let target = el.target.getAttribute('data-target');
                     if (el.target.checked) indexMap.showContextMarker(el.target, target);
@@ -316,7 +316,7 @@ var index = (function() {
      * sets navbar filter checkbox from url param
      */
     function setFilterDropDown() {
-        document.querySelectorAll('.filter-checkbox').forEach((checkbox) => {
+        Array.from(document.querySelectorAll('.filter-checkbox')).forEach((checkbox) => {
             core.getPkStatus('filter').forEach((f) => {
                 if (checkbox.getAttribute('data-id') === f) {
                     checkbox.checked = true;
@@ -331,7 +331,7 @@ var index = (function() {
     function getFilterDropdown() {
         let query = '/filter?';
         var value = '';
-        document.querySelectorAll('.filter-checkbox').forEach((el) => {
+        Array.from(document.querySelectorAll('.filter-checkbox')).forEach((el) => {
             if (el.checked) {
                 value += 'tag=' + el.getAttribute('data-id') + '&';
             }
