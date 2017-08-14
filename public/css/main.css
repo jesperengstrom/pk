@@ -12,6 +12,24 @@ body {
 }
 
 
+/*moz hack*/
+
+@-moz-document url-prefix() {
+    .full-height {
+        height: 88%;
+    }
+}
+
+
+/*edge hack*/
+
+@supports (-ms-ime-align:auto) {
+    .full-height {
+        height: 88%;
+    }
+}
+
+
 /*MAPS*/
 
 
