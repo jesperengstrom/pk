@@ -15,9 +15,17 @@ const options = {
 
 const User = new Schema({
     local: {
-        username: { type: String, unique: true },
-        password: { type: String },
-        isAdmin: { type: Boolean, default: false }
+        username: {
+            type: String,
+            // unique: true //removed - E11000 duplicate key error
+        },
+        password: {
+            type: String
+        },
+        isAdmin: {
+            type: Boolean,
+            default: false
+        }
     }
 }, { collection: 'users' })
 
