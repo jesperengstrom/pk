@@ -56,7 +56,6 @@ app.use(express.static(path.join(__dirname, '/public'))); //for google verificat
 //Hooking up middleware
 app.use(helmet());
 app.use(logger('dev'));
-app.use(require('prerender-node').set('prerenderToken', 'RtfjSVgjKiorJannp4Ph'));
 
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(bodyParser.urlencoded({ extended: false }));
