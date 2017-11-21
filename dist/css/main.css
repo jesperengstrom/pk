@@ -160,6 +160,7 @@ a:hover {
 
 .timeline-content {
     font-family: 'Roboto', sans-serif;
+    background: white;
 }
 
 .timeline-axis-text {

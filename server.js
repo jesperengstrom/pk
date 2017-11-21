@@ -50,8 +50,8 @@ app.use(cors()); //remove this later?
 
 //setting my static paths
 app.use('/client_assets', express.static(path.join(__dirname, 'client_assets')));
-app.use('/public', express.static(path.join(__dirname, '/public')));
-app.use(express.static(path.join(__dirname, '/public'))); //for google verification
+app.use('/dist', express.static(path.join(__dirname, '/dist')));
+app.use(express.static(path.join(__dirname, '/dist'))); //for google verification
 
 //Hooking up middleware
 app.use(helmet());
