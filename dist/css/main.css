@@ -204,6 +204,10 @@ div.op-event {
 
 /*Observation window*/
 
+#obs-map-wrapper {
+    flex-direction: row;
+}
+
 #indexmap {
     resize: horizontal;
 }
@@ -211,6 +215,7 @@ div.op-event {
 #obs-wrapper {
     overflow-y: scroll;
     resize: horizontal;
+    margin-left: 1rem!important;
 }
 
 
@@ -230,4 +235,26 @@ div.op-event {
 .filter-color,
 .warning {
     color: rgb(171, 84, 84);
+}
+
+
+/* media queries */
+
+@media screen and (max-width: 900px) {
+    #indexmap {
+        height: 50%;
+        width: 100%
+    }
+    #obs-map-wrapper {
+        flex-direction: column;
+    }
+    #obs-wrapper {
+        margin-left: 0!important;
+    }
+}
+
+@media (max-width: 991px) {
+    .navbar-toggleable-md .navbar-nav .dropdown-menu {
+        position: absolute !important;
+    }
 }
