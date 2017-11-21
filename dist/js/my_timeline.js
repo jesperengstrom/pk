@@ -1,7 +1,10 @@
 'use strict';//module for my timeline
 var indexTimeline=function(){var timeline;//static events on timeline
-var redEvents=[[new Date('1986/02/28 20:35:00'),,'<span class="timeline-text op-event-content">L\xE4mnar bostaden</span>'],[new Date('1986/02/28 20:55:00'),,'<span class="timeline-text op-event-content">Anl\xE4nder Grand</span>'],[new Date('1986/02/28 23:12:00'),,'<span class="timeline-text op-event-content">L\xE4mnar Grand</span>'],[new Date('1986/02/28 23:21:00'),,'<span class="timeline-text op-event-content">Mordet</span>']];google.load('visualization','1');// Set callback to run when API is loaded
-google.setOnLoadCallback(drawVisualization);// Called when the Visualization API is loaded.
+var redEvents=[[new Date('1986/02/28 20:35:00'),,'<span class="timeline-text op-event-content">L\xE4mnar bostaden</span>'],[new Date('1986/02/28 20:55:00'),,'<span class="timeline-text op-event-content">Anl\xE4nder Grand</span>'],[new Date('1986/02/28 23:12:00'),,'<span class="timeline-text op-event-content">L\xE4mnar Grand</span>'],[new Date('1986/02/28 23:21:00'),,'<span class="timeline-text op-event-content">Mordet</span>']];//old google charts
+// google.load("visualization", "1");
+// // Set callback to run when API is loaded
+// google.setOnLoadCallback(drawVisualization);
+google.charts.load('current',{packages:['corechart']});google.charts.setOnLoadCallback(drawVisualization);// Called when the Visualization API is loaded.
 function drawVisualization(){core.setPkStatus('timelineLoaded',true);// Create and populate a data table.
 var data=new google.visualization.DataTable;data.addColumn('datetime','start');data.addColumn('datetime','end');data.addColumn('string','content');if(index.checkLoadStatus()&&!core.getPkStatus('timelineEvents')){//if status ok and timeline events not added, add them and proceed
 data.addRows(insertEvents());core.setPkStatus('timelineEvents',true)}else return;//else abort timeline

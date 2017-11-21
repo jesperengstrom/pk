@@ -13,10 +13,15 @@ var indexTimeline = (function() {
         [new Date('1986/02/28 23:21:00'), , '<span class="timeline-text op-event-content">Mordet</span>']
     ];
 
-    google.load("visualization", "1");
+    //old google charts
+    // google.load("visualization", "1");
 
-    // Set callback to run when API is loaded
-    google.setOnLoadCallback(drawVisualization);
+    // // Set callback to run when API is loaded
+    // google.setOnLoadCallback(drawVisualization);
+
+
+    google.charts.load('current', {packages: ['corechart']});
+    google.charts.setOnLoadCallback(drawVisualization);
 
     // Called when the Visualization API is loaded.
     function drawVisualization() {
