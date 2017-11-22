@@ -112,6 +112,7 @@
         </a>
       </li>
       {{else}}
+      {{#if index}}
       <li class="nav-item dropdown mr-5">
         <a class="nav-link dropdown-toggle" href="/users/login" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-key" aria-hidden="true"></i> 
@@ -133,6 +134,7 @@
             </form>
         </div>
       </li>
+      {{/if}}
     {{/if}}
     </ul>
   </div>
